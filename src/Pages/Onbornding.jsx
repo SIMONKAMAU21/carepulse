@@ -1,28 +1,28 @@
-import { Box, Button, Heading, Image, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import AuthWrapper from '../Components/OnboarndingWrapper';
-import illustration from '../assets/doc.png';
-import logo from '../assets/logo.png';
-import CustomInputs from '../Components/CustomInputs';
-import { FaPhone, FaUser, FaVoicemail } from 'react-icons/fa';
-import { createUser } from '../lib/Actions/patient.actions';
+import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+import AuthWrapper from "../Components/OnboarndingWrapper";
+import illustration from "../assets/doc.png";
+import logo from "../assets/logo.png";
+import CustomInputs from "../Components/CustomInputs";
+import { FaPhone, FaUser, FaVoicemail } from "react-icons/fa";
+import { createUser } from "../lib/Actions/patient.actions";
+import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
+import { useNavigate } from "react-router-dom";
 
-// Utility function to format phone number
 const formatPhoneNumber = (number) => {
-  // Remove non-numeric characters except '+'
-  const cleanNumber = number.replace(/[^\d+]/g, '');
-  // Ensure it starts with '+' and is no longer than 15 digits
+  const cleanNumber = number.replace(/[^\d+]/g, "");
   if (cleanNumber.length > 15) {
     return cleanNumber.slice(0, 15);
   }
-  return cleanNumber.startsWith('+') ? cleanNumber : `+${cleanNumber}`;
+  return cleanNumber.startsWith("+") ? cleanNumber : `+${cleanNumber}`;
 };
 
 const Onboarding = () => {
+  const navigate = useNavigate()
   const [form, setForm] = useState({
     email: "",
     name: "",
-    phone: ""
+    phone: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -30,25 +30,27 @@ const Onboarding = () => {
     const { name, value } = e.target;
     setForm((prevForm) => ({
       ...prevForm,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const submit = async () => {
     try {
-      setLoading(true);
+      LoadingToast(true);
       const { email, name, phone } = form;
-      const formattedPhone = formatPhoneNumber(phone); // Format phone number
+      const formattedPhone = formatPhoneNumber(phone);
       const userData = { email, name, phone: formattedPhone };
       const createdUser = await createUser(userData);
+      console.log('first', createdUser)
 
       if (createdUser) {
-        console.log("User successfully created or fetched:", createdUser);
+        SuccessToast("User successfully created");
+        navigate(`/${createdUser.$id}/register`)
       }
-      setLoading(false);
+      LoadingToast(false);
     } catch (error) {
-      console.log("Error in user submission:", error);
-      setLoading(false);
+      ErrorToast("failed to create user");
+      LoadingToast(false);
     }
   };
 
@@ -61,7 +63,13 @@ const Onboarding = () => {
             <Heading>Hi there, ....</Heading>
             <Text>Get started with Appointments</Text>
           </Box>
-          <Box mt={"10%"} justifyContent={"space-between"} display={"flex"} flexDirection={"column"} h={"23%"}>
+          <Box
+            mt={"10%"}
+            justifyContent={"space-between"}
+            display={"flex"}
+            flexDirection={"column"}
+            h={"23%"}
+          >
             <CustomInputs
               icon={FaUser}
               label={"Full Name"}

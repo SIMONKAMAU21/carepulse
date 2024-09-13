@@ -3,12 +3,10 @@ import { users } from "../appwriteConfig.js";
 
 export const createUser = async (user) => {
   try {
-    // Creating a new user with unique ID
-    const newUser = await users.create(ID.unique(), user.email, user.phone, user.name);
+    const newUser = await users.create(ID.unique(), user.email, user.phone,undefined, user.name);
     console.log('New User Created:', newUser);
     return newUser;
   } catch (error) {
-    // If a conflict error (email already exists) occurs, check if the user exists
     if (error && error?.code === 409) {
       try {
         const userList = await users.list([Query.equal('email', user.email)]);

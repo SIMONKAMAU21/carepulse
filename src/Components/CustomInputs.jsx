@@ -20,6 +20,8 @@ const CustomInputs = ({ label,value, placeholder, icon: IconComponent,width, typ
         />
       </InputGroup>
     </FormControl>
+
+
   );
 };
 
