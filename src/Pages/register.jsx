@@ -16,7 +16,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import doc from "../assets/doc1.png";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
+import logo from '../assets/logo.png'
 import CustomInputs from "../Components/CustomInputs";
 import {
   FaAddressBook,
