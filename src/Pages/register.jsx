@@ -13,6 +13,7 @@ import {
   Checkbox,
   Select,
   FormControl,
+  Button,
 } from "@chakra-ui/react";
 import doc from "../assets/doc1.png";
 import logo from "../assets/logo.png";
@@ -72,13 +73,28 @@ const Register = () => {
         <>
           <Box p={"4%"}>
             <Image src={logo} />
-            <Heading>welcome👋</Heading>
+            <Heading mt={"4%"}>welcome👋</Heading>
             <Text>Let us know more about yourself</Text>
           </Box>
 
-          <Box h={"80%"} overflowY={"auto"} p={"4%"}>
+          <Box
+            sx={{
+              "::-webkit-scrollbar": {
+                display: "none",
+              },
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+            h={"80%"}
+            overflowY={"auto"}
+            p={"4%"}
+          >
             <Box>
-              <Heading as={"h2"} size={{base:"md",md:"lg"}} mt={{ base: "5%", md: "10%" }}>
+              <Heading
+                as={"h2"}
+                size={{ base: "md", md: "lg" }}
+                mt={{ base: "5%", md: "none" }}
+              >
                 Personal Information
               </Heading>
               <CustomInputs
@@ -167,7 +183,11 @@ const Register = () => {
             </Box>
 
             <Box>
-              <Heading as={"h2"} size={{base:"md",md:"lg"}} mt={{ base: "8%", md: "2%" }}>
+              <Heading
+                as={"h2"}
+                size={{ base: "md", md: "lg" }}
+                mt={{ base: "8%", md: "2%" }}
+              >
                 Medical Information
               </Heading>
               <CustomInputs
@@ -237,8 +257,12 @@ const Register = () => {
             </Box>
 
             <Box>
-            <Heading as={"h2"} size={{base:"md",md:"xl"}} mt={{ base: "5%", md: "2%" }}>
-            Identification and Verification
+              <Heading
+                as={"h2"}
+                size={{ base: "md", md: "xl" }}
+                mt={{ base: "5%", md: "2%" }}
+              >
+                Identification and Verification
               </Heading>
               <Select
                 placeholder={"Enter your identification document"}
@@ -271,7 +295,9 @@ const Register = () => {
             </Box>
 
             <Box mt={{ base: "8%", md: "2%" }}>
-              <Heading as={"h2"} size={{base:"md",md:"xl"}}>Consent and Privacy</Heading>
+              <Heading as={"h2"} size={{ base: "md", md: "xl" }}>
+                Consent and Privacy
+              </Heading>
               <FormControl>
                 <Checkbox
                   name="treatment"
@@ -297,6 +323,13 @@ const Register = () => {
                   policy.
                 </Checkbox>
               </FormControl>
+              <Button mt={{ base: "20%", md: "1%" }}
+            bg={"rgb(36,174,124)"}
+            width={{ base: "100%", md: "90%" }}
+            // onClick={submit}
+            color={"white"}
+            // isLoading={loading} 
+            _hover={{ bg: "rgb(30,140,100)" }}>Submit & continue</Button>
             </Box>
           </Box>
         </>
