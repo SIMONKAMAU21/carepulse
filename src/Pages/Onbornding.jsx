@@ -2,12 +2,12 @@ import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import illustration from "../assets/doc.png";
-import logo from "../assets/logo.png";
 import CustomInputs from "../Components/CustomInputs";
 import { FaPhone, FaUser, FaVoicemail } from "react-icons/fa";
 import { createUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
+import logo from '../assets/logo.png'
 
 const formatPhoneNumber = (number) => {
   const cleanNumber = number.replace(/[^\d+]/g, "");
