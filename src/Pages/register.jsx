@@ -16,8 +16,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import doc from "../assets/doc1.png";
-// import logo from "../assets/logo.png";
-import logo from '../assets/logo.png'
+import logo from "../assets/logo.png";
 import CustomInputs from "../Components/CustomInputs";
 import {
   FaAddressBook,
@@ -27,9 +26,11 @@ import {
   FaUser,
   FaVoicemail,
 } from "react-icons/fa";
+import { registerUser } from "../lib/Actions/patient.actions";
 
 const Register = () => {
   const [form, setForm] = useState({});
+  const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [consents, setConsents] = useState({
     treatment: false,
@@ -68,6 +69,69 @@ const Register = () => {
     }));
   };
 
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const userData = {
+        email: form.email,
+        phone: form.phone,
+        name: form.name,
+        gender: form.gender,
+        address: form.address,
+        birthDate: form.birthDate,
+        occupation: form.occupation,
+        privacyConsent:form.privacyConsent,
+        emergencyContact: form.emergencyContact,
+        insuranceProvider: form.insuranceProvider,
+        insurancePolicyNumber: form.insurancePolicyNumber,
+        allergies: form.allergies,
+        currentMedications: form.currentMedications,
+        familyMedicalHistory: form.familyMedicalHistory,
+        pastMedicalHistory: form.pastMedicalHistory,
+        identificationType: form.identificationType,
+        identificationNumber: form.identificationNumber,
+        idDocument: selectedFile,
+      };
+
+      const data = new FormData();
+      data.append("file", selectedFile); 
+      data.append("upload_preset", "wdfjbcug");
+      data.append("cloud_name", "diyuy63ue");
+
+      const cloudinaryRes = await fetch(
+        "https://api.cloudinary.com/v1_1/diyuy63ue/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const responseJson = await cloudinaryRes.json();
+      if (cloudinaryRes.ok) {
+        const { secure_url } = responseJson;
+        userData.idDocument = secure_url; 
+      } else {
+        console.error("Cloudinary upload failed:", responseJson);
+        throw new Error("Cloudinary upload failed");
+      }
+
+      // Assuming createUser is a function that handles user registration
+      const newUser = await registerUser (userData); // Submit the form data to your API
+      console.log("User Created:", newUser);
+
+      // Reset form and consents after successful submission
+      setForm({});
+      setConsents({
+        treatment: false,
+        disclosure: false,
+        privacyPolicy: false,
+      });
+    } catch (error) {
+      console.error("Error during submission:", error);
+    }
+    setLoading(false);
+  };
+
   return (
     <AuthWrapper
       leftChildren={
@@ -102,7 +166,7 @@ const Register = () => {
                 icon={FaUser}
                 label={"Full Name"}
                 name="name"
-                value={form.name}
+                value={form.name || ""}
                 onChange={handleInputChange}
                 placeholder={"Enter your full name"}
               />
@@ -111,7 +175,7 @@ const Register = () => {
                   icon={FaVoicemail}
                   label={"Email Address"}
                   name="email"
-                  value={form.email}
+                  value={form.email || ""}
                   onChange={handleInputChange}
                   placeholder={"Enter your email address"}
                   type="email"
@@ -120,7 +184,7 @@ const Register = () => {
                   icon={FaPhone}
                   label={"Phone Number"}
                   name="phone"
-                  value={form.phone}
+                  value={form.phone || ""}
                   onChange={handleInputChange}
                   placeholder={"Enter your phone number"}
                   type="tel"
@@ -129,14 +193,17 @@ const Register = () => {
                   icon={FaCalendar}
                   label={"Date of Birth"}
                   name="birthDate"
-                  value={form.birthDate}
+                  value={form.birthDate || ""}
                   onChange={handleInputChange}
                   placeholder={"Select your birth date"}
                   type="date"
                 />
                 <Box mt={4}>
                   <Text mb={2}>Gender</Text>
-                  <RadioGroup onChange={handleGenderChange} value={form.gender}>
+                  <RadioGroup
+                    onChange={handleGenderChange}
+                    value={form.gender || ""}
+                  >
                     <Stack direction="row">
                       <Radio value="male">Male</Radio>
                       <Radio value="female">Female</Radio>
@@ -148,7 +215,7 @@ const Register = () => {
                   icon={FaAddressBook}
                   label={"Address"}
                   name="address"
-                  value={form.address}
+                  value={form.address || ""}
                   onChange={handleInputChange}
                   placeholder={"Enter your address"}
                   type="text"
@@ -157,7 +224,7 @@ const Register = () => {
                   icon={FaCalendar}
                   label={"Occupation"}
                   name="occupation"
-                  value={form.occupation}
+                  value={form.occupation || ""}
                   onChange={handleInputChange}
                   placeholder={"Enter your occupation"}
                   type="text"
@@ -166,7 +233,7 @@ const Register = () => {
                   icon={FaUser}
                   label={"Emergency Contact Name"}
                   name="emergencyContact"
-                  value={form.emergencyContact}
+                  value={form.emergencyContact || ""}
                   onChange={handleInputChange}
                   placeholder={"Guardian's name"}
                   type="text"
@@ -175,7 +242,7 @@ const Register = () => {
                   icon={FaPhone}
                   label={"Emergency Contact Phone"}
                   name="emergencyPhone"
-                  value={form.emergencyPhone}
+                  value={form.emergencyPhone || ""}
                   onChange={handleInputChange}
                   placeholder={"Enter emergency contact phone number"}
                   type="tel"
@@ -195,7 +262,7 @@ const Register = () => {
                 icon={FaUser}
                 label={"Primary Care Physician"}
                 name="primaryCarePhysician"
-                value={form.primaryCarePhysician}
+                value={form.primaryCarePhysician || ""}
                 onChange={handleInputChange}
                 placeholder={"Enter your physician's name"}
               />
@@ -204,7 +271,7 @@ const Register = () => {
                   icon={FaVoicemail}
                   label={"Insurance Provider"}
                   name="insuranceProvider"
-                  value={form.insuranceProvider}
+                  value={form.insuranceProvider || ""}
                   onChange={handleInputChange}
                   placeholder={"e.g., NHIF"}
                   type="text"
@@ -213,7 +280,7 @@ const Register = () => {
                   icon={FaPhone}
                   label={"Insurance Policy Number"}
                   name="insurancePolicyNumber"
-                  value={form.insurancePolicyNumber}
+                  value={form.insurancePolicyNumber || ""}
                   onChange={handleInputChange}
                   placeholder={"e.g., 4233333"}
                   type="number"
@@ -222,7 +289,7 @@ const Register = () => {
                   icon={FaCalendar}
                   label={"Allergies"}
                   name="allergies"
-                  value={form.allergies}
+                  value={form.allergies || ""}
                   onChange={handleInputChange}
                   placeholder={"e.g., pollen, penicillin"}
                   type="text"
@@ -231,7 +298,7 @@ const Register = () => {
                   icon={FaAddressBook}
                   label={"Current Medications"}
                   name="currentMedications"
-                  value={form.currentMedications}
+                  value={form.currentMedications || ""}
                   onChange={handleInputChange}
                   placeholder={"e.g., Ibuprofen 200mg"}
                   type="text"
@@ -240,7 +307,7 @@ const Register = () => {
                   icon={FaUser}
                   label={"Family Medical History"}
                   name="familyMedicalHistory"
-                  value={form.familyMedicalHistory}
+                  value={form.familyMedicalHistory || ""}
                   onChange={handleInputChange}
                   placeholder={"e.g., heart disease"}
                   type="text"
@@ -249,9 +316,9 @@ const Register = () => {
                   icon={FaPhone}
                   label={"Past Medical History"}
                   name="pastMedicalHistory"
-                  value={form.pastMedicalHistory}
+                  value={form.pastMedicalHistory || ""}
                   onChange={handleInputChange}
-                  placeholder={"e.g., asthma"}
+                  placeholder={"e.g., surgery in 2022"}
                   type="text"
                 />
               </Grid>
@@ -260,91 +327,91 @@ const Register = () => {
             <Box>
               <Heading
                 as={"h2"}
-                size={{ base: "md", md: "xl" }}
-                mt={{ base: "5%", md: "2%" }}
+                size={{ base: "md", md: "lg" }}
+                mt={{ base: "8%", md: "2%" }}
               >
-                Identification and Verification
+                Identification
               </Heading>
-              <Select
-                placeholder={"Enter your identification document"}
-                name="identificationType"
-                value={form.identificationType}
-                label="document"
-                onChange={handleInputChange}
-                mt={5}
-              >
-                <option value="idCard">ID Card</option>
-                <option value="passport">Passport</option>
-                <option value="driverLicense">Driver's License</option>
-              </Select>
-              <CustomInputs
-                icon={FaIdCard}
-                label={"Identification Number"}
-                name="identificationNumber"
-                value={form.identificationNumber}
-                onChange={handleInputChange}
-                placeholder={"e.g., 4233333"}
-                type="number"
-              />
-              <CustomInputs
-                icon={FaIdCard}
-                label={"Scanned Copy of Identification Document"}
-                name="idDocument"
-                onChange={handleFileChange}
-                type="file"
-              />
+              <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
+                <FormControl>
+                  <Text mb={2}>Identification Type</Text>
+                  <Select
+                    name="identificationType"
+                    value={form.identificationType || ""}
+                    onChange={handleInputChange}
+                  >
+                    <option value="passport">Passport</option>
+                    <option value="idCard">ID Card</option>
+                    <option value="drivingLicense">Driving License</option>
+                  </Select>
+                </FormControl>
+                <CustomInputs
+                  icon={FaIdCard}
+                  label={"Identification Number"}
+                  name="identificationNumber"
+                  value={form.identificationNumber || ""}
+                  onChange={handleInputChange}
+                  placeholder={"e.g., A123456"}
+                />
+                <FormControl mt={4}>
+                  <Text mb={2}>Upload Document</Text>
+                  <Input
+                    type="file"
+                    name="idDocument"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                  />
+                </FormControl>
+              </Grid>
             </Box>
 
-            <Box mt={{ base: "8%", md: "2%" }}>
-              <Heading as={"h2"} size={{ base: "md", md: "xl" }}>
-                Consent and Privacy
+            <Box>
+              <Heading
+                as={"h2"}
+                size={{ base: "md", md: "lg" }}
+                mt={{ base: "8%", md: "2%" }}
+              >
+                Consent
               </Heading>
-              <FormControl>
-                <Checkbox
-                  name="treatment"
-                  isChecked={consents.treatment}
-                  onChange={handleCheckboxChange}
-                >
-                  I consent to receive treatment for my health condition.
-                </Checkbox>
-                <Checkbox
-                  name="disclosure"
-                  isChecked={consents.disclosure}
-                  onChange={handleCheckboxChange}
-                >
-                  I consent to the use and disclosure of my health information
-                  for treatment purposes.
-                </Checkbox>
-                <Checkbox
-                  name="privacyPolicy"
-                  isChecked={consents.privacyPolicy}
-                  onChange={handleCheckboxChange}
-                >
-                  I acknowledge that I have reviewed and agree to the privacy
-                  policy.
-                </Checkbox>
-              </FormControl>
-              <Button mt={{ base: "20%", md: "1%" }}
-            bg={"rgb(36,174,124)"}
-            width={{ base: "100%", md: "90%" }}
-            // onClick={submit}
-            color={"white"}
-            // isLoading={loading} 
-            _hover={{ bg: "rgb(30,140,100)" }}>Submit & continue</Button>
+              <Checkbox
+                name="treatment"
+                isChecked={consents.treatment}
+                onChange={handleCheckboxChange}
+              >
+                I consent to receive treatment.
+              </Checkbox>
+              <Checkbox
+                name="disclosure"
+                isChecked={consents.disclosure}
+                onChange={handleCheckboxChange}
+              >
+                I consent to disclose my medical information to authorized
+                parties.
+              </Checkbox>
+              <Checkbox
+                name="privacyPolicy"
+                isChecked={consents.privacyPolicy}
+                onChange={handleCheckboxChange}
+              >
+                I have read and agree to the privacy policy.
+              </Checkbox>
             </Box>
+
+            <Button
+              isLoading={loading}
+              onClick={handleSubmit}
+              colorScheme="blue"
+              mt={4}
+            >
+              Register
+            </Button>
           </Box>
         </>
       }
       rightChildren={
-        <Box height="100vh" width="100%">
-          <Image
-            src={doc}
-            alt="doc"
-            height="100%"
-            width="100%"
-            objectFit="cover"
-          />
-        </Box>
+        <>
+          <Image src={doc} h={"100vh"} w={"100%"} objectFit={"cover"} />
+        </>
       }
     />
   );

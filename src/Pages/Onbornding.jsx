@@ -7,7 +7,7 @@ import { FaPhone, FaUser, FaVoicemail } from "react-icons/fa";
 import { createUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
-import logo from '../assets/logo.png'
+import logo from "../assets/logo.png";
 
 const formatPhoneNumber = (number) => {
   const cleanNumber = number.replace(/[^\d+]/g, "");
@@ -18,7 +18,7 @@ const formatPhoneNumber = (number) => {
 };
 
 const Onboarding = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
     name: "",
@@ -38,14 +38,17 @@ const Onboarding = () => {
     try {
       LoadingToast(true);
       const { email, name, phone } = form;
+      if ((!email, !name, !phone)) {
+       ErrorToast("all fields are required");
+        LoadingToast(false)
+      }
       const formattedPhone = formatPhoneNumber(phone);
       const userData = { email, name, phone: formattedPhone };
-      const createdUser = await createUser(userData);
-      console.log('first', createdUser)
 
+      const createdUser = await createUser(userData);
       if (createdUser) {
         SuccessToast("User successfully created");
-        navigate(`/${createdUser.$id}/register`)
+        navigate(`/register`);
       }
       LoadingToast(false);
     } catch (error) {
