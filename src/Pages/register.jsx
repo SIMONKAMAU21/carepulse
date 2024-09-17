@@ -16,7 +16,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import doc from "../assets/doc1.png";
-// import logo from "../assets/logo.png";
+import logo from "../assets/logo.png";
 import CustomInputs from "../Components/CustomInputs";
 import {
   FaAddressBook,
@@ -164,7 +164,7 @@ const Register = () => {
       leftChildren={
         <>
           <Box p={"4%"}>
-            {/* <Image src={logo} /> */}
+            <Image src={logo} />
             <Heading mt={"4%"}>welcome👋</Heading>
             <Text>Let us know more about yourself</Text>
           </Box>
