@@ -7,7 +7,7 @@ import { FaPhone, FaUser, FaVoicemail } from "react-icons/fa";
 import { createUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
 
 const formatPhoneNumber = (number) => {
   const cleanNumber = number.replace(/[^\d+]/g, "");
@@ -80,7 +80,7 @@ const Onboarding = () => {
     <AuthWrapper
       leftChildren={
         <Box ml={{ base: "10%", md: "20%" }} h={"100%"}>
-          <Image mt={"10%"} src={logo} alt="Logo" />
+          <Image mt={"10%"} src={""} alt="Logo" />
           <Box mt={"5%"}>
             <Heading>Hi there, ....</Heading>
             <Text>Get started with Appointments</Text>
