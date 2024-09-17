@@ -26,24 +26,35 @@ export const createUser = async (user) => {
           return userList.documents[0];
         }
       } catch (listError) {
-        console.log("Error fetching user:", listError);
+        return("Error fetching user:", listError);
       }
     } else {
-      console.log("Error creating user:", error);
+      return("Error creating user:", error);
     }
   }
 };
+export const getUser = async (userId) => {
+  try {
+    const user = await users.get(userId);
+console.log('user', user)
+    return (user);
+  } catch (error) {
+    console.error(
+      "An error occurred while retrieving the user details:",
+      error
+    );
+  }
+};
+
 
 export const registerUser = async (userData, documentUrl) => {
   try {
-    const newUser = await createUser(userData);
-    console.log("User Created:", newUser);
 
     const additionalDetails = {
-      userId: newUser.$id,
-      phone: newUser.phone,
-      email: newUser.email,
-      name: newUser.name,
+      userId: userData.userId,
+      phone: userData.phone,
+      email: userData.email,
+      name: userData.name,
       gender: userData.gender,
       address: userData.address,
       birthDate: userData.birthDate,
@@ -53,13 +64,15 @@ export const registerUser = async (userData, documentUrl) => {
       insuranceProvider: userData.insuranceProvider,
       insurancePolicyNumber: userData.insurancePolicyNumber,
       allergies: userData.allergies,
-      currentMedications: userData.currentMedications,
+      currentMedication: userData.currentMedication,
       familyMedicalHistory: userData.familyMedicalHistory,
       pastMedicalHistory: userData.pastMedicalHistory,
       identificationType: userData.identificationType,
       identificationNumber: userData.identificationNumber,
-      documentUrl,
+      identificationUrl:userData.identificationUrl,
     };
+
+    console.log("Additional Details:", additionalDetails);
 
     const response = await databases.createDocument(
       VITE_DATABASE_ID,
@@ -70,7 +83,7 @@ export const registerUser = async (userData, documentUrl) => {
     console.log("Additional user details stored:", response);
 
     return {
-      user: newUser,
+      // user: newUser,
       documentId: response.$id,
     };
   } catch (error) {
@@ -78,3 +91,4 @@ export const registerUser = async (userData, documentUrl) => {
     throw error;
   }
 };
+

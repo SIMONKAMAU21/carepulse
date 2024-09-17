@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import {
   Box,
@@ -26,17 +26,42 @@ import {
   FaUser,
   FaVoicemail,
 } from "react-icons/fa";
-import { registerUser } from "../lib/Actions/patient.actions";
+import { getUser, registerUser } from "../lib/Actions/patient.actions";
+import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 
 const Register = () => {
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [consents, setConsents] = useState({
-    treatment: false,
-    disclosure: false,
-    privacyPolicy: false,
+    treatment: true,
+    disclosure: true,
+    privacyPolicy: true,
   });
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      const userID = user.id;
+      const fetchUserData = async () => {
+        try {
+          const fetchedUser = await getUser(userID);
+          setForm((prevForm) => ({
+            ...prevForm,
+            userId: fetchedUser.$id,
+            email: fetchedUser.email,
+            name: fetchedUser.name,
+            phone: fetchedUser.phone,
+          }));
+        } catch (error) {
+          ErrorToast("Error fetching user data");
+          console.error("Error fetching user data:", error);
+        }
+      };
+      fetchUserData();
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,30 +96,33 @@ const Register = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    LoadingToast(true);
     try {
       const userData = {
         email: form.email,
         phone: form.phone,
+        userId: form.userId,
         name: form.name,
         gender: form.gender,
         address: form.address,
         birthDate: form.birthDate,
         occupation: form.occupation,
-        privacyConsent:form.privacyConsent,
+        privacyConsent: form.privacyConsent,
         emergencyContact: form.emergencyContact,
         insuranceProvider: form.insuranceProvider,
         insurancePolicyNumber: form.insurancePolicyNumber,
         allergies: form.allergies,
-        currentMedications: form.currentMedications,
+        currentMedication: form.currentMedication,
         familyMedicalHistory: form.familyMedicalHistory,
         pastMedicalHistory: form.pastMedicalHistory,
         identificationType: form.identificationType,
         identificationNumber: form.identificationNumber,
-        idDocument: selectedFile,
+        identificationUrl: selectedFile,
       };
+      console.log("userData", userData);
 
       const data = new FormData();
-      data.append("file", selectedFile); 
+      data.append("file", selectedFile);
       data.append("upload_preset", "wdfjbcug");
       data.append("cloud_name", "diyuy63ue");
 
@@ -109,27 +137,26 @@ const Register = () => {
       const responseJson = await cloudinaryRes.json();
       if (cloudinaryRes.ok) {
         const { secure_url } = responseJson;
-        userData.idDocument = secure_url; 
+        userData.identificationUrl = secure_url;
       } else {
-        console.error("Cloudinary upload failed:", responseJson);
         throw new Error("Cloudinary upload failed");
       }
-
-      // Assuming createUser is a function that handles user registration
-      const newUser = await registerUser (userData); // Submit the form data to your API
+      const newUser = await registerUser(userData);
       console.log("User Created:", newUser);
 
-      // Reset form and consents after successful submission
       setForm({});
+      SuccessToast("registration succeeded");
       setConsents({
         treatment: false,
         disclosure: false,
         privacyPolicy: false,
       });
     } catch (error) {
+      ErrorToast("failed to register");
       console.error("Error during submission:", error);
     }
     setLoading(false);
+    LoadingToast(false);
   };
 
   return (
@@ -170,6 +197,14 @@ const Register = () => {
                 onChange={handleInputChange}
                 placeholder={"Enter your full name"}
               />
+               {/* <CustomInputs
+                icon={FaUser}
+                label={"id"}
+                name="ID"
+                value={form.userId || ""}
+                onChange={handleInputChange}
+                placeholder={"Enter your full name"}
+              /> */}
               <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
                 <CustomInputs
                   icon={FaVoicemail}
@@ -375,6 +410,7 @@ const Register = () => {
               </Heading>
               <Checkbox
                 name="treatment"
+                value={form.prevConsents}
                 isChecked={consents.treatment}
                 onChange={handleCheckboxChange}
               >
@@ -383,6 +419,7 @@ const Register = () => {
               <Checkbox
                 name="disclosure"
                 isChecked={consents.disclosure}
+                value={form.prevConsents}
                 onChange={handleCheckboxChange}
               >
                 I consent to disclose my medical information to authorized
@@ -391,6 +428,7 @@ const Register = () => {
               <Checkbox
                 name="privacyPolicy"
                 isChecked={consents.privacyPolicy}
+                value={form.prevConsents}
                 onChange={handleCheckboxChange}
               >
                 I have read and agree to the privacy policy.

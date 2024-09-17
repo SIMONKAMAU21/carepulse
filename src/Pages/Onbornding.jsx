@@ -38,24 +38,43 @@ const Onboarding = () => {
     try {
       LoadingToast(true);
       const { email, name, phone } = form;
-      if ((!email, !name, !phone)) {
-       ErrorToast("all fields are required");
-        LoadingToast(false)
+  
+      if (!email || !name || !phone) {
+        ErrorToast("All fields are required");
+        LoadingToast(false);
+        return;
       }
+  
       const formattedPhone = formatPhoneNumber(phone);
       const userData = { email, name, phone: formattedPhone };
-
+  
       const createdUser = await createUser(userData);
+  
       if (createdUser) {
+        // Store the user data in localStorage
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email: createdUser.email,
+            name: createdUser.name,
+            phone: createdUser.phone,
+            id: createdUser.$id,
+          })
+        );
+  
+        // Display success toast and navigate to the next page
         SuccessToast("User successfully created");
         navigate(`/register`);
       }
+  
       LoadingToast(false);
     } catch (error) {
-      ErrorToast("failed to create user");
+      ErrorToast("Failed to create user");
       LoadingToast(false);
     }
   };
+  
+  
 
   return (
     <AuthWrapper
