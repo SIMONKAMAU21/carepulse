@@ -7,7 +7,7 @@ import { FaPhone, FaUser, FaVoicemail } from "react-icons/fa";
 import { createUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
-import Logo from '../assets/logo.svg'
+import Logo from '../assets/Logo.svg'
 
 const formatPhoneNumber = (number) => {
   const cleanNumber = number.replace(/[^\d+]/g, "");
