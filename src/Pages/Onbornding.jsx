@@ -12,7 +12,7 @@ import logo from "../assets/logo.png";
 const formatPhoneNumber = (number) => {
   const cleanNumber = number.replace(/[^\d+]/g, "");
   if (cleanNumber.length > 15) {
-    return cleanNumber.slice(0, 15);
+    return cleanNumber.slice(0, 15); 
   }
   return cleanNumber.startsWith("+") ? cleanNumber : `+${cleanNumber}`;
 };
