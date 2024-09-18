@@ -10,8 +10,6 @@ export const {
   VITE_STORAGE_ID,
   VITE_ENDPOINT,
 } = import.meta.env;
-console.log('meta.env', import.meta.env)
-console.log('project', VITE_PROJECT_ID);
 
 const client = new sdk.Client();
 

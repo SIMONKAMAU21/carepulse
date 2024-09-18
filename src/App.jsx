@@ -5,6 +5,7 @@ import Onboarnding from "./Pages/Onbornding";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToasterContainer } from "./Components/toaster";
 import Register from "./Pages/register";
+import Appointment from "./Pages/newAppointment";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Onboarnding />} />
             <Route path="/register" element={<Register/>} />
+            <Route path="/Appointment" element={<Appointment/>} />
+
 
           </Routes>
       </BrowserRouter>

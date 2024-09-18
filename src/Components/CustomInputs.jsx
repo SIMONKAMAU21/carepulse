@@ -17,6 +17,8 @@ const CustomInputs = ({ label,value, placeholder, icon: IconComponent,width, typ
           placeholder={placeholder} 
           {...rest} 
           w={width}
+          variant={"outline"}
+          isRequired
         />
       </InputGroup>
     </FormControl>

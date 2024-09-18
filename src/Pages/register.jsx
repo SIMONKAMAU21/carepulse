@@ -28,17 +28,18 @@ import {
 } from "react-icons/fa";
 import { getUser, registerUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [consents, setConsents] = useState({
-    treatment: true,
-    disclosure: true,
-    privacyPolicy: true,
+    treatment: false,
+    disclosure: false,
+    privacyPolicy: false,
   });
-
+const navigate = useNavigate()
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -142,18 +143,17 @@ const Register = () => {
         throw new Error("Cloudinary upload failed");
       }
       const newUser = await registerUser(userData);
-      console.log("User Created:", newUser);
 
       setForm({});
       SuccessToast("registration succeeded");
+      navigate("/Appointment")
       setConsents({
-        treatment: false,
-        disclosure: false,
-        privacyPolicy: false,
+        treatment: true,
+        disclosure: true,
+        privacyPolicy: true,
       });
     } catch (error) {
       ErrorToast("failed to register");
-      console.error("Error during submission:", error);
     }
     setLoading(false);
     LoadingToast(false);
