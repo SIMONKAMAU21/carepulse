@@ -26,18 +26,18 @@ export const createUser = async (user) => {
           return userList.documents[0];
         }
       } catch (listError) {
-        return("Error fetching user:", listError);
+        return "Error fetching user:", listError;
       }
     } else {
-      return("Error creating user:", error);
+      return "Error creating user:", error;
     }
   }
 };
 export const getUser = async (userId) => {
   try {
     const user = await users.get(userId);
-console.log('user', user)
-    return (user);
+    console.log("user", user);
+    return user;
   } catch (error) {
     console.error(
       "An error occurred while retrieving the user details:",
@@ -46,10 +46,23 @@ console.log('user', user)
   }
 };
 
-
+export const getPatient = async (userId) => {
+  try {
+    const patient = await databases.listDocuments(
+      VITE_DATABASE_ID,
+      VITE_PATIENT_COLLECTION_ID,
+      [Query.equal("userId", userId)]
+    );
+    return patient.documents[0];
+  } catch (error) {
+    console.error(
+      "An error occurred while retrieving the user details:",
+      error
+    );
+  }
+};
 export const registerUser = async (userData, documentUrl) => {
   try {
-
     const additionalDetails = {
       userId: userData.userId,
       phone: userData.phone,
@@ -69,7 +82,7 @@ export const registerUser = async (userData, documentUrl) => {
       pastMedicalHistory: userData.pastMedicalHistory,
       identificationType: userData.identificationType,
       identificationNumber: userData.identificationNumber,
-      identificationUrl:userData.identificationUrl,
+      identificationUrl: userData.identificationUrl,
     };
 
     console.log("Additional Details:", additionalDetails);
@@ -91,4 +104,3 @@ export const registerUser = async (userData, documentUrl) => {
     throw error;
   }
 };
-

@@ -197,14 +197,7 @@ const navigate = useNavigate()
                 onChange={handleInputChange}
                 placeholder={"Enter your full name"}
               />
-               {/* <CustomInputs
-                icon={FaUser}
-                label={"id"}
-                name="ID"
-                value={form.userId || ""}
-                onChange={handleInputChange}
-                placeholder={"Enter your full name"}
-              /> */}
+               
               <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
                 <CustomInputs
                   icon={FaVoicemail}

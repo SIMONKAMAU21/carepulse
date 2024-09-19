@@ -6,19 +6,22 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToasterContainer } from "./Components/toaster";
 import Register from "./Pages/register";
 import Appointment from "./Pages/newAppointment";
+import Success from "./Pages/appointmentSuccess";
 
 function App() {
   return (
     <Box color={"white"} w={"100vw"} h={"100vh"}>
       <BrowserRouter>
-        <ToasterContainer/>
-          <Routes>
-            <Route path="/" element={<Onboarnding />} />
-            <Route path="/register" element={<Register/>} />
-            <Route path="/Appointment" element={<Appointment/>} />
-
-
-          </Routes>
+        <ToasterContainer />
+        <Routes>
+          <Route path="/" element={<Onboarnding />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/Appointment" element={<Appointment />} />
+          <Route
+            path="/success/:userId/appointment/:appointmentId"
+            element={<Success />}
+          />
+        </Routes>
       </BrowserRouter>
     </Box>
   );
