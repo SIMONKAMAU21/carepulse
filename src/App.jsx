@@ -7,6 +7,7 @@ import { ToasterContainer } from "./Components/toaster";
 import Register from "./Pages/register";
 import Appointment from "./Pages/newAppointment";
 import Success from "./Pages/appointmentSuccess";
+import Admin from "./Admin/admin";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             path="/success/:userId/appointment/:appointmentId"
             element={<Success />}
           />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
     </Box>

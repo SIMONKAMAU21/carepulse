@@ -22,9 +22,7 @@ export const addAppointment = async (userData) => {
       );
       console.log("Additional user details stored:", response);
   
-      return {
-        documentId: response.$id,
-      };
+      return response
     } catch (error) {
       console.error("Error during registration:", error);
       throw error;

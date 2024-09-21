@@ -4,10 +4,11 @@ import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
 import logo from "../assets/Logo.svg";
 import check from "../assets/check.svg";
 import illustration from "../assets/doc.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { getAppointment } from "../lib/Actions/appointment.actions";
 import calender from "../assets/calendar.png";
 const Success = () => {
+  const { appointmentId } = useParams();
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +16,7 @@ const Success = () => {
   useEffect(() => {
     const fetchAppointment = async () => {
       try {
-        const fetchedAppointment = await getAppointment("66ebeb260023b3052528");
+        const fetchedAppointment = await getAppointment(appointmentId);
         setAppointment(fetchedAppointment);
       } catch (error) {
         setError("Error fetching appointment");
@@ -26,7 +27,7 @@ const Success = () => {
     };
 
     fetchAppointment();
-  }, []);
+  }, [appointmentId]);
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     const date = new Date(dateString);
@@ -91,7 +92,6 @@ const Success = () => {
             <NavLink to={"/appointment"}>
               <Button
                 mt={"10%"}
-                // display={{ base: "block", md: "none" }}
                 color={"white"}
                 w={"50%"}
                 bgColor={"rgb(74,201,126)"}
@@ -109,7 +109,7 @@ const Success = () => {
               src={illustration}
               alt="Illustration"
               height="100%"
-            //   position={"relative"}
+              //   position={"relative"}
               width="100%"
               objectFit="cover"
             />

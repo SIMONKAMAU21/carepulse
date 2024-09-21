@@ -74,7 +74,7 @@ const Appointment = () => {
       setForm({});
       SuccessToast("appointment added");
       navigate(
-        `/success/${form.userId}/appointment/${newAppointment.documentId}`
+        `/success/${form.userId}/appointment/${newAppointment.$id}`
       );
       LoadingToast(false);
     } catch (error) {
