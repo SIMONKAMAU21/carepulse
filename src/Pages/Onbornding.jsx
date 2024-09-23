@@ -55,7 +55,6 @@ const Onboarding = () => {
       const createdUser = await createUser(userData);
 
       if (createdUser) {
-        // Store the user data in localStorage
         localStorage.setItem(
           "user",
           JSON.stringify({
@@ -66,7 +65,6 @@ const Onboarding = () => {
           })
         );
 
-        // Display success toast and navigate to the next page
         SuccessToast("User successfully created");
         navigate(`/register`);
       }

@@ -13,7 +13,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { ErrorToast } from "../Components/toaster";
+import { ErrorToast, SuccessToast } from "../Components/toaster";
 
 const PasskeyModal = ({ isOpen, onClose }) => {
   const [otp, setOtp] = useState("");
@@ -23,6 +23,7 @@ const PasskeyModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = () => {
     if (otp === SECRET_KEY) {
+      SuccessToast("welcome admin")
       navigate("/admin");
     } else {
       ErrorToast("Invalid passkey. Please try again.");
