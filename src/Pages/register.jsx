@@ -57,7 +57,7 @@ const navigate = useNavigate()
           }));
         } catch (error) {
           ErrorToast("Error fetching user data");
-          console.error("Error fetching user data:", error);
+          // console.error("Error fetching user data:", error);
         }
       };
       fetchUserData();
@@ -120,7 +120,7 @@ const navigate = useNavigate()
         identificationNumber: form.identificationNumber,
         identificationUrl: selectedFile,
       };
-      console.log("userData", userData);
+      // console.log("userData", userData);
 
       const data = new FormData();
       data.append("file", selectedFile);

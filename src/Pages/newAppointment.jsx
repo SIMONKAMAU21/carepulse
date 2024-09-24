@@ -7,6 +7,7 @@ import {
   Text,
   Textarea,
   FormLabel,
+  Select,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import logo from "../assets/Logo.svg";
@@ -27,8 +28,10 @@ const Appointment = () => {
     appointmentReason: "",
     preferences: "",
     appointmentDate: "",
+    status: "pending",  // default status
   });
   const navigate = useNavigate();
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({
@@ -49,7 +52,7 @@ const Appointment = () => {
             userId: fetchedUser.userId,
             patientId: fetchedUser.$id,
           }));
-          console.log("fetchedUser", fetchedUser);
+          // console.log("fetchedUser", fetchedUser);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -68,9 +71,10 @@ const Appointment = () => {
         appointmentReason: form.appointmentReason || "",
         preferences: form.preferences || "",
         appointmentDate: form.appointmentDate || "",
+        status: form.status || "pending",  // include status in data submission
       };
       const newAppointment = await addAppointment(appointmentData);
-      console.log("newAppointment", newAppointment);
+      // console.log("newAppointment", newAppointment);
       setForm({});
       SuccessToast("appointment added");
       navigate(
@@ -141,6 +145,21 @@ const Appointment = () => {
               value={form.appointmentDate}
               onChange={handleInputChange}
             />
+
+            {/* Add Status Select Input */}
+            {/* <FormLabel htmlFor="status">Appointment Status</FormLabel>
+            <Select
+              id="status"
+              name="status"
+              value={form.status}
+              onChange={handleInputChange}
+              placeholder="Select appointment status"
+            >
+              <option value="pending">Pending</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="cancelled">Cancelled</option>
+            </Select> */}
+
             <Button
               mt={{ base: "20%", md: "10%" }}
               bg={"rgb(36,174,124)"}

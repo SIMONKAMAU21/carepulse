@@ -15,14 +15,14 @@ export const createUser = async (user) => {
       undefined,
       user.name
     );
-    console.log("New User Created:", newUser);
+    // console.log("New User Created:", newUser);
     return newUser;
   } catch (error) {
     if (error && error?.code === 409) {
       try {
         const userList = await users.list([Query.equal("email", user.email)]);
         if (userList.total > 0) {
-          console.log("User already exists:", userList.documents[0]);
+          // console.log("User already exists:", userList.documents[0]);
           return userList.documents[0];
         }
       } catch (listError) {
@@ -36,7 +36,7 @@ export const createUser = async (user) => {
 export const getUser = async (userId) => {
   try {
     const user = await users.get(userId);
-    console.log("user", user);
+    // console.log("user", user);
     return user;
   } catch (error) {
     console.error(
@@ -85,7 +85,7 @@ export const registerUser = async (userData, documentUrl) => {
       identificationUrl: userData.identificationUrl,
     };
 
-    console.log("Additional Details:", additionalDetails);
+    // console.log("Additional Details:", additionalDetails);
 
     const response = await databases.createDocument(
       VITE_DATABASE_ID,
@@ -93,7 +93,7 @@ export const registerUser = async (userData, documentUrl) => {
       ID.unique(),
       additionalDetails
     );
-    console.log("Additional user details stored:", response);
+    // console.log("Additional user details stored:", response);
 
     return {
       // user: newUser,
