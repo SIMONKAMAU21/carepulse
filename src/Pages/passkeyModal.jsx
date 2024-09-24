@@ -13,23 +13,28 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { ErrorToast, SuccessToast } from "../Components/toaster";
+import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 
 const PasskeyModal = ({ isOpen, onClose }) => {
-  const [otp, setOtp] = useState("");
   const cancelRef = useRef();
   const navigate = useNavigate();
   const SECRET_KEY = import.meta.env.VITE_SECRETKEY;
 
-  const handleSubmit = () => {
-    if (otp === SECRET_KEY) {
-      SuccessToast("welcome admin")
-      navigate("/admin");
+  const handleSubmit = (value) => {
+    if (value === SECRET_KEY) {
+      LoadingToast(true)
+      setTimeout(()=>{
+        navigate("/admin");
+        SuccessToast("welcome admin")
+        LoadingToast(false)
+      },2000)
     } else {
       ErrorToast("Invalid passkey. Please try again.");
       navigate("/")
+      onClose()
     }
-    onClose();
+    LoadingToast(false)
+
   };
 
   const cancel = () => {
@@ -37,15 +42,14 @@ const PasskeyModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const handlePinChange = (value) => {
-    setOtp(value);
-  };
+
 
   return (
     <AlertDialog
       isOpen={isOpen}
       leastDestructiveRef={cancelRef}
       onClose={onClose}
+      
     >
       <AlertDialogOverlay>
         <Center h="100vh">
@@ -63,7 +67,7 @@ const PasskeyModal = ({ isOpen, onClose }) => {
             <AlertDialogBody>
               To access the admin page, please enter the passkey:
               <HStack mt={4} spacing={4} justifyContent="center">
-                <PinInput size="lg" onChange={handlePinChange} otp>
+                <PinInput size="lg"  onComplete={handleSubmit} otp>
                   <PinInputField />
                   <PinInputField />
                   <PinInputField />
@@ -75,13 +79,6 @@ const PasskeyModal = ({ isOpen, onClose }) => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button
-                bgColor={"rgb(74,201,126)"}
-                color={"white"}
-                onClick={handleSubmit}
-              >
-                Enter Admin Panel
-              </Button>
               <Button ref={cancelRef} onClick={cancel} ml={3}>
                 Cancel
               </Button>

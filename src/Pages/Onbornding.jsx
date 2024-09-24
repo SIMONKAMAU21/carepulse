@@ -1,4 +1,11 @@
-import { Box, Button, Heading, Image, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Image,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import illustration from "../assets/doc.png";
@@ -40,45 +47,50 @@ const Onboarding = () => {
 
   const submit = async () => {
     try {
-      LoadingToast(true);
+      LoadingToast(true); 
       const { email, name, phone } = form;
-
+  
       if (!email || !name || !phone) {
         ErrorToast("All fields are required");
         LoadingToast(false);
         return;
       }
-
+  
       const formattedPhone = formatPhoneNumber(phone);
       const userData = { email, name, phone: formattedPhone };
-
       const createdUser = await createUser(userData);
-
-      if (createdUser) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            email: createdUser.email,
-            name: createdUser.name,
-            phone: createdUser.phone,
-            id: createdUser.$id,
-          })
-        );
-
-        SuccessToast("User successfully created");
-        navigate(`/register`);
+  
+      if (createdUser.error) {
+        ErrorToast(createdUser.error);
+        LoadingToast(false);
+        return;
       }
-
+  
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          email: createdUser.email,
+          name: createdUser.name,
+          phone: createdUser.phone,
+          id: createdUser.$id,
+        })
+      );
+  
+      SuccessToast("User successfully created");
+      navigate(`/register`);
       LoadingToast(false);
     } catch (error) {
-      ErrorToast("Failed to create user");
       LoadingToast(false);
+      ErrorToast("Failed to create user");
     }
   };
+  
+  
+  
 
   React.useEffect(() => {
     if (isAdmin) {
-      onOpen(); 
+      onOpen();
     }
   }, [isAdmin, onOpen]);
 
@@ -87,7 +99,7 @@ const Onboarding = () => {
       <AuthWrapper
         leftChildren={
           <>
-            <Box ml={{ base: "10%", md: "20%" }} h={"100%"}>
+            <Box ml={{ base: "9%", md: "20%" }} h={"100%"}>
               <Image mt={"10%"} src={Logo} alt="Logo" />
               <Box mt={"5%"}>
                 <Heading>Hi there, ....</Heading>
@@ -107,7 +119,7 @@ const Onboarding = () => {
                   value={form.name}
                   onChange={handleInputChange}
                   placeholder={"Enter your full name"}
-                  width={{ base: "80%", md: "50%" }}
+                  width={{ base: "90%", md: "50%" }}
                 />
                 <CustomInputs
                   icon={FaVoicemail}
@@ -116,7 +128,7 @@ const Onboarding = () => {
                   value={form.email}
                   onChange={handleInputChange}
                   placeholder={"Enter your email address"}
-                  width={{ base: "80%", md: "50%" }}
+                  width={{ base: "90%", md: "50%" }}
                   type="email"
                 />
                 <CustomInputs
@@ -126,22 +138,28 @@ const Onboarding = () => {
                   value={form.phone}
                   onChange={handleInputChange}
                   placeholder={"Enter your phone number"}
-                  width={{ base: "80%", md: "50%" }}
+                  width={{ base: "90%", md: "50%" }}
                   type="tel"
                 />
               </Box>
               <Button
                 mt={{ base: "20%", md: "10%" }}
                 bg={"rgb(36,174,124)"}
-                width={{ base: "80%", md: "50%" }}
+                width={{ base: "90%", md: "50%" }}
                 onClick={submit}
                 color={"white"}
-                isLoading={loading} // Chakra UI's prop to show a loading spinner
+                isLoading={loading}
                 _hover={{ bg: "rgb(30,140,100)" }}
               >
                 Get Started
               </Button>
-              <Box mt={"10%"} w={"100%"} display={"flex"} alignItems={"flex-end"}  color={"rgb(74,201,126)"}>
+              <Box
+                mt={"10%"}
+                w={"100%"}
+                display={"flex"}
+                alignItems={"flex-end"}
+                color={"rgb(74,201,126)"}
+              >
                 <NavLink to={"/?admin=true"}>Admin</NavLink>
               </Box>
             </Box>

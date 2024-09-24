@@ -39,25 +39,30 @@ const Register = () => {
     disclosure: false,
     privacyPolicy: false,
   });
-const navigate = useNavigate()
+  const navigate = useNavigate();
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-
+    console.log("user", user);
+    if (!user) {
+      ErrorToast("your data is required")
+      navigate("/");
+    }
     if (user) {
       const userID = user.id;
+   
       const fetchUserData = async () => {
         try {
           const fetchedUser = await getUser(userID);
           setForm((prevForm) => ({
             ...prevForm,
             userId: fetchedUser.$id,
-            email: fetchedUser.email,
-            name: fetchedUser.name,
-            phone: fetchedUser.phone,
+            email: fetchedUser.email || "",
+            name: fetchedUser.name || "",
+            phone: fetchedUser.phone || "",
           }));
         } catch (error) {
           ErrorToast("Error fetching user data");
-          // console.error("Error fetching user data:", error);
         }
       };
       fetchUserData();
@@ -146,7 +151,7 @@ const navigate = useNavigate()
 
       setForm({});
       SuccessToast("registration succeeded");
-      navigate("/Appointment")
+      navigate("/Appointment");
       setConsents({
         treatment: true,
         disclosure: true,
@@ -193,11 +198,11 @@ const navigate = useNavigate()
                 icon={FaUser}
                 label={"Full Name"}
                 name="name"
-                value={form.name || ""}
+                value={form.name}
                 onChange={handleInputChange}
                 placeholder={"Enter your full name"}
               />
-               
+
               <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
                 <CustomInputs
                   icon={FaVoicemail}

@@ -17,7 +17,6 @@ export const addAppointment = async (userData) => {
       appointmentDate: userData.appointmentDate,
       status: userData.status,
     };
-    // console.log("Additional Details:", additionalDetails);
 
     const response = await databases.createDocument(
       VITE_DATABASE_ID,
@@ -25,7 +24,6 @@ export const addAppointment = async (userData) => {
       ID.unique(),
       additionalDetails
     );
-    // console.log("Additional user details stored:", response);
 
     return response;
   } catch (error) {

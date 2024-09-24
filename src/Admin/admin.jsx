@@ -35,6 +35,7 @@ import {
   updateAppointment,
 } from "../lib/Actions/appointment.actions";
 import {
+  FaBatteryEmpty,
   FaCalendarCheck,
   FaClock,
   FaExclamationTriangle,
@@ -57,6 +58,13 @@ const Admin = () => {
     const fetchAppointments = async () => {
       try {
         const response = await getRecentAppointmentList();
+        if (!response) {
+          return (
+            <Box>
+              <Text>no data</Text>
+            </Box>
+          );
+        }
         if (response) {
           setAppointments(response);
         } else {
@@ -135,7 +143,7 @@ const Admin = () => {
   };
 
   return (
-    <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100vh"} p={4}>
+    <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"} p={4}>
       <HStack p={4} bg={"black"}>
         <Image src={logo} />
         <Spacer />
@@ -175,7 +183,7 @@ const Admin = () => {
           p={{ base: "4", md: "6" }}
           borderRadius="md"
           shadow="md"
-          h={{ base: "auto", md: "" }} // Smaller height on mobile
+          h={{ base: "auto", md: "" }}
         >
           <VStack align="start">
             <HStack>
@@ -220,6 +228,7 @@ const Admin = () => {
           </VStack>
         </Box>
       </SimpleGrid>
+
       <Box p={4} mt={4} h={"50%"} overflowX="auto">
         <Table variant="simple" colorScheme="whiteAlpha" size={"md"}>
           <Thead>
@@ -232,79 +241,96 @@ const Admin = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {appointments.documents.map((appointment, index) => (
-              <Tr key={appointment?.$id}>
-                <Td>
-                  <HStack>
-                    <Avatar name={appointment?.patientId?.name || "Unknown"} />
-                    <VStack align="start">
-                      <Text>{appointment?.patientId?.name || "No Name"}</Text>
-                      <Text fontSize="sm" color="gray.400">
-                        {appointment?.patientId?.email || "No Email"}
-                      </Text>
-                      <Text fontSize="sm" color="gray.400">
-                        {appointment?.patientId?.phone || "No Phone"}
-                      </Text>
-                    </VStack>
-                  </HStack>
-                </Td>
-                <Td>
-                  {new Date(appointment?.appointmentDate).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
+            {appointments.documents.length > 0 ? (
+              appointments.documents.map((appointment, index) => (
+                <Tr key={appointment?.$id}>
+                  <Td>
+                    <HStack>
+                      <Avatar
+                        name={appointment?.patientId?.name || "Unknown"}
+                      />
+                      <VStack align="start">
+                        <Text>{appointment?.patientId?.name || "No Name"}</Text>
+                        <Text fontSize="sm" color="gray.400">
+                          {appointment?.patientId?.email || "No Email"}
+                        </Text>
+                        <Text fontSize="sm" color="gray.400">
+                          {appointment?.patientId?.phone || "No Phone"}
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Td>
+                  <Td>
+                    {appointment?.appointmentDate
+                      ? new Date(
+                          appointment?.appointmentDate
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "No Date"}
+                  </Td>
+                  <Td
+                    color={
+                      appointment.status === "Scheduled"
+                        ? "green.400"
+                        : appointment.status === "Cancelled"
+                        ? "red.400"
+                        : "yellow.400"
                     }
-                  ) || "No Date"}
-                </Td>
-                <Td
-                  color={
-                    appointment.status === "Scheduled"
-                      ? "green.400"
-                      : appointment.status === "Cancelled"
-                      ? "red.400"
-                      : "yellow.400"
-                  }
-                >
-                  {appointment?.status || "Pending"}
-                </Td>
-                <Td>{appointment?.doctor || "No Doctor"}</Td>
-                <Td>
-                  <Button
-                    colorScheme="green"
-                    size="sm"
-                    onClick={() => openModal(index, true)}
                   >
-                    Schedule
-                  </Button>
-                  <Button
-                    ml={"1%"}
-                    mt={{ base: "5%", md: "none" }}
-                    colorScheme="red"
-                    size="sm"
-                    onClick={() => openModal(index, false)}
-                  >
-                    Cancel
-                  </Button>
+                    {appointment?.status || "Pending"}
+                  </Td>
+                  <Td>{appointment?.doctor || "No Doctor"}</Td>
+                  <Td>
+                    <Button
+                      colorScheme="green"
+                      size="sm"
+                      onClick={() => openModal(index, true)}
+                    >
+                      Schedule
+                    </Button>
+                    <Button
+                      ml={2}
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => openModal(index, false)}
+                    >
+                      Cancel
+                    </Button>
+                  </Td>
+                </Tr>
+              ))
+            ) : (
+              <Tr>
+                <Td colSpan={5} textAlign="center">
+                  <Icon mr={"1%"} src={FaClock}/>
+                  No appointments found.
                 </Td>
               </Tr>
-            ))}
+            )}
           </Tbody>
         </Table>
       </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent width={{base:"40%",md:"60%"}} bg={"#131619"} color={"white"} opacity={"0.9"}>
+        <ModalContent
+          width={{ base: "90%", md: "60%" }}
+          bg={"#131619"}
+          color={"white"}
+          opacity={"0.9"}
+        >
           <ModalHeader>
             {isScheduleModal ? "Schedule Appointment" : "Cancel Appointment"}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody pb={6} >
+          <ModalBody pb={6}>
             {isScheduleModal ? (
               <Input
                 type="date"
+                placeholder="enter date"
                 value={
                   appointments.documents[selectedAppointmentIndex]
                     ?.selectedDate || ""
