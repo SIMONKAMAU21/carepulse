@@ -8,6 +8,7 @@ import Register from "./Pages/register";
 import Appointment from "./Pages/newAppointment";
 import Success from "./Pages/appointmentSuccess";
 import Admin from "./Admin/admin";
+import Adddoctor from "./Admin/adddoctor";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
             element={<Success />}
           />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/doctor" element={<Adddoctor/>} />
+
         </Routes>
       </BrowserRouter>
     </Box>

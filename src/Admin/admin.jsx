@@ -29,7 +29,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import logo from "../assets/Logo.svg";
 import {
   getRecentAppointmentList,
   updateAppointment,
@@ -41,6 +40,7 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 import { ErrorToast, SuccessToast } from "../Components/toaster";
+import Header from "../Components/header";
 
 const Admin = () => {
   const [appointments, setAppointments] = useState({
@@ -49,7 +49,7 @@ const Admin = () => {
     pendingCount: 0,
     cancelledCount: 0,
   });
-  const { isOpen, onOpen, onClose } = useDisclosure(); // Modal controls
+  const { isOpen, onOpen, onClose } = useDisclosure(); 
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] =
     useState(null);
   const [isScheduleModal, setIsScheduleModal] = useState(false);
@@ -144,17 +144,21 @@ const Admin = () => {
 
   return (
     <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"} p={4}>
-      <HStack p={4} bg={"black"}>
-        <Image src={logo} />
-        <Spacer />
-      </HStack>
-
-      <VStack spacing={4} align="start" p={4}>
-        <Heading>Welcome, Admin</Heading>
-        <Text>Start your day by managing new appointments</Text>
-      </VStack>
-
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
+      <Header width={{ base: "90%", md: "99%" }} />
+      <SimpleGrid
+        mt={{ base: "60%", md: "0%" }}
+        columns={{ base: 1, md: 3 }}
+        spacing={6}
+        h={{ base: "25%", md: "10%" }}
+        overflowY={"scroll"}
+        sx={{
+          "::-webkit-scrollbar": {
+            display: "none",
+          },
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+      >
         <Box
           bgGradient="linear(to-l, rgb(255,209,71),#1c1e22, #1c1e22)"
           p={{ base: "4", md: "6" }}
@@ -305,7 +309,7 @@ const Admin = () => {
             ) : (
               <Tr>
                 <Td colSpan={5} textAlign="center">
-                  <Icon mr={"1%"} src={FaClock}/>
+                  <Icon mr={"1%"} src={FaClock} />
                   No appointments found.
                 </Td>
               </Tr>
