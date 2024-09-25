@@ -11,8 +11,8 @@ import {
 
 export const sidebarLinks = [
   { path: "/admin", label: "Dashboard", icon: MdDashboard },
-  { path: "/doctor", label: "Transactions", icon: MdMonetizationOn },
-  { path: "/reports", label: "Reports", icon: MdAssessment },
+  { path: "/doctor", label: "Add doctor", icon: MdMonetizationOn },
+  { path: "/reports", label: "Patients", icon: MdAssessment },
   { path: "/statements", label: "Statements", icon: MdReceipt },
   { path: "/settings", label: "Settings", icon: MdSettings },
 ];
@@ -26,6 +26,7 @@ const Sidebar = () => {
         p="10px"
         color="#6F7E84"
         position="fixed"
+        zIndex={"1000"}
         left="0"
         top="0"
         h="100vh"

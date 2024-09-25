@@ -45,12 +45,12 @@ const Register = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     console.log("user", user);
     if (!user) {
-      ErrorToast("your data is required")
+      ErrorToast("your data is required");
       navigate("/");
     }
     if (user) {
       const userID = user.id;
-   
+
       const fetchUserData = async () => {
         try {
           const fetchedUser = await getUser(userID);

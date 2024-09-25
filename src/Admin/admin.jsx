@@ -354,14 +354,15 @@ const Admin = () => {
           </ModalBody>
           <ModalFooter>
             <Button
+            w={"100%"}
               colorScheme={isScheduleModal ? "green" : "red"}
               onClick={isScheduleModal ? handleSaveSchedule : handleSaveCancel}
             >
               Save
             </Button>
-            <Button onClick={onClose} ml={3}>
+            {/* <Button onClick={onClose} ml={3}>
               Close
-            </Button>
+            </Button> */}
           </ModalFooter>
         </ModalContent>
       </Modal>

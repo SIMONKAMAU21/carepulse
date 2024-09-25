@@ -23,7 +23,7 @@ const Header = ({width}) => {
         onClick={isOpen ? onClose:onOpen}
         position={"absolute"}
         zIndex={"1000"}
-        left={{base:"80%",md:"16%"}}
+        left={{base:"80%",md:"20%"}}
         />
         <Image src={logo} onClick={isOpen? onClose : onOpen} cursor="pointer" /> 
         <Spacer />
