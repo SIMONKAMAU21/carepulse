@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import Header from "../Components/header";
-import { Box, Button, FormControl, Image, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  Image,
+  Input,
+  Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@chakra-ui/react";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import illustration from "../assets/Illustration1.png";
 import CustomInputs from "../Components/CustomInputs";
@@ -8,10 +22,14 @@ import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { registerDoctor } from "../lib/Actions/doctor.actions";
 import { FaUser } from "react-icons/fa";
 import Doctorsdata from "../Components/doctors";
+import { formatPhoneNumber } from "../Pages/Onbornding";
 
 const Adddoctor = () => {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({ email: "",
+    drname: "",
+    phone: "",});
   const [selectedFile, setSelectedFile] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure(); 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +38,7 @@ const Adddoctor = () => {
       [name]: value,
     }));
   };
+
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
     setForm((prevForm) => ({
@@ -53,17 +72,17 @@ const Adddoctor = () => {
       if (cloudinaryRes.ok) {
         const { secure_url } = responseJson;
 
-        // Prepare user data
+        const formattedPhone = formatPhoneNumber(form.phone);
         const userData = {
-          drname: doctorName, // Use the name with "Dr." prepended
+          drname: doctorName,
+          phone:formattedPhone,
+          email:form.email,
           doctorPhotoUrl: secure_url,
         };
 
-        // Register doctor in the database
         const newUser = await registerDoctor(userData);
-        console.log("newUser", newUser);
 
-        setForm({}); // Clear form
+        setForm({}); 
         SuccessToast("Registration succeeded");
       } else {
         throw new Error("Cloudinary upload failed");
@@ -80,43 +99,67 @@ const Adddoctor = () => {
       <AuthWrapper
         leftChildren={
           <>
-            <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"} p={4}>
-              <Header width={{ base: "90%", md: "50%" }} />
-              <Box ml={{base:"1%",md:"1%"}} mt={{base:"70%",md:"5%"}} w={{base:"100%",md:"50%"}}>
-                <CustomInputs
-                  icon={FaUser}
-                  label={"Full Name"}
-                  name="drname"
-                  value={form.drname}
-                  width={{base:"80%",md:"50%"}}
-                  onChange={handleInputChange}
-                  placeholder={"Enter your full name"}
-                />
-                     <CustomInputs
-                  icon={FaUser}
-                  label={"Phone number"}
-                  name="phone"
-                  value={form.phone}
-                  width={{base:"80%",md:"50%"}}
-                  onChange={handleInputChange}
-                  placeholder={"Enter your full name"}
-                />
-                <FormControl mt={4}>
-                  <Text mb={2}>Upload Document</Text>
-                  <Input
-                    type="file"
-                    w={{base:"80%",md:"50%"}}
-                    name="idDocument"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                  />
-                </FormControl>
-                <Button onClick={addDoctor} w={{base:"80%",md:"50%"}} colorScheme="green" mt={4}>
-                  Register
-                </Button>
-              </Box>
+            <Box bg={"#131619"} color={"white"} w={"100%"} h={"100%"} p={4}>
+              <Header width={{ base: "90%", md: "100%" }} title={"Manage your Doctors"}/>
+
+              <Button onClick={onOpen} colorScheme="green" w={"100%"} mt={{base:"50%",md:"1%"}}>
+                Add Doctor
+              </Button>
+
+              <Modal  isOpen={isOpen} onClose={onClose} size="xl">
+                <ModalOverlay />
+                <ModalContent w={{base:"90%"}} color={"white"} bg={"#131619"}>
+                  <ModalHeader>Add New Doctor</ModalHeader>
+                  <ModalBody>
+                    <CustomInputs
+                      icon={FaUser}
+                      label={"Full Name"}
+                      name="drname"
+                      value={form.drname}
+                      width={{ base: "90%", md: "100%" }}
+                      onChange={handleInputChange}
+                      placeholder={"Enter your full name"}
+                    />
+                    <CustomInputs
+                      icon={FaUser}
+                      label={"Phone number"}
+                      name="phone"
+                      value={form.phone}
+                      width={{ base: "90%", md: "100%" }}
+                      onChange={handleInputChange}
+                      placeholder={"+254 0000000"}
+                    />
+                    <CustomInputs
+                      icon={FaUser}
+                      label={"Email"}
+                      name="email"
+                      value={form.email}
+                      width={{ base: "90%", md: "100%" }}
+                      onChange={handleInputChange}
+                      placeholder={"example@gmail.com"}
+                    />
+                    <FormControl mt={4}>
+                      <Text mb={2}>Upload Document</Text>
+                      <Input
+                        type="file"
+                        width={{ base: "90%", md: "100%" }}
+                        name="idDocument"
+                        onChange={handleFileChange}
+                        accept="image/*"
+                      />
+                    </FormControl>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button w={{base:"100%",md:"50%"}} colorScheme="green" onClick={addDoctor}>
+                      Register
+                    </Button>
+                    
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+
               <Box mt={"1%"}>
-                <Doctorsdata/>
+                <Doctorsdata />
               </Box>
             </Box>
           </>

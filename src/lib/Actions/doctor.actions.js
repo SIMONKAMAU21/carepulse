@@ -9,6 +9,8 @@ export const registerDoctor = async (doctorData) => {
   try {
     const doctorDetails = {
       drname: doctorData.drname,
+      phone:doctorData.phone,
+      email:doctorData.email,
       doctorPhotoUrl: doctorData.doctorPhotoUrl,
     };
     const doctor = await databases.createDocument(

@@ -5,7 +5,7 @@ import Sidebar from "../Pages/layout/sidebar";
 import { IconBase } from "react-icons/lib";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
-const Header = ({width}) => {
+const Header = ({width,title,subTitle}) => {
     const { isOpen, onOpen, onClose } = useDisclosure(); 
 
 
@@ -38,8 +38,8 @@ const Header = ({width}) => {
         align="start"
         p={4}
       >
-        <Heading>Welcome, Admin</Heading>
-        <Text>Start your day by managing new appointments</Text>
+        <Heading>{title}</Heading>
+        <Text>{subTitle}</Text>
       </VStack>
 
       {isOpen && <Sidebar onClose={onClose} />} 

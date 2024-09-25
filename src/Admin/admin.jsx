@@ -137,7 +137,7 @@ const Admin = () => {
 
   return (
     <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"} p={4}>
-      <Header width={{ base: "90%", md: "99%" }} />
+      <Header width={{ base: "90%", md: "99%" }} title={"Welcome Admin 😄"} subTitle={"Start day with managing new appointments"} />
       <SimpleGrid
         mt={{ base: "60%", md: "0%" }}
         columns={{ base: 1, md: 3 }}

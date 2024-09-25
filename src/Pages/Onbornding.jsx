@@ -17,7 +17,7 @@ import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import Logo from "../assets/Logo.svg";
 import PasskeyModal from "./passkeyModal";
 
-const formatPhoneNumber = (number) => {
+export const formatPhoneNumber = (number) => {
   const cleanNumber = number.replace(/[^\d+]/g, "");
   if (cleanNumber.length > 15) {
     return cleanNumber.slice(0, 15);
