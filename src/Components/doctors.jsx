@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getDoctors } from "../lib/Actions/doctor.actions";
-import { Box, Spinner, Text, VStack, Image } from "@chakra-ui/react";
+import { Box, Spinner, Text, VStack, Image, HStack } from "@chakra-ui/react";
 
 const Doctorsdata = () => {
   const [doctors, setDoctors] = useState([]); // To store doctors data
@@ -44,16 +44,19 @@ const Doctorsdata = () => {
     <VStack spacing={4} p={4}>
       {doctors.length > 0 ? (
         doctors.map((doctor) => (
-          <Box key={doctor.$id} p={4} borderWidth="1px" borderRadius="md" w="100%">
-            <Text fontSize="lg" fontWeight="bold">{doctor.drname}</Text>
-            <Image
-              src={doctor.doctorPhotoUrl} // Display the doctor's photo
+          <Box key={doctor.$id} p={{base:"1px",md:"3px"}} h={"50%"} borderRadius="md" w="100%">
+          <HStack>
+          <Image
+              src={doctor.doctorPhotoUrl} 
               alt={doctor.drname}
-              boxSize="150px"
+              boxSize="50px"
               objectFit="cover"
-              borderRadius="md"
-              mt={2}
+              borderRadius="50%"
+            //   mt={2}
             />
+          <Text fontSize="lg" >{doctor.drname}</Text>
+           
+          </HStack>
           </Box>
         ))
       ) : (

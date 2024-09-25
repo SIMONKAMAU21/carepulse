@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "../Components/header";
 import { Box, Button, FormControl, Image, Input, Text } from "@chakra-ui/react";
 import AuthWrapper from "../Components/OnboarndingWrapper";
-import illustration from "../assets/illustration1.png";
+import illustration from "../assets/Illustration1.png";
 import CustomInputs from "../Components/CustomInputs";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { registerDoctor } from "../lib/Actions/doctor.actions";
@@ -88,6 +88,15 @@ const Adddoctor = () => {
                   label={"Full Name"}
                   name="drname"
                   value={form.drname}
+                  width={{base:"80%",md:"50%"}}
+                  onChange={handleInputChange}
+                  placeholder={"Enter your full name"}
+                />
+                     <CustomInputs
+                  icon={FaUser}
+                  label={"Phone number"}
+                  name="phone"
+                  value={form.phone}
                   width={{base:"80%",md:"50%"}}
                   onChange={handleInputChange}
                   placeholder={"Enter your full name"}
