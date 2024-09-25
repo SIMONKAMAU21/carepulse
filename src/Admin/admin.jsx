@@ -58,13 +58,6 @@ const Admin = () => {
     const fetchAppointments = async () => {
       try {
         const response = await getRecentAppointmentList();
-        if (!response) {
-          return (
-            <Box>
-              <Text>no data</Text>
-            </Box>
-          );
-        }
         if (response) {
           setAppointments(response);
         } else {
@@ -360,9 +353,6 @@ const Admin = () => {
             >
               Save
             </Button>
-            {/* <Button onClick={onClose} ml={3}>
-              Close
-            </Button> */}
           </ModalFooter>
         </ModalContent>
       </Modal>
