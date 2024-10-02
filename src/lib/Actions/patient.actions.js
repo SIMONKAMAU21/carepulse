@@ -77,6 +77,8 @@ export const registerUser = async (userData, documentUrl) => {
       occupation: userData.occupation,
       privacyConsent: userData.privacyConsent,
       emergencyContact: userData.emergencyContact,
+      primaryPhysician:userData.primaryPhysician,
+      emergencyContactName:userData.emergencyContactName,
       insuranceProvider: userData.insuranceProvider,
       insurancePolicyNumber: userData.insurancePolicyNumber,
       allergies: userData.allergies,
@@ -104,3 +106,30 @@ export const registerUser = async (userData, documentUrl) => {
     throw error;
   }
 };
+export const getPatients = async () => {
+  try {
+    const patients = await databases.listDocuments(
+      VITE_DATABASE_ID,
+      VITE_PATIENT_COLLECTION_ID,
+    );
+    return patients;
+  } catch (error) {
+    console.error(
+      "An error occurred while retrieving the recent patients:",
+      error
+    );
+  }
+};
+
+export const deletePatient = async(patientId)=>{
+  try {
+    const patient = await databases.deleteDocument(
+      VITE_DATABASE_ID,
+      VITE_PATIENT_COLLECTION_ID,
+      patientId
+    )
+    return patient
+  } catch (error) {
+    throw error
+  }
+}

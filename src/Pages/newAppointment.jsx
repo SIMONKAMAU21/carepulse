@@ -7,16 +7,23 @@ import {
   Text,
   Textarea,
   FormLabel,
-  Select,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Flex,
+  Input,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import logo from "../assets/Logo.svg";
 import illustration from "../assets/doc2.png";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import CustomInputs from "../Components/CustomInputs";
-import { FaCalendarAlt, FaSearch } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import { getPatient } from "../lib/Actions/patient.actions";
 import { addAppointment } from "../lib/Actions/appointment.actions";
+import { getDoctors } from "../lib/Actions/doctor.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
 
@@ -24,21 +31,17 @@ const Appointment = () => {
   const [form, setForm] = useState({
     doctor: "",
     patientId: "",
+    doctorId:"",
     userId: "",
     appointmentReason: "",
     preferences: "",
     appointmentDate: "",
-    status: "pending",  // default status
+    status: "pending", 
   });
+
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
-  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -52,7 +55,6 @@ const Appointment = () => {
             userId: fetchedUser.userId,
             patientId: fetchedUser.$id,
           }));
-          // console.log("fetchedUser", fetchedUser);
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -61,25 +63,54 @@ const Appointment = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await getDoctors();
+        setDoctors(response.documents);
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDoctors();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
+  };
+
+  const handleDoctorSelect = (doctorName, doctorId) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      doctor: doctorName, 
+      doctorId: doctorId,  
+    }));
+  };
+  
+
   const handleSubmit = async () => {
     LoadingToast(true);
     try {
       const appointmentData = {
         doctor: form.doctor || "",
+        doctorId: form.doctorId || "",
         patientId: form.patientId || "",
         userId: form.userId || "",
         appointmentReason: form.appointmentReason || "",
         preferences: form.preferences || "",
         appointmentDate: form.appointmentDate || "",
-        status: form.status || "pending",  // include status in data submission
+        status: form.status || "pending",
       };
       const newAppointment = await addAppointment(appointmentData);
-      // console.log("newAppointment", newAppointment);
       setForm({});
-      SuccessToast("appointment added");
-      navigate(
-        `/success/${form.userId}/appointment/${newAppointment.$id}`
-      );
+      SuccessToast("Appointment added");
+      navigate(`/success/${form.userId}/appointment/${newAppointment.$id}`);
       LoadingToast(false);
     } catch (error) {
       ErrorToast(error);
@@ -97,14 +128,41 @@ const Appointment = () => {
             <Text>Request a new appointment in 10 seconds</Text>
           </Box>
           <Box mt={{ base: "10%", md: "5%" }}>
-            <CustomInputs
-              label={"Doctor"}
-              icon={FaSearch}
-              name="doctor"
-              value={form.doctor}
-              onChange={handleInputChange}
-              placeholder={"ex: Doctor Simon"}
-            />
+            <FormLabel variant={"outline"}>Select Doctor</FormLabel>
+            <Menu>
+              <MenuButton
+                variant={"outline"}
+                w={"100%"}
+                color={"white"}
+                as={Button}
+                backgroundColor={"none"}
+                colorScheme="none"
+                rightIcon={<ChevronDownIcon />}
+              >
+                {form.doctor ? form.doctor : "Select Doctor"}
+              </MenuButton>
+              <MenuList>
+                {doctors.map((doctor) => (
+                  <MenuItem
+                    color={"black"}
+                    key={doctor.$id}
+                    onClick={() => handleDoctorSelect(doctor.drname,doctor.$id)}
+                  >
+                    <Flex align="center">
+                      <Image
+                        src={doctor.doctorPhotoUrl}
+                        alt={doctor.drname}
+                        boxSize="30px"
+                        borderRadius="full"
+                        mr={3}
+                      />
+                      <Text>{doctor.drname}</Text>
+                    </Flex>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+
             <Grid
               mt={"1%"}
               templateColumns={{ base: "1fr", md: "1fr 1fr" }}
@@ -137,6 +195,7 @@ const Appointment = () => {
                 />
               </Box>
             </Grid>
+
             <CustomInputs
               label={"Expected appointment date"}
               icon={FaCalendarAlt}
@@ -145,20 +204,6 @@ const Appointment = () => {
               value={form.appointmentDate}
               onChange={handleInputChange}
             />
-
-            {/* Add Status Select Input */}
-            {/* <FormLabel htmlFor="status">Appointment Status</FormLabel>
-            <Select
-              id="status"
-              name="status"
-              value={form.status}
-              onChange={handleInputChange}
-              placeholder="Select appointment status"
-            >
-              <option value="pending">Pending</option>
-              <option value="scheduled">Scheduled</option>
-              <option value="cancelled">Cancelled</option>
-            </Select> */}
 
             <Button
               mt={{ base: "20%", md: "10%" }}

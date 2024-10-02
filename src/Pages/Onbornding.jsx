@@ -99,7 +99,7 @@ const Onboarding = () => {
       <AuthWrapper
         leftChildren={
           <>
-            <Box ml={{ base: "9%", md: "20%" }} h={"100%"}>
+            <Box ml={{ base: "9%", md: "20%" }}>
               <Image mt={"10%"} src={Logo} alt="Logo" />
               <Box mt={"5%"}>
                 <Heading>Hi there, ....</Heading>

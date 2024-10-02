@@ -9,6 +9,7 @@ import Appointment from "./Pages/newAppointment";
 import Success from "./Pages/appointmentSuccess";
 import Admin from "./Admin/admin";
 import Adddoctor from "./Admin/adddoctor";
+import Patients from "./Admin/Patients";
 
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
           />
           <Route path="/admin" element={<Admin />} />
           <Route path="/doctor" element={<Adddoctor/>} />
+          <Route path="/Patients" element={<Patients/>} />
+
 
         </Routes>
       </BrowserRouter>

@@ -4,12 +4,14 @@ import {
   messaging,
   VITE_APPOINTMENT_COLLECTION_ID,
   VITE_DATABASE_ID,
+  VITE_DOCTOR_COLLECTION_ID,
 } from "../appwriteConfig";
 
 export const addAppointment = async (userData) => {
   try {
     const additionalDetails = {
       userId: userData.userId,
+      doctorId: userData.doctorId,
       patientId: userData.patientId,
       doctor: userData.doctor,
       appointmentReason: userData.appointmentReason,
@@ -57,9 +59,13 @@ export const updateAppointment = async (userId, appointmentId, data) => {
     );
 
     const smsNotification = `Hi, it's carePulse. 
-      ${data.status === "Scheduled" ? `Your appointment has been scheduled for ${data.appointmentDate}` : `We regret to inform you that your appointment has been cancelled for the following reason: ${data.cancelReason}`}
+      ${
+        data.status === "Scheduled"
+          ? `Your appointment has been scheduled for ${data.appointmentDate}`
+          : `We regret to inform you that your appointment has been cancelled for the following reason: ${data.cancelReason}`
+      }
     `;
-    
+
     await sendSms(userId, smsNotification);
     return updatedAppointment;
   } catch (error) {
@@ -83,8 +89,8 @@ export const getRecentAppointmentList = async () => {
     };
 
     const counts = appointments.documents.reduce((acc, appointment) => {
-      const status = appointment.status; 
-      console.log("Status found:", status); 
+      const status = appointment.status;
+      console.log("Status found:", status);
       switch (status) {
         case "Scheduled":
           acc.scheduledCount++;
@@ -123,6 +129,27 @@ export const sendSms = async (userId, content) => {
     );
     return message;
   } catch (error) {
-    throw(error)
+    throw error;
+  }
+};
+
+export const getAppointmentWithDoctor = async (appointmentId) => {
+  try {
+    const appointment = await databases.getDocument(
+      VITE_DATABASE_ID,
+      VITE_APPOINTMENT_COLLECTION_ID,
+      appointmentId
+    );
+    console.log("appointment", appointment);
+    const doctor = await databases.getDocument(
+      VITE_DATABASE_ID,
+      VITE_DOCTOR_COLLECTION_ID,
+      appointment.doctorId
+    );
+    console.log("doctor", doctor);
+    return { ...appointment, doctor };
+  } catch (error) {
+    console.error("Error fetching appointment and doctor:", error);
+    throw error;
   }
 };

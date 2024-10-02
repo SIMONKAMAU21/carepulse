@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getDoctors } from "../lib/Actions/doctor.actions";
+import { deleteDoctor, getDoctors } from "../lib/Actions/doctor.actions";
 import {
   Box,
   Spinner,
@@ -12,26 +12,33 @@ import {
   Tr,
   Th,
   Td,
-  HStack,
   Input,
-  InputGroup,
-  Icon,
-  InputLeftElement,
+  Button,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
-import { FaSearch } from "react-icons/fa";
 import SearchInput from "./Search";
+import { FaSearch } from "react-icons/fa";
+import { ErrorToast, LoadingToast, SuccessToast } from "./toaster";
 
 const Doctorsdata = () => {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDoctorId, setSelectedDoctorId] = useState(null); 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const cancelRef = React.useRef();
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         const response = await getDoctors();
-        setDoctors(response);
+        setDoctors(response.documents || []);
       } catch (error) {
         setError("Failed to fetch doctors data");
       } finally {
@@ -42,71 +49,73 @@ const Doctorsdata = () => {
     fetchDoctors();
   }, []);
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minH="100vh"
-      >
-        <Spinner size="xl" color="blue.500" />
-      </Box>
-    );
-  }
+  const handleDelete = async (doctorId) => {
+    try {
+      LoadingToast(true);
+      await deleteDoctor(doctorId);
+      SuccessToast("Doctor deleted successfully");
+      setDoctors(doctors.filter((doctor) => doctor.$id !== doctorId));
+    } catch (error) {
+      ErrorToast("Failed to delete the doctor");
+    } finally {
+      LoadingToast(false);
+    }
+  };
 
-  if (error) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minH="100vh"
-      >
-        <Text color="red.500" fontSize="lg">
-          {error}
-        </Text>
-      </Box>
-    );
-  }
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
-  const filteredDoctor = doctors?.documents?.filter((doctor) => {
-    return doctor?.drname?.toLowerCase().includes(searchTerm)||  doctor?.phone?.toLowerCase().includes(searchTerm)||  doctor?.email?.toLowerCase().includes(searchTerm)
+
+  const filteredDoctors = doctors.filter((doctor) => {
+    return (
+      doctor.drname.toLowerCase().includes(searchTerm) ||
+      doctor.phone.toLowerCase().includes(searchTerm) ||
+      doctor.email.toLowerCase().includes(searchTerm)
+    );
   });
+
+  const handleOpenDeleteDialog = (doctorId) => {
+    setSelectedDoctorId(doctorId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setSelectedDoctorId(null);
+    setIsDeleteDialogOpen(false);
+  };
 
   return (
     <Box>
-      <Box mt={{ base: "1%", md: "1%" }} w={{ base: "100%", md: "50%" }}>
+      <Box mt="2%" w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
           onChange={handleSearch}
-          placeholder={"search doctor by phone or name"}
+          placeholder={"Search doctor by name, phone, or email"}
         />
-      </Box>{" "}
-      {filteredDoctor?.length > 0 ? (
-        <Box
-          w={{ base: "100%" }}
-          mt={{ base: "10%", md: "0%" }}
-          h={"80%"}
-          overflowX="auto"
-        >
-          <Table
-            variant={"simple"}
-            colorScheme="whiteAlpha"
-            size={{ base: "sm", md: "md" }}
-          >
+      </Box>
+
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" minH="40vh">
+          <Spinner size="xl" color="blue.500" />
+        </Box>
+      ) : error ? (
+        <Text color="red.500" fontSize="lg" textAlign="center">
+          {error}
+        </Text>
+      ) : filteredDoctors.length > 0 ? (
+        <Box w="100%" mt="5%" overflowX="auto">
+          <Table variant="simple" colorScheme="whiteAlpha" size="md">
             <Thead>
               <Tr>
                 <Th>Photo</Th>
-                <Th> DoctorFullName</Th>
+                <Th>Doctor Full Name</Th>
                 <Th>Phone Number</Th>
                 <Th>Email</Th>
+                <Th>Actions</Th>
               </Tr>
             </Thead>
-            <Tbody color={""}>
-              {filteredDoctor.map((doctor) => (
+            <Tbody>
+              {filteredDoctors.map((doctor) => (
                 <Tr key={doctor.$id}>
                   <Td>
                     <Image
@@ -115,8 +124,6 @@ const Doctorsdata = () => {
                       boxSize="50px"
                       objectFit="cover"
                       borderRadius="50%"
-                      position="relative"
-                      zIndex="1"
                       transition="transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out"
                       _hover={{
                         transform: "scale(3)",
@@ -127,9 +134,14 @@ const Doctorsdata = () => {
                       }}
                     />
                   </Td>
-                  <Td w={"10%"}>{doctor.drname}</Td>
+                  <Td>{doctor.drname}</Td>
                   <Td>{doctor.phone}</Td>
                   <Td>{doctor.email}</Td>
+                  <Td>
+                    <Button size="sm" colorScheme="red" onClick={() => handleOpenDeleteDialog(doctor.$id)}>
+                      Delete Doctor
+                    </Button>
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
@@ -138,6 +150,36 @@ const Doctorsdata = () => {
       ) : (
         <Text>No doctors found.</Text>
       )}
+
+      <AlertDialog
+        isOpen={isDeleteDialogOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={handleCloseDeleteDialog}
+      >
+        <AlertDialogOverlay >
+          <AlertDialogContent w={{base:"90%"}} color={"white"}  bg={"#131619"}>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Doctor
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete this doctor? This action cannot be undone.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={handleCloseDeleteDialog}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={() => {
+                handleDelete(selectedDoctorId);
+                handleCloseDeleteDialog();
+              }} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

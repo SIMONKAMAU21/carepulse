@@ -12,7 +12,7 @@ import {
 export const sidebarLinks = [
   { path: "/admin", label: "Dashboard", icon: MdDashboard },
   { path: "/doctor", label: "Add doctor", icon: MdMonetizationOn },
-  { path: "/reports", label: "Patients", icon: MdAssessment },
+  { path: "/Patients", label: "Patients", icon: MdAssessment },
   { path: "/statements", label: "Statements", icon: MdReceipt },
   { path: "/settings", label: "Settings", icon: MdSettings },
 ];

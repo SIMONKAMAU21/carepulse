@@ -87,8 +87,8 @@ const Register = () => {
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-    setConsents((prevConsents) => ({
-      ...prevConsents,
+    setConsents((privacyConsent) => ({
+      ...privacyConsent,
       [name]: checked,
     }));
   };
@@ -114,7 +114,8 @@ const Register = () => {
         birthDate: form.birthDate,
         occupation: form.occupation,
         privacyConsent: form.privacyConsent,
-        emergencyContact: form.emergencyContact,
+        emergencyContactName: form.emergencyContactName,
+        emergencyContact:form.emergencyContact,
         insuranceProvider: form.insuranceProvider,
         insurancePolicyNumber: form.insurancePolicyNumber,
         allergies: form.allergies,
@@ -124,8 +125,8 @@ const Register = () => {
         identificationType: form.identificationType,
         identificationNumber: form.identificationNumber,
         identificationUrl: selectedFile,
+        primaryPhysician:form.primaryPhysician
       };
-      // console.log("userData", userData);
 
       const data = new FormData();
       data.append("file", selectedFile);
@@ -265,8 +266,8 @@ const Register = () => {
                 <CustomInputs
                   icon={FaUser}
                   label={"Emergency Contact Name"}
-                  name="emergencyContact"
-                  value={form.emergencyContact || ""}
+                  name="emergencyContactName"
+                  value={form.emergencyContactName || ""}
                   onChange={handleInputChange}
                   placeholder={"Guardian's name"}
                   type="text"
@@ -274,8 +275,8 @@ const Register = () => {
                 <CustomInputs
                   icon={FaPhone}
                   label={"Emergency Contact Phone"}
-                  name="emergencyPhone"
-                  value={form.emergencyPhone || ""}
+                  name="emergencyContact"
+                  value={form.emergencyContact || ""}
                   onChange={handleInputChange}
                   placeholder={"Enter emergency contact phone number"}
                   type="tel"
@@ -294,8 +295,8 @@ const Register = () => {
               <CustomInputs
                 icon={FaUser}
                 label={"Primary Care Physician"}
-                name="primaryCarePhysician"
-                value={form.primaryCarePhysician || ""}
+                name="primaryPhysician"
+                value={form.primaryPhysician || ""}
                 onChange={handleInputChange}
                 placeholder={"Enter your physician's name"}
               />
@@ -331,7 +332,7 @@ const Register = () => {
                   icon={FaAddressBook}
                   label={"Current Medications"}
                   name="currentMedications"
-                  value={form.currentMedications || ""}
+                  value={form.currentMedication || ""}
                   onChange={handleInputChange}
                   placeholder={"e.g., Ibuprofen 200mg"}
                   type="text"
@@ -417,7 +418,7 @@ const Register = () => {
               <Checkbox
                 name="disclosure"
                 isChecked={consents.disclosure}
-                value={form.prevConsents}
+                value={form.privacyConsent}
                 onChange={handleCheckboxChange}
               >
                 I consent to disclose my medical information to authorized
@@ -426,7 +427,7 @@ const Register = () => {
               <Checkbox
                 name="privacyPolicy"
                 isChecked={consents.privacyPolicy}
-                value={form.prevConsents}
+                value={form.privacyConsent}
                 onChange={handleCheckboxChange}
               >
                 I have read and agree to the privacy policy.

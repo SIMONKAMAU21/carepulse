@@ -1,6 +1,7 @@
 import { ID } from "node-appwrite";
 import {
   databases,
+  VITE_APPOINTMENT_COLLECTION_ID,
   VITE_DATABASE_ID,
   VITE_DOCTOR_COLLECTION_ID,
 } from "../appwriteConfig";
@@ -31,7 +32,6 @@ export const getDoctors = async () => {
       VITE_DATABASE_ID,
       VITE_DOCTOR_COLLECTION_ID
     );
-    console.log("appointments", appointments);
     return appointments;
   } catch (error) {
     console.error(
@@ -40,3 +40,16 @@ export const getDoctors = async () => {
     );
   }
 };
+
+export const deleteDoctor = async (doctorId)=>{
+  try {
+    const doctor = await databases.deleteDocument(
+      VITE_DATABASE_ID,
+      VITE_DOCTOR_COLLECTION_ID,
+      doctorId,
+    )
+    return doctor
+  } catch (error) {
+    throw error
+  }
+}

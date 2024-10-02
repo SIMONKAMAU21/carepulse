@@ -20,7 +20,6 @@ const Success = () => {
         setAppointment(fetchedAppointment);
       } catch (error) {
         setError("Error fetching appointment");
-        // console.error("Error fetching appointment:", error);
       } finally {
         setLoading(false);
       }
