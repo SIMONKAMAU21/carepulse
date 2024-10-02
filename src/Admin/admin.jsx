@@ -27,6 +27,9 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  IconButton,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 
 import {
@@ -38,9 +41,11 @@ import {
   FaCalendarCheck,
   FaClock,
   FaExclamationTriangle,
+  FaSearch,
 } from "react-icons/fa";
 import { ErrorToast, SuccessToast } from "../Components/toaster";
 import Header from "../Components/header";
+import SearchInput from "../Components/Search";
 
 const Admin = () => {
   const [appointments, setAppointments] = useState({
@@ -49,9 +54,10 @@ const Admin = () => {
     pendingCount: 0,
     cancelledCount: 0,
   });
-  const { isOpen, onOpen, onClose } = useDisclosure(); 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] =
     useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isScheduleModal, setIsScheduleModal] = useState(false);
 
   useEffect(() => {
@@ -134,10 +140,23 @@ const Admin = () => {
       }
     }
   };
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
 
+  const filteredAppointments = appointments.documents.filter((appointment) => {
+    return (
+      appointment?.patientId?.name?.toLowerCase().includes(searchTerm)||
+      appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
+    );
+  });
   return (
     <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"} p={4}>
-      <Header width={{ base: "90%", md: "99%" }} title={"Welcome Admin 😄"} subTitle={"Start day with managing new appointments"} />
+      <Header
+        width={{ base: "90%", md: "99%" }}
+        title={"Welcome Admin 😄"}
+        subTitle={"Start day with managing new appointments"}
+      />
       <SimpleGrid
         mt={{ base: "60%", md: "0%" }}
         columns={{ base: 1, md: 3 }}
@@ -225,7 +244,13 @@ const Admin = () => {
           </VStack>
         </Box>
       </SimpleGrid>
-
+      <Box mt={{ base: "none", md: "1%" }} w={{ base: "100%", md: "50%" }}>
+      <SearchInput
+      value={searchTerm}
+      onChange={handleSearch}
+      placeholder={"search appointments by name or phone"}
+      />
+      </Box>
       <Box p={4} mt={4} h={"50%"} overflowX="auto">
         <Table variant="simple" colorScheme="whiteAlpha" size={"md"}>
           <Thead>
@@ -238,8 +263,8 @@ const Admin = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {appointments.documents.length > 0 ? (
-              appointments.documents.map((appointment, index) => (
+            {filteredAppointments?.length > 0 ? (
+              filteredAppointments.map((appointment, index) => (
                 <Tr key={appointment?.$id}>
                   <Td>
                     <HStack>
@@ -302,7 +327,7 @@ const Admin = () => {
             ) : (
               <Tr>
                 <Td colSpan={5} textAlign="center">
-                  <Icon mr={"1%"} src={FaClock} />
+                  <Icon mr={"1%"} as={FaClock} />
                   No appointments found.
                 </Td>
               </Tr>
@@ -347,7 +372,7 @@ const Admin = () => {
           </ModalBody>
           <ModalFooter>
             <Button
-            w={"100%"}
+              w={"100%"}
               colorScheme={isScheduleModal ? "green" : "red"}
               onClick={isScheduleModal ? handleSaveSchedule : handleSaveCancel}
             >

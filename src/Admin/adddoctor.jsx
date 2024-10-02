@@ -84,6 +84,7 @@ const Adddoctor = () => {
 
         setForm({}); 
         SuccessToast("Registration succeeded");
+        onClose()
       } else {
         throw new Error("Cloudinary upload failed");
       }
@@ -158,7 +159,7 @@ const Adddoctor = () => {
                 </ModalContent>
               </Modal>
 
-              <Box mt={"1%"}>
+              <Box mt={"1%"} overflow={"scroll"} h={"70%"} >
                 <Doctorsdata />
               </Box>
             </Box>

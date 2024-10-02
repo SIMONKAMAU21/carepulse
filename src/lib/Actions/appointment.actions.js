@@ -68,7 +68,6 @@ export const updateAppointment = async (userId, appointmentId, data) => {
   }
 };
 
-//  GET RECENT APPOINTMENTS
 export const getRecentAppointmentList = async () => {
   try {
     const appointments = await databases.listDocuments(
@@ -84,8 +83,8 @@ export const getRecentAppointmentList = async () => {
     };
 
     const counts = appointments.documents.reduce((acc, appointment) => {
-      const status = appointment.status; // Normalize to lowercase
-      console.log("Status found:", status); // Log each status found
+      const status = appointment.status; 
+      console.log("Status found:", status); 
       switch (status) {
         case "Scheduled":
           acc.scheduledCount++;
@@ -124,6 +123,6 @@ export const sendSms = async (userId, content) => {
     );
     return message;
   } catch (error) {
-    // console.log("smserror", error);
+    throw(error)
   }
 };
