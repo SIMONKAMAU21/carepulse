@@ -20,6 +20,7 @@ import {
   useDisclosure,
   HStack,
   Spacer,
+  Avatar,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Header from "../Components/header";
@@ -57,14 +58,14 @@ const Patients = () => {
       LoadingToast(true);
       await deletePatient(patientId);
       SuccessToast("Patient deleted successfully");
-      setPatients(patients.filter(patient => patient.$id !== patientId)); 
+      setPatients(patients.filter((patient) => patient.$id !== patientId));
     } catch (error) {
       ErrorToast("Failed to delete patient");
     } finally {
       LoadingToast(false);
     }
   };
-  
+
   const spanStyles = {
     fontWeight: "bold",
     color: "grey",
@@ -98,24 +99,45 @@ const Patients = () => {
                 <Tr>
                   <Th>Name</Th>
                   <Th>Email</Th>
-                  <Th>Phone</Th>
-                  <Th>Insurance Provider</Th>
+                  <Th display={{ base: "none", md: "table-cell" }}>Phone</Th>
+                  <Th display={{ base: "none", md: "table-cell" }}>
+                    Insurance Provider
+                  </Th>
                   <Th>Action</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {patients.map((patient) => (
                   <Tr key={patient.$id}>
-                    <Td>{patient.name}</Td>
-                    <Td>{patient.email}</Td>
-                    <Td>{patient.phone}</Td>
-                    <Td>{patient.insuranceProvider}</Td>
                     <Td>
-                      <Button size={"sm"} onClick={() => handlePatientSelect(patient)}>
+                      <HStack>
+                        <Avatar name={patient.name} />
+                        <Text> {patient.name}</Text>
+                      </HStack>
+                    </Td>
+                    <Td>{patient.email}</Td>
+                    <Td display={{ base: "none", md: "table-cell" }}>
+                      {patient.phone}
+                    </Td>
+                    <Td display={{ base: "none", md: "table-cell" }}>
+                      {patient.insuranceProvider}
+                    </Td>
+                    <Td>
+                      <Button
+                        w={"100%"}
+                        size={"sm"}
+                        onClick={() => handlePatientSelect(patient)}
+                      >
                         View More
                       </Button>
-                      <Spacer/>
-                      <Button mt={"5%"} size={"sm"} colorScheme={"red"} onClick={()=>handleDelete(patient.$id)}>
+                      <Spacer />
+                      <Button
+                        mt={"5%"}
+                        w={"100%"}
+                        size={"sm"}
+                        colorScheme={"red"}
+                        onClick={() => handleDelete(patient.$id)}
+                      >
                         Delete patient
                       </Button>
                     </Td>
