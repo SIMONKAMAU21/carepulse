@@ -71,9 +71,9 @@ const Patients = () => {
     color: "grey",
   };
   return (
-    <Box h={"100%"} w={"100%"} bg={"#131619"}>
+    <Box h={"100%"} w={"100%"} bg={"#131619"} p={4}>
       <Header
-        width={{ base: "100%" }}
+        width={{ base: "90%", md: "99%" }}
         title={"Manage Your Patients"}
         subTitle={"View, update, and track patient details efficiently"}
       />
@@ -126,6 +126,7 @@ const Patients = () => {
                       <Button
                         w={"100%"}
                         size={"sm"}
+                        colorScheme="green"
                         onClick={() => handlePatientSelect(patient)}
                       >
                         View More

@@ -309,14 +309,16 @@ const Admin = () => {
                     <Button
                       colorScheme="green"
                       size="sm"
+                      w={"100%"}
                       onClick={() => openModal(index, true)}
                     >
                       Schedule
                     </Button>
                     <Button
-                      ml={2}
+                      mt={2}
                       colorScheme="red"
                       size="sm"
+                      w={"100%"}
                       onClick={() => openModal(index, false)}
                     >
                       Cancel
