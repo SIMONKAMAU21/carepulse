@@ -126,8 +126,9 @@ const Doctorsdata = () => {
                       borderRadius="50%"
                       transition="transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out"
                       _hover={{
-                        transform: "scale(3)",
+                        transform: "scale(4)",
                         zIndex: "1000",
+                        left:"20%",
                         position: "absolute",
                         boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",
                         borderRadius: "10px",
