@@ -151,7 +151,13 @@ const Admin = () => {
     );
   });
   return (
-    <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"} p={4}>
+    <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"}   sx={{
+      "::-webkit-scrollbar": {
+        display: "none",
+      },
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
+    }} overflow={"scroll"} p={4}>
       <Header
         width={{ base: "90%", md: "99%" }}
         title={"Welcome Admin 😄"}
@@ -162,7 +168,7 @@ const Admin = () => {
         columns={{ base: 1, md: 3 }}
         spacing={6}
         h={{ base: "25%", md: "10%" }}
-        overflowY={"scroll"}
+        overflow={"scroll"}
         sx={{
           "::-webkit-scrollbar": {
             display: "none",

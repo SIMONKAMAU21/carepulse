@@ -23,6 +23,7 @@ import {
   FaCalendar,
   FaIdCard,
   FaPhone,
+  FaUpload,
   FaUser,
   FaVoicemail,
 } from "react-icons/fa";
@@ -115,7 +116,7 @@ const Register = () => {
         occupation: form.occupation,
         privacyConsent: form.privacyConsent,
         emergencyContactName: form.emergencyContactName,
-        emergencyContact:form.emergencyContact,
+        emergencyContact: form.emergencyContact,
         insuranceProvider: form.insuranceProvider,
         insurancePolicyNumber: form.insurancePolicyNumber,
         allergies: form.allergies,
@@ -125,7 +126,7 @@ const Register = () => {
         identificationType: form.identificationType,
         identificationNumber: form.identificationNumber,
         identificationUrl: selectedFile,
-        primaryPhysician:form.primaryPhysician
+        primaryPhysician: form.primaryPhysician,
       };
 
       const data = new FormData();
@@ -388,13 +389,32 @@ const Register = () => {
                   placeholder={"e.g., A123456"}
                 />
                 <FormControl mt={4}>
-                  <Text mb={2}>Upload Document</Text>
+                  <Text>Upload Document</Text>
                   <Input
                     type="file"
                     name="idDocument"
+                    position={"absolute"}
                     onChange={handleFileChange}
                     accept="image/*"
+                    display={"none"}
+                    id="fileUpload"
                   />
+                  <Button
+                    onClick={() =>
+                      document.getElementById("fileUpload").click()
+                    }
+                    position={"relative"}
+                    zIndex={"1000"}
+                    top={"9%"}
+                    justifyContent={"flex-start"}
+                    bg={"#131619"}
+                    width={{ base: "100%", md: "100%" }}
+                    variant="outline"
+                    color={"grey"}
+                    leftIcon={<FaUpload />}
+                  >
+                    Upload Document
+                  </Button>
                 </FormControl>
               </Grid>
             </Box>
@@ -437,8 +457,9 @@ const Register = () => {
             <Button
               isLoading={loading}
               onClick={handleSubmit}
-              colorScheme="blue"
+              colorScheme="green"
               mt={4}
+              w={"100%"}
             >
               Register
             </Button>
@@ -447,7 +468,12 @@ const Register = () => {
       }
       rightChildren={
         <>
-          <Image src={doc} h={"100vh"} w={"100%"} objectFit={"cover"} />
+          <Image
+            src={doc}
+            h={{ base: "40vh", md: "100vh" }}
+            w={{ base: "100%", md: "100%" }}
+            objectFit={"cover"}
+          />
         </>
       }
     />
