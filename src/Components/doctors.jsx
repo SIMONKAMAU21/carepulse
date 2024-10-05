@@ -22,7 +22,6 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import SearchInput from "./Search";
-import { FaSearch } from "react-icons/fa";
 import { ErrorToast, LoadingToast, SuccessToast } from "./toaster";
 
 const Doctorsdata = () => {

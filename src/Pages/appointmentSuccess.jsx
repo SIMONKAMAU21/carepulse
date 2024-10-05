@@ -17,6 +17,7 @@ const Success = () => {
     const fetchAppointment = async () => {
       try {
         const fetchedAppointment = await getAppointment(appointmentId);
+        console.log("first", fetchedAppointment);
         setAppointment(fetchedAppointment);
       } catch (error) {
         setError("Error fetching appointment");
@@ -71,18 +72,36 @@ const Success = () => {
               </Heading>
               <Text mt={"5%"}>We'll be in touch shortly to confirm.</Text>
             </Box>
-            <Box display={"flex"} mt={"5%"} alignItems={"center"}>
+            <Box mt={"5%"} alignItems={"center"}>
               <Heading as={"h4"} size={{ base: "sm", md: "lg" }}>
                 Requested appointment details:
               </Heading>
+
               {appointment && (
-                <Box display={"flex"} alignItems={"center"}>
+                <Box
+                  fontSize={{ base: "14px", md: "18px" }}
+                  alignItems={"center"}
+                >
                   <Text w={"50%"}>
-                    <span style={{ color: "rgb(74,201,126)" }}>Doctor</span>{" "}
+                    <span
+                      style={{ color: "rgb(74,201,126)", fontWeight: "bold" }}
+                    >
+                      Doctor:{" "}
+                    </span>
                     {appointment.doctor}
                   </Text>
-                  <Box display={"flex"} alignItems={"center"}>
-                    <Image h={"30px"} w={"30px"} src={calender} />
+                  <Text>You are expect at this date:</Text>
+
+                  <Box
+                    color={"rgb(74,201,126)"}
+                    fontWeight={"bold"}
+                    display={"flex"}
+                    alignItems={"center"}
+                  >
+                    <Image
+                      boxSize={{ base: "20px", md: "30px" }}
+                      src={calender}
+                    />
                     {formatDate(appointment.appointmentDate)}
                   </Box>
                 </Box>

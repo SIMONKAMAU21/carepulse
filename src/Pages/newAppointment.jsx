@@ -98,13 +98,13 @@ const Appointment = () => {
     LoadingToast(true);
     try {
       const appointmentData = {
-        doctor: form.doctor || "",
-        doctorId: form.doctorId || "",
-        patientId: form.patientId || "",
-        userId: form.userId || "",
-        appointmentReason: form.appointmentReason || "",
-        preferences: form.preferences || "",
-        appointmentDate: form.appointmentDate || "",
+        doctor: form.doctor || "-",
+        doctorId: form.doctorId || "-",
+        patientId: form.patientId || "-",
+        userId: form.userId || "-",
+        appointmentReason: form.appointmentReason || "-",
+        preferences: form.preferences || "-",
+        appointmentDate: form.appointmentDate || "-",
         status: form.status || "pending",
       };
       const newAppointment = await addAppointment(appointmentData);
