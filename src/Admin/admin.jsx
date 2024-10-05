@@ -159,7 +159,7 @@ const Admin = () => {
       msOverflowStyle: "none",
     }} overflow={"scroll"} p={4}>
       <Header
-        width={{ base: "90%", md: "99%" }}
+        width={{ base: "100%", md: "99%" }}
         title={"Welcome Admin 😄"}
         subTitle={"Start day with managing new appointments"}
       />

@@ -7,6 +7,8 @@ import {
   VITE_DOCTOR_COLLECTION_ID,
 } from "../appwriteConfig";
 
+
+
 export const addAppointment = async (userData) => {
   try {
     const additionalDetails = {
@@ -90,7 +92,7 @@ export const getRecentAppointmentList = async () => {
 
     const counts = appointments.documents.reduce((acc, appointment) => {
       const status = appointment.status;
-      console.log("Status found:", status);
+      // console.log("Status found:", status);
       switch (status) {
         case "Scheduled":
           acc.scheduledCount++;
@@ -153,3 +155,4 @@ export const getAppointmentWithDoctor = async (appointmentId) => {
     throw error;
   }
 };
+

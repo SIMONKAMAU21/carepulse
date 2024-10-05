@@ -38,7 +38,7 @@ const Patients = () => {
     const fetchPatients = async () => {
       try {
         const response = await getPatients();
-        setPatients(response.documents);
+        setPatients(response?.documents);
       } catch (error) {
         setError("Failed to fetch patients data");
       } finally {
@@ -79,7 +79,7 @@ const Patients = () => {
       />
       <Box padding={4}>
         {loading ? (
-          <Spinner size="xl" />
+          <Text>loading....</Text>
         ) : error ? (
           <Text color="red.500">{error}</Text>
         ) : patients.length > 0 ? (

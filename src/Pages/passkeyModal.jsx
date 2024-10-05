@@ -67,7 +67,7 @@ const PasskeyModal = ({ isOpen, onClose }) => {
             <AlertDialogBody>
               To access the admin page, please enter the passkey:
               <HStack mt={4} spacing={4} justifyContent="center">
-                <PinInput size="lg"  onComplete={handleSubmit} otp>
+                <PinInput size="lg" mask type="alphanumeric"  onComplete={handleSubmit} otp>
                   <PinInputField />
                   <PinInputField />
                   <PinInputField />
