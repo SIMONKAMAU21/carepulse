@@ -14,6 +14,7 @@ const CustomInputs = ({ label,value, placeholder, icon: IconComponent,width, typ
         <Input 
           type={type} 
           value={value}
+          border={"1px solid gray"}
           placeholder={placeholder} 
           {...rest} 
           w={width}

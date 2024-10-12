@@ -14,6 +14,13 @@ import {
   Select,
   FormControl,
   Button,
+  FormLabel,
+  Menu,
+  MenuButton,
+  MenuList,
+  Textarea,
+  MenuItem,
+  Flex,
 } from "@chakra-ui/react";
 import doc from "../assets/doc1.png";
 import Logo from "../assets/Logo.svg";
@@ -21,20 +28,29 @@ import CustomInputs from "../Components/CustomInputs";
 import {
   FaAddressBook,
   FaCalendar,
+  FaCalendarAlt,
   FaIdCard,
   FaPhone,
   FaUpload,
   FaUser,
   FaVoicemail,
 } from "react-icons/fa";
-import { getUser, registerUser } from "../lib/Actions/patient.actions";
+import {
+  getPatient,
+  getUser,
+  registerUser,
+} from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
+import { getDoctors } from "../lib/Actions/doctor.actions";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const Register = () => {
+  const [patientExists, setPatientExists] = useState(false); // Track patient existence
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [doctor, setDoctor] = useState([]);
   const [consents, setConsents] = useState({
     treatment: false,
     disclosure: false,
@@ -43,15 +59,26 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await getDoctors();
+        setDoctor(response.documents);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
+  useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log("user", user);
     if (!user) {
       ErrorToast("your data is required");
       navigate("/");
     }
     if (user) {
       const userID = user.id;
-
       const fetchUserData = async () => {
         try {
           const fetchedUser = await getUser(userID);
@@ -77,7 +104,12 @@ const Register = () => {
       [name]: value,
     }));
   };
-
+  const handleDoctorSelect = (doctorName) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      primaryPhysician: doctorName,
+    }));
+  };
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
     setForm((prevForm) => ({
@@ -100,35 +132,34 @@ const Register = () => {
       gender: value,
     }));
   };
+  useEffect(() => {
+    const checkPatientExists = async () => {
+      if (form.userId) { 
+        const existingPatient = await getPatient(form.userId);
+        setPatientExists(!!existingPatient); 
+        if (existingPatient) {
+          navigate("/patient/dashbord"); 
+        }else{
+          return
+        }
+      }
+    };
+    
+    checkPatientExists(); 
+  }, [form.userId, navigate]); 
 
   const handleSubmit = async () => {
     setLoading(true);
     LoadingToast(true);
-    try {
-      const userData = {
-        email: form.email,
-        phone: form.phone,
-        userId: form.userId,
-        name: form.name,
-        gender: form.gender,
-        address: form.address,
-        birthDate: form.birthDate,
-        occupation: form.occupation,
-        privacyConsent: form.privacyConsent,
-        emergencyContactName: form.emergencyContactName,
-        emergencyContact: form.emergencyContact,
-        insuranceProvider: form.insuranceProvider,
-        insurancePolicyNumber: form.insurancePolicyNumber,
-        allergies: form.allergies,
-        currentMedication: form.currentMedication,
-        familyMedicalHistory: form.familyMedicalHistory,
-        pastMedicalHistory: form.pastMedicalHistory,
-        identificationType: form.identificationType,
-        identificationNumber: form.identificationNumber,
-        identificationUrl: selectedFile,
-        primaryPhysician: form.primaryPhysician,
-      };
 
+    if (!form.primaryPhysician || !selectedFile) {
+      ErrorToast("Please fill all required fields.");
+      setLoading(false);
+      LoadingToast(false);
+      return;
+    }
+
+    try {
       const data = new FormData();
       data.append("file", selectedFile);
       data.append("upload_preset", "wdfjbcug");
@@ -142,28 +173,31 @@ const Register = () => {
         }
       );
 
-      const responseJson = await cloudinaryRes.json();
-      if (cloudinaryRes.ok) {
-        const { secure_url } = responseJson;
-        userData.identificationUrl = secure_url;
-      } else {
+      if (!cloudinaryRes.ok) {
         throw new Error("Cloudinary upload failed");
       }
-      const newUser = await registerUser(userData);
 
-      setForm({});
-      SuccessToast("registration succeeded");
+      const responseJson = await cloudinaryRes.json();
+      const { secure_url } = responseJson;
+
+      // Prepare userData for registration
+      const userData = {
+        ...form,
+        identificationUrl: secure_url,
+      };
+
+      const newUser = await registerUser(userData);
+      if (!newUser) throw new Error("User registration failed");
+
+      SuccessToast("Registration succeeded");
       navigate("/Appointment");
-      setConsents({
-        treatment: true,
-        disclosure: true,
-        privacyPolicy: true,
-      });
     } catch (error) {
-      ErrorToast("failed to register");
+      console.error("Registration error:", error);
+      ErrorToast("Failed to register: " + error.message);
+    } finally {
+      setLoading(false);
+      LoadingToast(false);
     }
-    setLoading(false);
-    LoadingToast(false);
   };
 
   return (
@@ -293,14 +327,49 @@ const Register = () => {
               >
                 Medical Information
               </Heading>
-              <CustomInputs
-                icon={FaUser}
-                label={"Primary Care Physician"}
-                name="primaryPhysician"
-                value={form.primaryPhysician || ""}
-                onChange={handleInputChange}
-                placeholder={"Enter your physician's name"}
-              />
+              <Box mt={{ base: "10%", md: "5%" }}>
+                <FormLabel variant={"outline"}>
+                  Select primary Physician
+                </FormLabel>
+                <Menu>
+                  <MenuButton
+                    variant={"outline"}
+                    w={"100%"}
+                    color={"white"}
+                    border={"1px solid gray"}
+                    as={Button}
+                    backgroundColor={"none"}
+                    colorScheme="none"
+                    rightIcon={<ChevronDownIcon />}
+                  >
+                    {form.primaryPhysician
+                      ? form.primaryPhysician
+                      : "Select primary Physician"}
+                  </MenuButton>
+                  <MenuList>
+                    {doctor.map((doctor) => (
+                      <MenuItem
+                        color={"black"}
+                        key={doctor.$id}
+                        onClick={() =>
+                          handleDoctorSelect(doctor.drname, doctor.$id)
+                        }
+                      >
+                        <Flex align="center">
+                          <Image
+                            src={doctor.doctorPhotoUrl}
+                            alt={doctor.drname}
+                            boxSize="30px"
+                            borderRadius="full"
+                            mr={3}
+                          />
+                          <Text>{doctor.drname}</Text>
+                        </Flex>
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Menu>
+              </Box>
               <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
                 <CustomInputs
                   icon={FaVoicemail}
@@ -332,7 +401,7 @@ const Register = () => {
                 <CustomInputs
                   icon={FaAddressBook}
                   label={"Current Medications"}
-                  name="currentMedications"
+                  name="currentMedication"
                   value={form.currentMedication || ""}
                   onChange={handleInputChange}
                   placeholder={"e.g., Ibuprofen 200mg"}
@@ -371,8 +440,11 @@ const Register = () => {
                 <FormControl>
                   <Text mb={2}>Identification Type</Text>
                   <Select
+                    border={"1px solid gray"}
                     name="identificationType"
-                    value={form.identificationType || ""}
+                    value={
+                      form.identificationType || "select identification type"
+                    }
                     onChange={handleInputChange}
                   >
                     <option value="passport">Passport</option>

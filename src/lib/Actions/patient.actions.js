@@ -21,12 +21,12 @@ export const createUser = async (user) => {
       try {
         const userList = await users.list([
           Query.equal("email", user.email),
-          Query.equal("phone", user.phone)
-
-
+          Query.equal("phone", user.phone),
         ]);
         if (userList.total > 0) {
-          return { error: "A user with the same email or phone number already exists." };
+          return {
+            error: "A user with the same email or phone number already exists.",
+          };
         }
       } catch (listError) {
         return { error: "Error fetching user data." };
@@ -64,8 +64,16 @@ export const getPatient = async (userId) => {
     );
   }
 };
-export const registerUser = async (userData, documentUrl) => {
+export const registerUser = async (userData) => {
   try {
+     const existingUser = await databases.listDocuments(
+      VITE_DATABASE_ID,
+      VITE_PATIENT_COLLECTION_ID,
+      [Query.equal("email", userData.email)]
+    );
+    if (existingUser.documents.length > 0) {
+      throw new Error('Email is already registered.');
+    }
     const additionalDetails = {
       userId: userData.userId,
       phone: userData.phone,
@@ -77,8 +85,8 @@ export const registerUser = async (userData, documentUrl) => {
       occupation: userData.occupation,
       privacyConsent: userData.privacyConsent,
       emergencyContact: userData.emergencyContact,
-      primaryPhysician:userData.primaryPhysician,
-      emergencyContactName:userData.emergencyContactName,
+      primaryPhysician: userData.primaryPhysician,
+      emergencyContactName: userData.emergencyContactName,
       insuranceProvider: userData.insuranceProvider,
       insurancePolicyNumber: userData.insurancePolicyNumber,
       allergies: userData.allergies,
@@ -89,7 +97,6 @@ export const registerUser = async (userData, documentUrl) => {
       identificationNumber: userData.identificationNumber,
       identificationUrl: userData.identificationUrl,
     };
-
 
     const response = await databases.createDocument(
       VITE_DATABASE_ID,
@@ -110,7 +117,7 @@ export const getPatients = async () => {
   try {
     const patients = await databases.listDocuments(
       VITE_DATABASE_ID,
-      VITE_PATIENT_COLLECTION_ID,
+      VITE_PATIENT_COLLECTION_ID
     );
     return patients;
   } catch (error) {
@@ -121,15 +128,15 @@ export const getPatients = async () => {
   }
 };
 
-export const deletePatient = async(patientId)=>{
+export const deletePatient = async (patientId) => {
   try {
     const patient = await databases.deleteDocument(
       VITE_DATABASE_ID,
       VITE_PATIENT_COLLECTION_ID,
       patientId
-    )
-    return patient
+    );
+    return patient;
   } catch (error) {
-    throw error
+    throw error;
   }
-}
+};
