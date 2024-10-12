@@ -124,9 +124,14 @@ const Patients = () => {
                     </Td>
                     <Td>
                       <Button
-                        w={"100%"}
+                        w={{base:"100%",md:"60%"}}
                         size={"sm"}
-                        colorScheme="green"
+                        bg={"transparent"}
+                        border={"2px solid green"}
+                        color={"white"}
+                        _hover={{
+                          bg:"green"
+                        }}
                         onClick={() => handlePatientSelect(patient)}
                       >
                         View More
@@ -134,9 +139,14 @@ const Patients = () => {
                       <Spacer />
                       <Button
                         mt={"5%"}
-                        w={"100%"}
+                        w={{base:"100%",md:"60%"}}
                         size={"sm"}
-                        colorScheme={"red"}
+                        bg={"transparent"}
+                        border={"2px solid red"}
+                        color={"white"}
+                        _hover={{
+                          bg:"red.500"
+                        }}
                         onClick={() => handleDelete(patient.$id)}
                       >
                         Delete patient

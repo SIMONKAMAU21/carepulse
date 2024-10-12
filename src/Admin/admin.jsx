@@ -146,18 +146,26 @@ const Admin = () => {
 
   const filteredAppointments = appointments.documents.filter((appointment) => {
     return (
-      appointment?.patientId?.name?.toLowerCase().includes(searchTerm)||
+      appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
       appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
     );
   });
   return (
-    <Box bg={"#131619"} color={"white"} w={"100vw"} h={"100%"}   sx={{
-      "::-webkit-scrollbar": {
-        display: "none",
-      },
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-    }} overflow={"scroll"} p={4}>
+    <Box
+      bg={"#131619"}
+      color={"white"}
+      w={"100vw"}
+      h={"100%"}
+      sx={{
+        "::-webkit-scrollbar": {
+          display: "none",
+        },
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}
+      overflow={"scroll"}
+      p={4}
+    >
       <Header
         width={{ base: "100%", md: "99%" }}
         title={"Welcome Admin 😄"}
@@ -251,11 +259,11 @@ const Admin = () => {
         </Box>
       </SimpleGrid>
       <Box mt={{ base: "none", md: "1%" }} w={{ base: "100%", md: "50%" }}>
-      <SearchInput
-      value={searchTerm}
-      onChange={handleSearch}
-      placeholder={"search appointments by name or phone"}
-      />
+        <SearchInput
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder={"search appointments by name or phone"}
+        />
       </Box>
       <Box p={4} mt={4} h={"50%"} overflowX="auto">
         <Table variant="simple" colorScheme="whiteAlpha" size={"md"}>
@@ -307,25 +315,38 @@ const Admin = () => {
                         ? "red.400"
                         : "yellow.400"
                     }
+                  
                   >
                     {appointment?.status || "Pending"}
                   </Td>
                   <Td>{appointment?.doctor || "No Doctor"}</Td>
                   <Td>
                     <Button
-                      colorScheme="green"
+                      bg={"transparent"}
+                      border={"2px solid green"}
                       size="sm"
-                      w={"100%"}
+                      w={{base:"100%",md:"60%"}}
+                      color={"white.700"}
+                      _hover={{
+                        bgColor:"green",
+                        color:"white"
+                      }}
                       onClick={() => openModal(index, true)}
                     >
                       Schedule
                     </Button>
                     <Button
                       mt={2}
-                      colorScheme="red"
                       size="sm"
-                      w={"100%"}
+                      color={"red"}
+                      border={"2px solid red"}
+                      bg={"transparent"}
+                      w={{base:"100%",md:"60%"}}
                       onClick={() => openModal(index, false)}
+                      _hover={{
+                        bgColor:"red",
+                        color:"white"
+                      }}
                     >
                       Cancel
                     </Button>
