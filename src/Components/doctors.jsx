@@ -20,6 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useColorMode,
 } from "@chakra-ui/react";
 import SearchInput from "./Search";
 import { ErrorToast, LoadingToast, SuccessToast } from "./toaster";
@@ -32,6 +33,7 @@ const Doctorsdata = () => {
   const [selectedDoctorId, setSelectedDoctorId] = useState(null); 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const cancelRef = React.useRef();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -103,7 +105,7 @@ const Doctorsdata = () => {
         </Text>
       ) : filteredDoctors.length > 0 ? (
         <Box w="100%" mt="5%" overflowX="auto">
-          <Table variant="simple" colorScheme="whiteAlpha" size="md">
+          <Table variant="simple" color={colorMode === "dark" ? "white" :"black"} size="md">
             <Thead>
               <Tr>
                 <Th>Photo</Th>

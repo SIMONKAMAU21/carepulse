@@ -30,6 +30,7 @@ import {
   IconButton,
   InputGroup,
   InputLeftElement,
+  useColorMode,
 } from "@chakra-ui/react";
 
 import {
@@ -59,6 +60,7 @@ const Admin = () => {
     useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isScheduleModal, setIsScheduleModal] = useState(false);
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -152,9 +154,8 @@ const Admin = () => {
   });
   return (
     <Box
-      bg={"#131619"}
       color={"white"}
-      w={"100vw"}
+      w={"100%"}
       h={"100%"}
       sx={{
         "::-webkit-scrollbar": {
@@ -167,7 +168,7 @@ const Admin = () => {
       p={4}
     >
       <Header
-        width={{ base: "100%", md: "99%" }}
+        width={{ base: "90%", md: "99%" }}
         title={"Welcome Admin 😄"}
         subTitle={"Start day with managing new appointments"}
       />
@@ -266,7 +267,7 @@ const Admin = () => {
         />
       </Box>
       <Box p={4} mt={4} h={"50%"} overflowX="auto">
-        <Table variant="simple" colorScheme="whiteAlpha" size={"md"}>
+        <Table variant="simple" color={colorMode === "dark" ? "black.200" :" black"} size={"md"}>
           <Thead>
             <Tr>
               <Th>Patient</Th>
@@ -315,6 +316,7 @@ const Admin = () => {
                         ? "red.400"
                         : "yellow.400"
                     }
+                    fontWeight={colorMode === "light" ? "bold" : "none"}
                   
                   >
                     {appointment?.status || "Pending"}

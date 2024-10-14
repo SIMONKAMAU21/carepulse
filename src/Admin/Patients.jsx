@@ -21,6 +21,7 @@ import {
   HStack,
   Spacer,
   Avatar,
+  useColorMode,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Header from "../Components/header";
@@ -33,6 +34,7 @@ const Patients = () => {
   const [error, setError] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -71,7 +73,7 @@ const Patients = () => {
     color: "grey",
   };
   return (
-    <Box h={"100%"} w={"100%"} bg={"#131619"} p={4}>
+    <Box h={"100%"} w={"100%"} p={4}>
       <Header
         width={{ base: "90%", md: "99%" }}
         title={"Manage Your Patients"}
@@ -88,10 +90,13 @@ const Patients = () => {
             mt={{ base: "60%", md: "0%" }}
             h={"100%"}
             overflowX="auto"
+            color={colorMode === "dark" ? "white" : "black"}
+
           >
             <Table
+              color={colorMode === "dark" ? "white" : "black"}
               variant={"simple"}
-              colorScheme="whiteAlpha"
+              // colorScheme="whiteAlpha"
               h={"100%"}
               size={{ base: "sm", md: "md" }}
             >
@@ -124,13 +129,13 @@ const Patients = () => {
                     </Td>
                     <Td>
                       <Button
-                        w={{base:"100%",md:"60%"}}
+                        w={{ base: "100%", md: "60%" }}
                         size={"sm"}
                         bg={"transparent"}
                         border={"2px solid green"}
                         color={"white"}
                         _hover={{
-                          bg:"green"
+                          bg: "green",
                         }}
                         onClick={() => handlePatientSelect(patient)}
                       >
@@ -139,13 +144,13 @@ const Patients = () => {
                       <Spacer />
                       <Button
                         mt={"5%"}
-                        w={{base:"100%",md:"60%"}}
+                        w={{ base: "100%", md: "60%" }}
                         size={"sm"}
                         bg={"transparent"}
                         border={"2px solid red"}
                         color={"white"}
                         _hover={{
-                          bg:"red.500"
+                          bg: "red.500",
                         }}
                         onClick={() => handleDelete(patient.$id)}
                       >

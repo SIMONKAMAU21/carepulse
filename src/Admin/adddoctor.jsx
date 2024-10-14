@@ -111,7 +111,7 @@ const Adddoctor = () => {
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
               }}
-              bg={"#131619"}
+              // bg={"#131619"}
               color={"white"}
               w={"100%"}
               h={"100%"}

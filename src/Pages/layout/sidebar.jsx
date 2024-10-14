@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Box, HStack, Icon, Text } from "@chakra-ui/react";
+import { Box, HStack, Icon, Text, useColorMode, useTheme } from "@chakra-ui/react";
 import {
   MdDashboard,
   MdMonetizationOn,
@@ -19,6 +19,8 @@ export const sidebarLinks = [
 
 const Sidebar = () => {
   const location = useLocation();
+  const { colorMode } = useColorMode();  // Access color mode
+  const theme = useTheme();  // Access the theme to use the global colors
 
   return (
     <>
@@ -31,7 +33,8 @@ const Sidebar = () => {
         top="0"
         h="100vh"
         w="250px"
-        bg={"#131619"}
+        // Apply the body's background color from the global theme
+        bg={colorMode === "dark" ? theme.styles.global({ colorMode }).body.bg : theme.styles.global({ colorMode }).body.bg}
         filter={"auto"}
         mt={"20px"}
       >
