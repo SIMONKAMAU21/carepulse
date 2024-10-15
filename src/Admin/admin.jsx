@@ -324,11 +324,11 @@ const Admin = () => {
                   <Td>{appointment?.doctor || "No Doctor"}</Td>
                   <Td>
                     <Button
-                      bg={"transparent"}
-                      border={"2px solid green"}
+                      bg={colorMode === "light" ? "green" :"none"}
+                      border={colorMode === "light" ? "none" :"2px solid green"}
                       size="sm"
                       w={{base:"100%",md:"60%"}}
-                      color={"white.700"}
+                      color={"white"}
                       _hover={{
                         bgColor:"green",
                         color:"white"
@@ -340,9 +340,9 @@ const Admin = () => {
                     <Button
                       mt={2}
                       size="sm"
-                      color={"red"}
-                      border={"2px solid red"}
-                      bg={"transparent"}
+                      color={"white"}
+                      bg={colorMode === "light" ? "red.400" :"none"}
+                      border={colorMode === "light" ? "none" :"2px solid red"}
                       w={{base:"100%",md:"60%"}}
                       onClick={() => openModal(index, false)}
                       _hover={{

@@ -4,6 +4,7 @@ import {
   Heading,
   Image,
   Text,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -15,6 +16,10 @@ import { createUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import Logo from "../assets/Logo.svg";
+import logo from "../assets/i (2).mp4";
+import log from "../assets/i.mp4";
+
+
 import PasskeyModal from "./passkeyModal";
 
 export const formatPhoneNumber = (number) => {
@@ -26,6 +31,8 @@ export const formatPhoneNumber = (number) => {
 };
 
 const Onboarding = () => {
+  const { colorMode } = useColorMode();
+
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -47,25 +54,25 @@ const Onboarding = () => {
 
   const submit = async () => {
     try {
-      LoadingToast(true); 
+      LoadingToast(true);
       const { email, name, phone } = form;
-  
+
       if (!email || !name || !phone) {
         ErrorToast("All fields are required");
         LoadingToast(false);
         return;
       }
-  
+
       const formattedPhone = formatPhoneNumber(phone);
       const userData = { email, name, phone: formattedPhone };
       const createdUser = await createUser(userData);
-  
+
       if (createdUser.error) {
         ErrorToast(createdUser.error);
         LoadingToast(false);
         return;
       }
-  
+
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -75,7 +82,7 @@ const Onboarding = () => {
           id: createdUser.$id,
         })
       );
-  
+
       SuccessToast("User successfully created");
       navigate(`/register`);
       LoadingToast(false);
@@ -84,9 +91,6 @@ const Onboarding = () => {
       ErrorToast("Failed to create user");
     }
   };
-  
-  
-  
 
   React.useEffect(() => {
     if (isAdmin) {
@@ -99,8 +103,23 @@ const Onboarding = () => {
       <AuthWrapper
         leftChildren={
           <>
-            <Box ml={{ base: "9%", md: "20%" }}>
-              <Image mt={"10%"} src={Logo} alt="Logo" />
+            <Box color={colorMode === "light" ? "gray.700" :"white"} ml={{ base: "9%", md: "20%" }}>
+              {/* <Image mt={"10%"} src={Logo} alt="Logo" /> */}
+              
+              <video
+                src={colorMode === "light" ? log : logo}
+                cursor="pointer"
+                autoPlay
+                loop
+                muted
+                style={{
+                  width: "30%",
+                  height: "100px",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                  marginTop:"10%"
+                }}
+              />
               <Box mt={"5%"}>
                 <Heading>Hi there, ....</Heading>
                 <Text>Get started with Appointments</Text>
@@ -154,7 +173,7 @@ const Onboarding = () => {
                 Get Started
               </Button>
               <Box
-                mt={"10%"}
+                mt={{base:"10%",md:"5%"}}
                 w={"100%"}
                 display={"flex"}
                 alignItems={"flex-end"}
