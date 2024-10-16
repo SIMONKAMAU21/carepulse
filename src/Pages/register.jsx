@@ -21,6 +21,7 @@ import {
   Textarea,
   MenuItem,
   Flex,
+  useColorMode,
 } from "@chakra-ui/react";
 import doc from "../assets/doc1.png";
 import Logo from "../assets/Logo.svg";
@@ -44,8 +45,11 @@ import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
 import { getDoctors } from "../lib/Actions/doctor.actions";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import logo from "../assets/i (2).mp4";
+import log from "../assets/i.mp4";
 
 const Register = () => {
+  const { colorMode } = useColorMode();
   const [patientExists, setPatientExists] = useState(false); // Track patient existence
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
@@ -132,21 +136,21 @@ const Register = () => {
       gender: value,
     }));
   };
-  useEffect(() => {
-    const checkPatientExists = async () => {
-      if (form.userId) { 
-        const existingPatient = await getPatient(form.userId);
-        setPatientExists(!!existingPatient); 
-        if (existingPatient) {
-          navigate("/patient/dashbord"); 
-        }else{
-          return
-        }
-      }
-    };
-    
-    checkPatientExists(); 
-  }, [form.userId, navigate]); 
+  // useEffect(() => {
+  //   const checkPatientExists = async () => {
+  //     if (form.userId) {
+  //       const existingPatient = await getPatient(form.userId);
+  //       setPatientExists(!!existingPatient);
+  //       if (existingPatient) {
+  //         navigate("/patient/dashbord");
+  //       } else {
+  //         return;
+  //       }
+  //     }
+  //   };
+
+  //   checkPatientExists();
+  // }, [form.userId, navigate]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -204,9 +208,22 @@ const Register = () => {
     <AuthWrapper
       leftChildren={
         <>
-          <Box p={"4%"}>
-            <Image src={Logo} />
-            <Heading mt={"4%"}>welcome👋</Heading>
+          <Box p={"4%"} color={colorMode === "light" ? "black" :"gray.100"}>
+            <video
+              src={colorMode === "light" ? log : logo}
+              cursor="pointer"
+              autoPlay
+              loop
+              muted
+              style={{
+                width: "30%",
+                height: "100px",
+                objectFit: "cover",
+                cursor: "pointer",
+                marginTop: "10%",
+              }}
+            />
+            <Heading  mt={"4%"}>welcome👋</Heading>
             <Text>Let us know more about yourself</Text>
           </Box>
 
@@ -267,7 +284,7 @@ const Register = () => {
                   placeholder={"Select your birth date"}
                   type="date"
                 />
-                <Box mt={4}>
+                <Box mt={4} color={colorMode === "light" ? "black" :"gray.100"}>
                   <Text mb={2}>Gender</Text>
                   <RadioGroup
                     onChange={handleGenderChange}
@@ -327,7 +344,7 @@ const Register = () => {
               >
                 Medical Information
               </Heading>
-              <Box mt={{ base: "10%", md: "5%" }}>
+              <Box color={colorMode === "light" ? "black" :"gray.100"} mt={{ base: "10%", md: "5%" }}>
                 <FormLabel variant={"outline"}>
                   Select primary Physician
                 </FormLabel>
@@ -335,7 +352,7 @@ const Register = () => {
                   <MenuButton
                     variant={"outline"}
                     w={"100%"}
-                    color={"white"}
+                    color={colorMode === "light" ? "black" :"gray.100"}
                     border={"1px solid gray"}
                     as={Button}
                     backgroundColor={"none"}
@@ -437,7 +454,7 @@ const Register = () => {
                 Identification
               </Heading>
               <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
-                <FormControl>
+                <FormControl color={colorMode === "light" ? "black" :"gray.100"}>
                   <Text mb={2}>Identification Type</Text>
                   <Select
                     border={"1px solid gray"}
@@ -460,7 +477,7 @@ const Register = () => {
                   onChange={handleInputChange}
                   placeholder={"e.g., A123456"}
                 />
-                <FormControl mt={4}>
+                <FormControl color={colorMode === "light" ? "black" :"gray.100"} mt={4}>
                   <Text>Upload Document</Text>
                   <Input
                     type="file"
@@ -491,7 +508,7 @@ const Register = () => {
               </Grid>
             </Box>
 
-            <Box>
+            <Box color={colorMode === "light" ? "black" :"gray.100"}>
               <Heading
                 as={"h2"}
                 size={{ base: "md", md: "lg" }}

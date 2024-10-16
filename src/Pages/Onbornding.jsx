@@ -18,8 +18,6 @@ import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import Logo from "../assets/Logo.svg";
 import logo from "../assets/i (2).mp4";
 import log from "../assets/i.mp4";
-
-
 import PasskeyModal from "./passkeyModal";
 
 export const formatPhoneNumber = (number) => {
