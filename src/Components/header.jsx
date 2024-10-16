@@ -65,6 +65,7 @@ const Header = ({ width, title, subTitle }) => {
 
       <VStack
         // bg={"#131619"}
+        bg={colorMode === "light" ? "white" : theme.colors.primary.dark}
         color={colorMode === "light" ? "black" : "white"}
 
         position={{ base: "fixed", md: "relative" }}

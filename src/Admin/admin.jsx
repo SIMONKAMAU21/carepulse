@@ -61,6 +61,8 @@ const Admin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isScheduleModal, setIsScheduleModal] = useState(false);
   const { colorMode } = useColorMode();
+  const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -72,6 +74,7 @@ const Admin = () => {
           setAppointments([]);
         }
       } catch (error) {
+        setError("Failed to fetch doctors data");
         setAppointments([]);
       }
     };
@@ -146,7 +149,7 @@ const Admin = () => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
-  const filteredAppointments = appointments.documents.filter((appointment) => {
+  const filteredAppointments = appointments?.documents?.filter((appointment) => {
     return (
       appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
       appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
@@ -385,7 +388,7 @@ const Admin = () => {
                 type="date"
                 placeholder="enter date"
                 value={
-                  appointments.documents[selectedAppointmentIndex]
+                  appointments?.documents[selectedAppointmentIndex]
                     ?.selectedDate || ""
                 }
                 onChange={(e) => handleDateChange(e.target.value)}
@@ -394,7 +397,7 @@ const Admin = () => {
               <Textarea
                 placeholder="Enter cancellation reason"
                 value={
-                  appointments.documents[selectedAppointmentIndex]
+                  appointments?.documents[selectedAppointmentIndex]
                     ?.cancelReason || ""
                 }
                 onChange={(e) => handleReasonChange(e.target.value)}

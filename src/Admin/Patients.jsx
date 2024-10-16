@@ -133,7 +133,7 @@ const Patients = () => {
                         size={"sm"}
                         bg={"transparent"}
                         border={"2px solid green"}
-                        color={"white"}
+                        color={colorMode === "dark" ? "white" : "gray.700"}
                         _hover={{
                           bg: "green",
                         }}
@@ -148,7 +148,7 @@ const Patients = () => {
                         size={"sm"}
                         bg={"transparent"}
                         border={"2px solid red"}
-                        color={"white"}
+                        color={colorMode === "dark" ? "white" : "gray.700"}
                         _hover={{
                           bg: "red.500",
                         }}
