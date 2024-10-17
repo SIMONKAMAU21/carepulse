@@ -13,10 +13,11 @@ import {
   MenuItem,
   Flex,
   Input,
+  useColorMode,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import logo from "../assets/Logo.svg";
+// import logo from "../assets/Logo.svg";
 import illustration from "../assets/doc2.png";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import CustomInputs from "../Components/CustomInputs";
@@ -26,19 +27,21 @@ import { addAppointment } from "../lib/Actions/appointment.actions";
 import { getDoctors } from "../lib/Actions/doctor.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/i.mp4";
+import log from "../assets/i (2).mp4";
 
 const Appointment = () => {
   const [form, setForm] = useState({
     doctor: "",
     patientId: "",
-    doctorId:"",
+    doctorId: "",
     userId: "",
     appointmentReason: "",
     preferences: "",
     appointmentDate: "",
-    status: "pending", 
+    status: "pending",
   });
-
+  const { colorMode, toggleColorMode } = useColorMode();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -88,11 +91,10 @@ const Appointment = () => {
   const handleDoctorSelect = (doctorName, doctorId) => {
     setForm((prevForm) => ({
       ...prevForm,
-      doctor: doctorName, 
-      doctorId: doctorId,  
+      doctor: doctorName,
+      doctorId: doctorId,
     }));
   };
-  
 
   const handleSubmit = async () => {
     if (
@@ -104,7 +106,7 @@ const Appointment = () => {
       ErrorToast("Please fill in all the required fields");
       return;
     }
-  
+
     LoadingToast(true);
     try {
       const appointmentData = {
@@ -117,7 +119,7 @@ const Appointment = () => {
         appointmentDate: form.appointmentDate || "-",
         status: form.status || "pending",
       };
-  
+
       const newAppointment = await addAppointment(appointmentData);
       setForm({});
       SuccessToast("Appointment added");
@@ -128,13 +130,24 @@ const Appointment = () => {
       LoadingToast(false);
     }
   };
-  
 
   return (
     <AuthWrapper
       leftChildren={
         <Box m={{ base: "5%", md: "5%" }} h={"100%"}>
-          <Image src={logo} />
+          <video
+            src={colorMode === "dark" ? log : logo}
+            cursor="pointer"
+            autoPlay
+            loop
+            muted
+            style={{
+              width: "150px",
+              height: "50px",
+              objectFit: "cover",
+              cursor: "pointer",
+            }}
+          />{" "}
           <Box mt={{ base: "10%", md: "9%" }}>
             <Heading>Hey there 👋</Heading>
             <Text>Request a new appointment in 10 seconds</Text>
@@ -158,7 +171,9 @@ const Appointment = () => {
                   <MenuItem
                     color={"black"}
                     key={doctor.$id}
-                    onClick={() => handleDoctorSelect(doctor.drname,doctor.$id)}
+                    onClick={() =>
+                      handleDoctorSelect(doctor.drname, doctor.$id)
+                    }
                   >
                     <Flex align="center">
                       <Image
