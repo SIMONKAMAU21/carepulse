@@ -95,6 +95,16 @@ const Appointment = () => {
   
 
   const handleSubmit = async () => {
+    if (
+      !form.doctor ||
+      !form.appointmentReason ||
+      !form.appointmentDate ||
+      !form.preferences
+    ) {
+      ErrorToast("Please fill in all the required fields");
+      return;
+    }
+  
     LoadingToast(true);
     try {
       const appointmentData = {
@@ -107,16 +117,18 @@ const Appointment = () => {
         appointmentDate: form.appointmentDate || "-",
         status: form.status || "pending",
       };
+  
       const newAppointment = await addAppointment(appointmentData);
       setForm({});
       SuccessToast("Appointment added");
       navigate(`/success/${form.userId}/appointment/${newAppointment.$id}`);
-      LoadingToast(false);
     } catch (error) {
       ErrorToast(error);
+    } finally {
+      LoadingToast(false);
     }
-    LoadingToast(false);
   };
+  
 
   return (
     <AuthWrapper
