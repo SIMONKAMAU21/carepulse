@@ -36,6 +36,18 @@ export const addAppointment = async (userData) => {
   }
 };
 
+export const getAppointmentByUserId = async(userId)=>{
+  try {
+    const response = await databases.listDocuments(
+      VITE_DATABASE_ID,
+      VITE_APPOINTMENT_COLLECTION_ID,
+      [Query.equal("userId", userId)]
+    )
+    return response
+  } catch (error) {
+    throw error
+  }
+}
 export const getAppointment = async (appointmentId) => {
   try {
     const response = await databases.getDocument(
@@ -92,7 +104,6 @@ export const getRecentAppointmentList = async () => {
 
     const counts = appointments.documents.reduce((acc, appointment) => {
       const status = appointment.status;
-      // console.log("Status found:", status);
       switch (status) {
         case "Scheduled":
           acc.scheduledCount++;
@@ -142,7 +153,6 @@ export const getAppointmentWithDoctor = async (appointmentId) => {
       VITE_APPOINTMENT_COLLECTION_ID,
       appointmentId
     );
-    console.log("appointment", appointment);
     const doctor = await databases.getDocument(
       VITE_DATABASE_ID,
       VITE_DOCTOR_COLLECTION_ID,

@@ -136,21 +136,21 @@ const Register = () => {
       gender: value,
     }));
   };
-  // useEffect(() => {
-  //   const checkPatientExists = async () => {
-  //     if (form.userId) {
-  //       const existingPatient = await getPatient(form.userId);
-  //       setPatientExists(!!existingPatient);
-  //       if (existingPatient) {
-  //         navigate("/patient/dashbord");
-  //       } else {
-  //         return;
-  //       }
-  //     }
-  //   };
+  useEffect(() => {
+    const checkPatientExists = async () => {
+      if (form.userId) {
+        const existingPatient = await getPatient(form.userId);
+        setPatientExists(!!existingPatient);
+        if (existingPatient) {
+          navigate("/patient/dashbord");
+        } else {
+          return;
+        }
+      }
+    };
 
-  //   checkPatientExists();
-  // }, [form.userId, navigate]);
+    checkPatientExists();
+  }, [form.userId, navigate]);
 
   const handleSubmit = async () => {
     setLoading(true);

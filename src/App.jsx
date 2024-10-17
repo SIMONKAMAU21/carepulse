@@ -10,6 +10,7 @@ import Success from "./Pages/appointmentSuccess";
 import Admin from "./Admin/admin";
 import Adddoctor from "./Admin/adddoctor";
 import Patients from "./Admin/Patients";
+import PatientDashboard from "./Patient/patient.dashbord";
 
 function App() {
   return (
@@ -27,8 +28,7 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/doctor" element={<Adddoctor/>} />
           <Route path="/Patients" element={<Patients/>} />
-
-
+          <Route path="/Patient/dashbord" element={<PatientDashboard/>} />
         </Routes>
       </BrowserRouter>
     </Box>

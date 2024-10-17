@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AuthWrapper from "../Components/OnboarndingWrapper";
-import { Box, Button, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, Image, Spacer, Text } from "@chakra-ui/react";
 import logo from "../assets/Logo.svg";
 import check from "../assets/check.svg";
 import illustration from "../assets/doc.png";
@@ -115,6 +115,17 @@ const Success = () => {
                 bgColor={"rgb(74,201,126)"}
               >
                 New Appointment
+              </Button>
+            </NavLink>
+            <Spacer/>
+            <NavLink to={"/patient/dashbord"}>
+              <Button
+                mt={"5%"}
+                color={"white"}
+                w={"20%"}
+                bgColor={"rgb(74,201,126)"}
+              >
+                Go to profile
               </Button>
             </NavLink>
           </Box>
