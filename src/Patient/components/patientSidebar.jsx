@@ -19,23 +19,25 @@ export const sidebarLinks = [
 
 const PatiendSidebar = () => {
   const location = useLocation();
-  const { colorMode } = useColorMode();  // Access color mode
-  const theme = useTheme();  // Access the theme to use the global colors
+  const { colorMode } = useColorMode();  
+  const theme = useTheme();  
 
   return (
     <>
       <Box
         p="10px"
-        color="#6F7E84"
+        // color="#6F7E84"
+        color={colorMode === "light" ? "white" :"white"}
         position="fixed"
         zIndex={"1000"}
         left="0"
         top="0"
         h="100vh"
-        w="250px"
-        bg={colorMode === "dark" ? theme.styles.global({ colorMode }).body.bg : theme.styles.global({ colorMode }).body.bg}
+        w={{base:"250px",md:"400px"}}
+        // bg={colorMode === "dark" ? theme.styles.global({ colorMode }).body.bg : theme.styles.global({ colorMode }).body.bg}
+        bg={colorMode === 'dark' ? theme.styles.global({ colorMode }).body.bg : "rgba(0,0,0,0.85)"}
         filter={"auto"}
-        mt={"20px"}
+        // mt={"20px"}
       >
         {sidebarLinks.map((link, index) => (
           <NavLink
@@ -58,7 +60,7 @@ const PatiendSidebar = () => {
                 spacing="4"
                 alignItems="center"
                 color={
-                  location.pathname.includes(link.path) ? "white" : "gray.500"
+                  location.pathname.includes(link.path) ? "white" : "white"
                 }
               >
                 <Icon

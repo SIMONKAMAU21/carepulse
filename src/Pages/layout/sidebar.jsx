@@ -19,8 +19,8 @@ export const sidebarLinks = [
 
 const Sidebar = () => {
   const location = useLocation();
-  const { colorMode } = useColorMode();  // Access color mode
-  const theme = useTheme();  // Access the theme to use the global colors
+  const { colorMode } = useColorMode();  
+  const theme = useTheme();  
 
   return (
     <>
@@ -32,11 +32,9 @@ const Sidebar = () => {
         left="0"
         top="0"
         h="100vh"
-        w="250px"
-        // Apply the body's background color from the global theme
-        bg={colorMode === "dark" ? theme.styles.global({ colorMode }).body.bg : theme.styles.global({ colorMode }).body.bg}
+        w={{base:"250px",md:"400px"}}
+        bg={colorMode === 'dark' ? theme.styles.global({ colorMode }).body.bg : "rgba(0,0,0,0.85)"}
         filter={"auto"}
-        mt={"20px"}
       >
         {sidebarLinks.map((link, index) => (
           <NavLink

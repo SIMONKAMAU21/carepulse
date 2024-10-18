@@ -73,22 +73,23 @@ const Patients = () => {
     color: "grey",
   };
   return (
-    <Box h={"100%"} w={"100%"} p={4}>
+    <Box h={"100%"} w={"100%"} border={"2px solid red"} p={4}>
       <Header
         width={{ base: "90%", md: "99%" }}
         title={"Manage Your Patients"}
         subTitle={"View, update, and track patient details efficiently"}
       />
-      <Box padding={4}>
+      <Box >
         {loading ? (
           <Text>loading....</Text>
         ) : error ? (
           <Text color="red.500">{error}</Text>
         ) : patients.length > 0 ? (
           <Box
-            w={{ base: "100%" }}
+            // w={{ base: "100%" }}
             mt={{ base: "60%", md: "0%" }}
             h={"100%"}
+            p={"0px"}
             overflowX="auto"
             color={colorMode === "dark" ? "white" : "black"}
 
@@ -96,8 +97,8 @@ const Patients = () => {
             <Table
               color={colorMode === "dark" ? "white" : "black"}
               variant={"simple"}
-              // colorScheme="whiteAlpha"
               h={"100%"}
+              w={"100%"}
               size={{ base: "sm", md: "md" }}
             >
               <Thead>
