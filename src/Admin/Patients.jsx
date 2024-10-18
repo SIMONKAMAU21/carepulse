@@ -73,7 +73,7 @@ const Patients = () => {
     color: "grey",
   };
   return (
-    <Box h={"100%"} w={"100%"} border={"2px solid red"} p={4}>
+    <Box h={"100%"} w={"100%"}  p={4}>
       <Header
         width={{ base: "90%", md: "99%" }}
         title={"Manage Your Patients"}
