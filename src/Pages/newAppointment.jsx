@@ -134,7 +134,7 @@ const Appointment = () => {
   return (
     <AuthWrapper
       leftChildren={
-        <Box m={{ base: "5%", md: "5%" }} h={"100%"}>
+        <Box color={colorMode === "light" ? "black" :""} m={{ base: "5%", md: "5%" }} h={"100%"}>
           <video
             src={colorMode === "dark" ? log : logo}
             cursor="pointer"
@@ -147,18 +147,18 @@ const Appointment = () => {
               objectFit: "cover",
               cursor: "pointer",
             }}
-          />{" "}
+          />
           <Box mt={{ base: "10%", md: "9%" }}>
             <Heading>Hey there 👋</Heading>
             <Text>Request a new appointment in 10 seconds</Text>
           </Box>
-          <Box mt={{ base: "10%", md: "5%" }}>
+          <Box  mt={{ base: "10%", md: "5%" }}>
             <FormLabel variant={"outline"}>Select Doctor</FormLabel>
             <Menu>
               <MenuButton
                 variant={"outline"}
                 w={"100%"}
-                color={"white"}
+                color={colorMode === "light" ? "black" :"gray.100"}
                 as={Button}
                 backgroundColor={"none"}
                 colorScheme="none"

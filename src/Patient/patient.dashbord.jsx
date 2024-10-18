@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from "react";
 import {
   Box,
   Spinner,
   useColorMode,
   Text,
-  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
   VStack,
+  IconButton,
 } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { getAppointmentByUserId } from "../lib/Actions/appointment.actions";
 import PatientHeader from "./components/PatientHeader";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
 const PatientDashboard = () => {
-  const [appointmentData, setAppointmentData] = useState([]); // Store appointment data as an array
+  const [appointmentData, setAppointmentData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { colorMode } = useColorMode();
@@ -33,7 +38,7 @@ const PatientDashboard = () => {
         console.log("response", response);
 
         if (response && response.documents && response.documents.length > 0) {
-          setAppointmentData(response.documents); // Store the array of appointments
+          setAppointmentData(response.documents);
         } else {
           setError("No appointments found for this user");
         }
@@ -67,33 +72,45 @@ const PatientDashboard = () => {
     navigate("/Appointment");
   };
 
+  const viewHistory = () => {
+    // Add logic to view appointment history
+    navigate("/AppointmentHistory");
+  };
+
   return (
     <VStack>
-      <PatientHeader width={{ base: "90%", md: "99%" }} />
-      
-    {/* <Box h={"4vh"} w={"100%"} > */}
-    <Button
-        position="fixed"
-        top="5%" // Adjust this value as needed
-        right={{ base: "5%", md: "0%" }}
-        bg={"#24AE7C"}
-        onClick={newAppointment}
-        zIndex={1}
-      >
-        Make new appointment
-      </Button>
-    {/* </Box> */}
-      
+      <PatientHeader width={{ base: "99%", md: "99%" }} />
+
+      <Menu>
+        <MenuButton
+          as={IconButton}
+          aria-label="Options"
+          icon={<ChevronDownIcon />}
+          variant="outline"
+          position="fixed"
+          top={{base:"8%",md:"1%"}}
+          right={{ base: "-1%", md: "10%" }}
+          zIndex={1}
+          border={"none"}
+          size={{base:"md",md:"lg"}}
+          // bg={"#24AE7C"}
+        />
+        <MenuList color={colorMode === "dark" ? "white" : "green.400"}>
+          <MenuItem onClick={newAppointment}>Make new appointment</MenuItem>
+          <MenuItem onClick={viewHistory}>View appointment history</MenuItem>
+        </MenuList>
+      </Menu>
+
       <Box
         mt={{ base: "25%", md: "0" }}
         w={"100%"}
-        h={"90vh"} 
-        overflowY={"scroll"} 
+        h={"90vh"}
+        overflowY={"scroll"}
         color={colorMode === "dark" ? "white" : "black"}
       >
         {appointmentData.length > 0 ? (
           appointmentData.map((appointment) => {
-            const patient = appointment.patientId; // Access patient details from appointment
+            const patient = appointment.patientId;
             return (
               <Box
                 key={appointment.$id}

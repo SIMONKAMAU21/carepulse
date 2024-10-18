@@ -1,23 +1,34 @@
 import React, { useState, useEffect } from "react";
 import AuthWrapper from "../Components/OnboarndingWrapper";
-import { Box, Button, Heading, Image, Spacer, Text } from "@chakra-ui/react";
-import logo from "../assets/Logo.svg";
+import {
+  Box,
+  Button,
+  Heading,
+  Image,
+  Spacer,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
+// import logo from "../assets/Logo.svg";
 import check from "../assets/check.svg";
 import illustration from "../assets/doc.png";
 import { NavLink, useParams } from "react-router-dom";
 import { getAppointment } from "../lib/Actions/appointment.actions";
 import calender from "../assets/calendar.png";
+import logo from "../assets/i.mp4";
+import log from "../assets/i (2).mp4";
+
 const Success = () => {
   const { appointmentId } = useParams();
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     const fetchAppointment = async () => {
       try {
         const fetchedAppointment = await getAppointment(appointmentId);
-        console.log("first", fetchedAppointment);
         setAppointment(fetchedAppointment);
       } catch (error) {
         setError("Error fetching appointment");
@@ -28,6 +39,7 @@ const Success = () => {
 
     fetchAppointment();
   }, [appointmentId]);
+
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     const date = new Date(dateString);
@@ -50,9 +62,21 @@ const Success = () => {
     <AuthWrapper
       leftChildren={
         <>
-          <Box ml={{ base: "10%", md: "20%" }} h={"100%"}>
+          <Box  ml={{ base: "10%", md: "20%" }} h={"100%"}>
             <NavLink to={"/"}>
-              <Image mt={{ base: "5%" }} src={logo} />
+              <video
+                src={colorMode === "dark" ? log : logo}
+                cursor="pointer"
+                autoPlay
+                loop
+                muted
+                style={{
+                  width: "150px",
+                  height: "50px",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                }}
+              />{" "}
             </NavLink>
             <Box
               w={{ base: "100%", md: "50%" }}
@@ -67,7 +91,7 @@ const Success = () => {
                 Your{" "}
                 <span style={{ color: "rgb(74,201,126)" }}>
                   Appointment request
-                </span>{" "}
+                </span>
                 has been successfully submitted
               </Heading>
               <Text mt={"5%"}>We'll be in touch shortly to confirm.</Text>
@@ -117,12 +141,12 @@ const Success = () => {
                 New Appointment
               </Button>
             </NavLink>
-            <Spacer/>
+            <Spacer />
             <NavLink to={"/patient/dashbord"}>
               <Button
                 mt={"5%"}
                 color={"white"}
-                w={"20%"}
+                w={{ base: "30%" }}
                 bgColor={"rgb(74,201,126)"}
               >
                 Go to profile
