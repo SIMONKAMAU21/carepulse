@@ -26,7 +26,6 @@ const PatiendSidebar = () => {
     <>
       <Box
         p="10px"
-        // color="#6F7E84"
         color={colorMode === "light" ? "white" :"white"}
         position="fixed"
         zIndex={"1000"}
@@ -34,10 +33,8 @@ const PatiendSidebar = () => {
         top="0"
         h="100vh"
         w={{base:"250px",md:"400px"}}
-        // bg={colorMode === "dark" ? theme.styles.global({ colorMode }).body.bg : theme.styles.global({ colorMode }).body.bg}
         bg={colorMode === 'dark' ? theme.styles.global({ colorMode }).body.bg : "rgba(0,0,0,0.85)"}
         filter={"auto"}
-        // mt={"20px"}
       >
         {sidebarLinks.map((link, index) => (
           <NavLink
@@ -52,7 +49,7 @@ const PatiendSidebar = () => {
             <Box
               borderRadius="md"
               w="100%"
-              bg={location.pathname.includes(link.path) ? "#002E3A" : "none"}
+              bg={location.pathname.includes(link.path) ? "blue.400" : "none"}
               p="3"
               _hover={{ bg: "#002E3A" }}
             >

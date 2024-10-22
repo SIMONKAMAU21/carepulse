@@ -3,16 +3,16 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Box, HStack, Icon, Text, useColorMode, useTheme } from "@chakra-ui/react";
 import {
   MdDashboard,
-  MdMonetizationOn,
-  MdAssessment,
   MdReceipt,
   MdSettings,
+  MdAdd,
+  MdPerson,
 } from "react-icons/md";
 
 export const sidebarLinks = [
   { path: "/admin", label: "Dashboard", icon: MdDashboard },
-  { path: "/doctor", label: "Add doctor", icon: MdMonetizationOn },
-  { path: "/Patients", label: "Patients", icon: MdAssessment },
+  { path: "/doctor", label: "Add doctor", icon: MdAdd },
+  { path: "/Patients", label: "Patients", icon: MdPerson },
   { path: "/statements", label: "Statements", icon: MdReceipt },
   { path: "/settings", label: "Settings", icon: MdSettings },
 ];
@@ -33,7 +33,8 @@ const Sidebar = () => {
         top="0"
         h="100vh"
         w={{base:"250px",md:"400px"}}
-        bg={colorMode === 'dark' ? theme.styles.global({ colorMode }).body.bg : "rgba(0,0,0,0.85)"}
+        // bg={colorMode === 'dark' ? theme.styles.global({ colorMode }).body.bg : "rgba(0,0,0,0.85)"}
+        bg={colorMode === 'dark' ? "rgba(10,10,10,0.85)" : "rgba(0,0,0,0.85)"}
         filter={"auto"}
       >
         {sidebarLinks.map((link, index) => (
@@ -49,15 +50,15 @@ const Sidebar = () => {
             <Box
               borderRadius="md"
               w="100%"
-              bg={location.pathname.includes(link.path) ? "#002E3A" : "none"}
+              bg={location.pathname.includes(link.path) ? "blue.400" : "none"}
               p="3"
-              _hover={{ bg: "#002E3A" }}
+              _hover={{ bg: "blue.300" }}
             >
               <HStack
                 spacing="4"
                 alignItems="center"
                 color={
-                  location.pathname.includes(link.path) ? "white" : "gray.500"
+                  location.pathname.includes(link.path) ? "white" : "white"
                 }
               >
                 <Icon
@@ -65,7 +66,7 @@ const Sidebar = () => {
                   boxSize="6"
                   color={
                     location.pathname.includes(link.path)
-                      ? "rgb(130,186,38)"
+                      ? "yellow"
                       : "gray.500"
                   }
                 />

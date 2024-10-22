@@ -11,6 +11,7 @@ const SearchInput = ({value,onChange,placeholder}) => {
       <FaSearch color={colorMode === "dark" ? "gray" :"black"} />
     </InputLeftElement>
     <Input
+    color={colorMode === 'light' ? "black" : "white"}
       value={value}
       onChange={onChange}
       placeholder={placeholder}

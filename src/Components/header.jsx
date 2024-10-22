@@ -1,4 +1,5 @@
 import {
+  Button,
   Heading,
   HStack,
   IconButton,
@@ -13,8 +14,6 @@ import {
 import React, { useState } from "react";
 import logo from "../assets/i.mp4";
 import log from "../assets/i (2).mp4";
-
-
 import Sidebar from "../Pages/layout/sidebar";
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 
@@ -22,13 +21,20 @@ const Header = ({ width, title, subTitle }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const theme = useTheme();
+
+  const text = colorMode === "light" ? "dark mode" : "lightmode";
+
   return (
     <>
       <HStack
         borderRadius={"10px"}
         w={width}
         p={4}
-        bg={colorMode === "light" ? theme.colors.primary.light : theme.colors.primary.dark}
+        bg={
+          colorMode === "light"
+            ? theme.colors.primary.light
+            : theme.colors.primary.dark
+        }
         position={{ base: "fixed", md: "relative" }}
       >
         <IconButton
@@ -40,34 +46,40 @@ const Header = ({ width, title, subTitle }) => {
           zIndex={"1000"}
           left={{ base: "70%", md: "20%" }}
         />
-       
+
         <video
-          src={colorMode==="dark" ? log : logo}
+          src={colorMode === "dark" ? log : logo}
           onClick={isOpen ? onClose : onOpen}
           cursor="pointer"
           autoPlay
           loop
           muted
-          style={{ width: "150px",height: "50px", objectFit:"cover",  cursor: "pointer" }}
+          style={{
+            width: "150px",
+            height: "50px",
+            objectFit: "cover",
+            cursor: "pointer",
+          }}
         />
         <Spacer />
-        <IconButton
-          aria-label="Toggle color mode"
-          icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-          onClick={toggleColorMode}
-          w={{ base: "40px" }}
+        <Button
+          w={{ base: "40px",md:"150px" }}
           h={{ base: "40px" }}
-          bg={"none"}
-          color={colorMode === "light" ? "black" : "white"}
-          //  color={textStyles.color}
-        />{" "}
+          onClick={toggleColorMode}
+        >
+          <IconButton
+            aria-label="Toggle color mode"
+            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            bg={"none"}
+            color={colorMode === "light" ? "black" : "white"}
+          />
+          <Text display={{ base: "none", md: "block" }}>{text}</Text>
+        </Button>
       </HStack>
 
       <VStack
-        // bg={"#131619"}
         bg={colorMode === "light" ? "white" : theme.colors.primary.dark}
         color={colorMode === "light" ? "black" : "white"}
-
         position={{ base: "fixed", md: "relative" }}
         mt={{ base: "20%", md: "0%" }}
         spacing={4}
