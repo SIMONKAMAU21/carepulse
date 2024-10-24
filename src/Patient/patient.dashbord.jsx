@@ -9,6 +9,7 @@ import {
   MenuItem,
   VStack,
   IconButton,
+  Button,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { getAppointmentByUserId } from "../lib/Actions/appointment.actions";
@@ -35,7 +36,6 @@ const PatientDashboard = () => {
       try {
         const userId = user.id;
         const response = await getAppointmentByUserId(userId);
-        console.log("response", response);
 
         if (response && response.documents && response.documents.length > 0) {
           setAppointmentData(response.documents);
@@ -52,6 +52,9 @@ const PatientDashboard = () => {
     fetchPatientDetails();
   }, []);
 
+  const newAppointment = () => {
+    navigate("/Appointment");
+  };
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" h="100vh">
@@ -64,13 +67,12 @@ const PatientDashboard = () => {
     return (
       <Box textAlign="center" p={4}>
         <Text color="red.500">{error}</Text>
+        <Button onClick={newAppointment}>make appointment</Button>
       </Box>
     );
   }
 
-  const newAppointment = () => {
-    navigate("/Appointment");
-  };
+
 
   const viewHistory = () => {
     // Add logic to view appointment history
@@ -136,7 +138,7 @@ const PatientDashboard = () => {
                   <strong>Doctor:</strong> {appointment.doctor}
                 </Text>
                 <Text>
-                  <strong>Appointment Reason:</strong>{" "}
+                  <strong>Appointment Reason:</strong>
                   {appointment.appointmentReason}
                 </Text>
                 <Text>
