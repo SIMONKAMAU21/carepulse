@@ -63,7 +63,6 @@ const Admin = () => {
   const { colorMode } = useColorMode();
   const [error, setError] = useState(null);
 
-
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -71,6 +70,7 @@ const Admin = () => {
         if (response) {
           setAppointments(response);
         } else {
+          setError("failed to get appointments");
           setAppointments([]);
         }
       } catch (error) {
@@ -78,7 +78,6 @@ const Admin = () => {
         setAppointments([]);
       }
     };
-
     fetchAppointments();
   }, []);
 
@@ -149,12 +148,14 @@ const Admin = () => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
-  const filteredAppointments = appointments?.documents?.filter((appointment) => {
-    return (
-      appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
-      appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
-    );
-  });
+  const filteredAppointments = appointments?.documents?.filter(
+    (appointment) => {
+      return (
+        appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
+        appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
+      );
+    }
+  );
   return (
     <Box
       color={"white"}
@@ -171,12 +172,13 @@ const Admin = () => {
       p={4}
     >
       <Header
-        width={{ base: "90%", md: "99%" }}
+        width={{ base: "99%", md: "99%" }}
         title={"Welcome Admin 😄"}
         subTitle={"Start day with managing new appointments"}
       />
       <SimpleGrid
         mt={{ base: "60%", md: "0%" }}
+        // border={"2px solid"}
         columns={{ base: 1, md: 3 }}
         spacing={6}
         h={{ base: "25%", md: "10%" }}
@@ -191,10 +193,10 @@ const Admin = () => {
       >
         <Box
           bgGradient="linear(to-l, rgb(255,209,71),#1c1e22, #1c1e22)"
-          p={{ base: "4", md: "6" }}
+          p={{ base: "2", md: "4" }}
           borderRadius="md"
           shadow="md"
-          h={{ base: "auto", md: "" }}
+          // h={{ base: "auto", md: "auto" }}
         >
           <VStack align="start">
             <HStack>
@@ -204,20 +206,20 @@ const Admin = () => {
                 color="rgb(255,209,71)"
               />
               <Heading size={{ base: "md", md: "lg" }}>
-                {appointments.scheduledCount}
+                {appointments?.scheduledCount}
               </Heading>
             </HStack>
-            <Text fontSize={{ base: "sm", md: "md" }}>
+            <Text fontSize={{ base: "sm", md: "sm" }}>
               Total number of scheduled appointments
             </Text>
           </VStack>
         </Box>
         <Box
           bgGradient="linear(to-l, blue.200,#1c1e22, #1c1e22)"
-          p={{ base: "4", md: "6" }}
+          p={{ base: "2", md: "4" }}
           borderRadius="md"
           shadow="md"
-          h={{ base: "auto", md: "" }}
+          // h={{ base: "auto", md: "" }}
         >
           <VStack align="start">
             <HStack>
@@ -227,7 +229,7 @@ const Admin = () => {
                 color="blue.200"
               />
               <Heading size={{ base: "md", md: "lg" }}>
-                {appointments.pendingCount}
+                {appointments?.pendingCount}
               </Heading>
             </HStack>
             <Text
@@ -240,10 +242,10 @@ const Admin = () => {
         </Box>
         <Box
           bgGradient="linear(to-l, red.300,#1c1e22, #1c1e22)"
-          p={{ base: "4", md: "6" }}
+          p={{ base: "2", md: "4" }}
           borderRadius="md"
           shadow="md"
-          h={{ base: "auto", md: "" }}
+          // h={{ base: "auto", md: "" }}
         >
           <VStack align="start">
             <HStack>
@@ -269,8 +271,12 @@ const Admin = () => {
           placeholder={"search appointments by name or phone"}
         />
       </Box>
-      <Box p={4} mt={4} h={"50%"} overflowX="auto">
-        <Table variant="simple" color={colorMode === "dark" ? "black.200" :" black"} size={"md"}>
+      <Box p={4} mt={4} h={"70%"} overflowX="auto">
+        <Table
+          variant="simple"
+          color={colorMode === "dark" ? "black.200" : " black"}
+          size={"md"}
+        >
           <Thead>
             <Tr>
               <Th>Patient</Th>
@@ -282,7 +288,7 @@ const Admin = () => {
           </Thead>
           <Tbody>
             {filteredAppointments?.length > 0 ? (
-              filteredAppointments.map((appointment, index) => (
+              filteredAppointments?.map((appointment, index) => (
                 <Tr key={appointment?.$id}>
                   <Td>
                     <HStack>
@@ -320,21 +326,22 @@ const Admin = () => {
                         : "yellow.400"
                     }
                     fontWeight={colorMode === "light" ? "bold" : "none"}
-                  
                   >
                     {appointment?.status || "Pending"}
                   </Td>
                   <Td>{appointment?.doctor || "No Doctor"}</Td>
                   <Td>
                     <Button
-                      bg={colorMode === "light" ? "green" :"none"}
-                      border={colorMode === "light" ? "none" :"2px solid green"}
+                      bg={colorMode === "light" ? "green" : "none"}
+                      border={
+                        colorMode === "light" ? "none" : "2px solid green"
+                      }
                       size="sm"
-                      w={{base:"100%",md:"60%"}}
+                      w={{ base: "100%", md: "60%" }}
                       color={"white"}
                       _hover={{
-                        bgColor:"green",
-                        color:"white"
+                        bgColor: "green",
+                        color: "white",
                       }}
                       onClick={() => openModal(index, true)}
                     >
@@ -344,13 +351,13 @@ const Admin = () => {
                       mt={2}
                       size="sm"
                       color={"white"}
-                      bg={colorMode === "light" ? "red.400" :"none"}
-                      border={colorMode === "light" ? "none" :"2px solid red"}
-                      w={{base:"100%",md:"60%"}}
+                      bg={colorMode === "light" ? "red.400" : "none"}
+                      border={colorMode === "light" ? "none" : "2px solid red"}
+                      w={{ base: "100%", md: "60%" }}
                       onClick={() => openModal(index, false)}
                       _hover={{
-                        bgColor:"red",
-                        color:"white"
+                        bgColor: "red",
+                        color: "white",
                       }}
                     >
                       Cancel

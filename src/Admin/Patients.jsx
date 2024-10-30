@@ -84,9 +84,8 @@ const Patients = () => {
           <Text>loading....</Text>
         ) : error ? (
           <Text color="red.500">{error}</Text>
-        ) : patients.length > 0 ? (
+        ) : patients?.length > 0 ? (
           <Box
-            // w={{ base: "100%" }}
             mt={{ base: "60%", md: "0%" }}
             h={"100%"}
             p={"0px"}
@@ -113,7 +112,7 @@ const Patients = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {patients.map((patient) => (
+                {patients?.map((patient) => (
                   <Tr key={patient.$id}>
                     <Td>
                       <HStack>
@@ -130,7 +129,7 @@ const Patients = () => {
                     </Td>
                     <Td>
                       <Button
-                        w={{ base: "100%", md: "60%" }}
+                        // w={{ base: "100%", md: "60%" }}
                         size={"sm"}
                         bg={"transparent"}
                         border={"2px solid green"}
@@ -145,7 +144,7 @@ const Patients = () => {
                       <Spacer />
                       <Button
                         mt={"5%"}
-                        w={{ base: "100%", md: "60%" }}
+                        // w={{ base: "100%", md: "60%" }}
                         size={"sm"}
                         bg={"transparent"}
                         border={"2px solid red"}
@@ -166,7 +165,8 @@ const Patients = () => {
         ) : (
           <Text
             alignItems={"center"}
-            mt={{ base: "30%", md: "0" }}
+            textAlign={"center"}
+            mt={{ base: "70%", md: "0" }}
             color="gray.500"
           >
             No patients found.

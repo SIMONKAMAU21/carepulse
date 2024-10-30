@@ -33,7 +33,7 @@ const Doctorsdata = () => {
   const [selectedDoctorId, setSelectedDoctorId] = useState(null); 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const cancelRef = React.useRef();
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     const fetchDoctors = async () => {

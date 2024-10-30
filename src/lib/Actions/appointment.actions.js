@@ -126,10 +126,11 @@ export const getRecentAppointmentList = async () => {
 
     return data;
   } catch (error) {
-    console.error(
-      "An error occurred while retrieving the recent appointments:",
-      error
-    );
+    throw new Error("failed to retrive the recent appointments")
+    // console.error(
+    //   "An error occurred while retrieving the recent appointments:",
+    //   error
+    // );
   }
 };
 export const sendSms = async (userId, content) => {

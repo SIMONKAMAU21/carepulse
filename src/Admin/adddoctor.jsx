@@ -28,10 +28,10 @@ const Adddoctor = () => {
   const [form, setForm] = useState({ email: "", drname: "", phone: "" });
   const [selectedFile, setSelectedFile] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [doctors, setDoctors] = useState([]); // Initialize state for doctors
+  const [doctors, setDoctors] = useState([]); 
 
   const handleDoctorUpdate = (newDoctor) => {
-    setDoctors((prevDoctors) => [...prevDoctors, newDoctor]); // Add new doctor to the list
+    setDoctors((prevDoctors) => [...prevDoctors, newDoctor]); 
   };
 
   const handleInputChange = (e) => {
@@ -118,7 +118,7 @@ const Adddoctor = () => {
               p={4}
             >
               <Header
-                width={{ base: "90%", md: "100%" }}
+                width={{ base: "90%", md: "100%",lg:"100%" }}
                 title={"Manage your Doctors"}
               />
 
@@ -226,7 +226,6 @@ const Adddoctor = () => {
                 objectFit="cover"
               />
             </Box>
-            woow
           </>
         }
       />
