@@ -286,7 +286,16 @@ const Admin = () => {
               <Th>Actions</Th>
             </Tr>
           </Thead>
-          <Tbody>
+          <Tbody
+            overflow={"scroll"}
+            sx={{
+              "::-webkit-scrollbar": {
+                display: "none",
+              },
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
             {filteredAppointments?.length > 0 ? (
               filteredAppointments?.map((appointment, index) => (
                 <Tr key={appointment?.$id}>
@@ -296,7 +305,7 @@ const Admin = () => {
                         name={appointment?.patientId?.name || "Unknown"}
                       />
                       <VStack align="start">
-                        <Text>{appointment?.patientId?.name || "No Name"}</Text>
+                        <Text>{appointment?.patientId?.name?.toLowerCase() || "No Name"}</Text>
                         <Text fontSize="sm" color="gray.400">
                           {appointment?.patientId?.email || "No Email"}
                         </Text>
