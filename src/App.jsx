@@ -11,6 +11,7 @@ import Admin from "./Admin/admin";
 import Adddoctor from "./Admin/adddoctor";
 import Patients from "./Admin/Patients";
 import PatientDashboard from "./Patient/patient.dashbord";
+import Callcenter from "./Pages/chatwoot/Callcenter";
 
 function App() {
   return (
@@ -26,9 +27,10 @@ function App() {
             element={<Success />}
           />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/doctor" element={<Adddoctor/>} />
-          <Route path="/Patients" element={<Patients/>} />
-          <Route path="/Patient/dashbord" element={<PatientDashboard/>} />
+          <Route path="/doctor" element={<Adddoctor />} />
+          <Route path="/Patients" element={<Patients />} />
+          <Route path="/Patient/dashbord" element={<PatientDashboard />} />
+          <Route path="/callcenter" element={<Callcenter />} />
         </Routes>
       </BrowserRouter>
     </Box>

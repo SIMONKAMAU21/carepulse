@@ -57,7 +57,7 @@ const Admin = () => {
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] =
-    useState(null);
+    useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [isScheduleModal, setIsScheduleModal] = useState(false);
   const { colorMode } = useColorMode();
@@ -412,10 +412,10 @@ const Admin = () => {
             ) : (
               <Textarea
                 placeholder="Enter cancellation reason"
-                value={
-                  appointments?.documents[selectedAppointmentIndex]
-                    ?.cancelReason || ""
-                }
+                // value={
+                //   appointments?.documents[selectedAppointmentIndex]
+                //     ?.cancelReason || ""
+                // }
                 onChange={(e) => handleReasonChange(e.target.value)}
               />
             )}

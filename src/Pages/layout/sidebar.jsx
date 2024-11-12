@@ -3,17 +3,18 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Box, HStack, Icon, Text, useColorMode, useTheme } from "@chakra-ui/react";
 import {
   MdDashboard,
-  MdReceipt,
+  // MdReceipt,
   MdSettings,
   MdAdd,
   MdPerson,
+  MdCall,
 } from "react-icons/md";
 
 export const sidebarLinks = [
   { path: "/admin", label: "Dashboard", icon: MdDashboard },
   { path: "/doctor", label: "Add doctor", icon: MdAdd },
   { path: "/Patients", label: "Patients", icon: MdPerson },
-  { path: "/statements", label: "Statements", icon: MdReceipt },
+  { path: "/callcenter", label: "call center", icon: MdCall },
   { path: "/settings", label: "Settings", icon: MdSettings },
 ];
 
