@@ -34,7 +34,6 @@ const Sidebar = () => {
         top="0"
         h="100vh"
         w={{base:"250px",md:"400px"}}
-        // bg={colorMode === 'dark' ? theme.styles.global({ colorMode }).body.bg : "rgba(0,0,0,0.85)"}
         bg={colorMode === 'dark' ? "rgba(10,10,10,0.85)" : "rgba(0,0,0,0.85)"}
         filter={"auto"}
       >

@@ -1,34 +1,43 @@
-import { Box, Text } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
-
+import { Box, Text, Button, VStack, useToast, Image, useColorMode } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import AuthWrapper from "../../Components/OnboarndingWrapper";
+import callcenter from "../../assets/call.jpg";
+import Header from "../../Components/header";
+import { useLocation } from "react-router-dom";
+import PatientHeader from "../../Patient/components/PatientHeader";
 const Callcenter = () => {
+  const [isChatwootLoaded, setIsChatwootLoaded] = useState(false);
+  const toast = useToast();
+  const location = useLocation();
+const {colorMode} = useColorMode()
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    console.log('user', user)
+    const user = JSON.parse(localStorage.getItem("user"));
     const userLoggedIn = !!user;
-
     if (userLoggedIn) {
-      (function(d, t) {
+      (function (d, t) {
         const BASE_URL = "https://app.chatwoot.com";
-        const g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+        const g = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
         g.src = BASE_URL + "/packs/js/sdk.js";
         g.async = true;
         g.defer = true;
         s.parentNode.insertBefore(g, s);
-        g.onload = function() {
+        g.onload = function () {
           window.chatwootSDK.run({
             websiteToken: "y3UBr9K1hNusY3hknPK6TGGa",
             baseUrl: BASE_URL,
-            locale: 'en',
+            locale: "en",
           });
 
-          // Automatically open the Chatwoot widget when it loads
           setTimeout(() => {
             if (window.$chatwoot) {
+              setIsChatwootLoaded(true);
               window.$chatwoot.toggle();
 
-              // Find the Chatwoot iframe and add the full-screen CSS class
-              const chatwootIframe = document.querySelector("iframe[title='chatwoot-web-widget']");
+              // Add fullscreen class
+              const chatwootIframe = document.querySelector(
+                "iframe[title='chatwoot-web-widget']"
+              );
               if (chatwootIframe) {
                 chatwootIframe.classList.add("chatwoot-fullscreen");
               }
@@ -38,22 +47,86 @@ const Callcenter = () => {
       })(document, "script");
     }
 
-    // Optional cleanup to remove the script on unmount
     return () => {
-      const chatwootScript = document.querySelector(`script[src="https://app.chatwoot.com/packs/js/sdk.js"]`);
+      const chatwootScript = document.querySelector(
+        `script[src="https://app.chatwoot.com/packs/js/sdk.js"]`
+      );
       if (chatwootScript) {
         chatwootScript.remove();
       }
     };
   }, []);
-  return(
-    <>
-    <Box>
-      <Text>hey</Text>
-    </Box>
-    
-    </>
-  )
+
+  const handleStartChat = () => {
+    if (window.$chatwoot) {
+      window.$chatwoot.toggle();
+    } else {
+      toast({
+        title: "Chat widget not ready.",
+        description: "Please wait for the chat widget to load.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+  const currentHeader =
+    location.pathname === "/simoCare/callcenter" ? (
+      <PatientHeader width={{ base: "100%", md: "98%" }}  />
+    ) : (
+      <Header  width={{ base: "100%", md: "98%" }}  /> 
+    );
+  return (
+    <AuthWrapper
+      leftChildren={
+        <>
+         <Box p={{base:0,md:4}} mt={{base:"none",md:"1%"}}>
+         {currentHeader}
+         </Box>
+          <Box
+            p={3}
+            h={"100%"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            display={"flex"}
+          >
+            <VStack spacing={6}>
+              <Text color={colorMode==="dark"? "white" : "green"} fontSize={{ base: "2xl", md: "4xl" }} fontWeight="bold">
+                Welcome to the Callcenter
+              </Text>
+              <Text color="gray.600">
+                We're here to assist you with any questions or issues. Start a
+                chat with our support team or browse through FAQs for quick
+                solutions.
+              </Text>
+              <Button colorScheme="blue" onClick={handleStartChat}>
+                {isChatwootLoaded ? "Start Chat" : "Loading Chat..."}
+              </Button>
+              <Text
+                fontSize="sm"
+                color={isChatwootLoaded ? "green.500" : "red.500"}
+              >
+                {isChatwootLoaded
+                  ? "Chat widget loaded successfully!"
+                  : "Chat widget is loading..."}
+              </Text>
+            </VStack>
+          </Box>
+        </>
+      }
+      rightChildren={
+        <Box  height="100vh" width="100%">
+          <Image
+            src={callcenter}
+            alt="callcenter"
+            height="100%"
+            width="100%"
+            objectFit="cover"
+          />
+        </Box>
+      }
+    />
+  );
 };
 
 export default Callcenter;

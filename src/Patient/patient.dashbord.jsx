@@ -73,8 +73,6 @@ const PatientDashboard = () => {
     );
   }
 
-
-
   const viewHistory = () => {
     // Add logic to view appointment history
     navigate("/AppointmentHistory");
@@ -82,8 +80,8 @@ const PatientDashboard = () => {
 
   return (
     <VStack>
-      <PatientHeader width={{ base: "99%", md: "99%" }} />
-<Callcenter/>
+      <PatientHeader width={{ base: "100%", md: "99%" }} />
+  
       <Menu>
         <MenuButton
           as={IconButton}
@@ -91,11 +89,11 @@ const PatientDashboard = () => {
           icon={<ChevronDownIcon />}
           variant="outline"
           position="fixed"
-          top={{base:"8%",md:"1%"}}
+          top={{ base: "8%", md: "1%" }}
           right={{ base: "-1%", md: "10%" }}
           zIndex={1}
           border={"none"}
-          size={{base:"md",md:"lg"}}
+          size={{ base: "md", md: "lg" }}
           // bg={"#24AE7C"}
         />
         <MenuList color={colorMode === "dark" ? "white" : "green.400"}>

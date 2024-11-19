@@ -16,7 +16,6 @@ import logo from "../assets/i.mp4";
 import log from "../assets/i (2).mp4";
 import Sidebar from "../Pages/layout/sidebar";
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
-import Callcenter from "../Pages/chatwoot/Callcenter";
 
 const Header = ({ width, title, subTitle }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,8 +27,9 @@ const Header = ({ width, title, subTitle }) => {
   return (
     <>
       <HStack
-        borderRadius={"10px"}
+        borderRadius={{base:"0",md:"10px"}}
         w={width}
+        boxShadow='dark-lg'
         p={4}
         bg={
           colorMode === "light"
@@ -38,7 +38,6 @@ const Header = ({ width, title, subTitle }) => {
         }
         position={{ base: "fixed", md: "relative" }}
       >
-        <Callcenter/>
         <IconButton
           icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
           onClick={isOpen ? onClose : onOpen}

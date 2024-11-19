@@ -28,10 +28,10 @@ const Adddoctor = () => {
   const [form, setForm] = useState({ email: "", drname: "", phone: "" });
   const [selectedFile, setSelectedFile] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [doctors, setDoctors] = useState([]); 
+  const [doctors, setDoctors] = useState([]);
 
   const handleDoctorUpdate = (newDoctor) => {
-    setDoctors((prevDoctors) => [...prevDoctors, newDoctor]); 
+    setDoctors((prevDoctors) => [...prevDoctors, newDoctor]);
   };
 
   const handleInputChange = (e) => {
@@ -111,14 +111,13 @@ const Adddoctor = () => {
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
               }}
-              // bg={"#131619"}
               color={"white"}
               w={"100%"}
               h={"100%"}
-              p={4}
+              p={{base:"none",md:4}}
             >
               <Header
-                width={{ base: "90%", md: "100%",lg:"100%" }}
+                width={{ base: "100%", md: "100%", lg: "100%" }}
                 title={"Manage your Doctors"}
               />
 

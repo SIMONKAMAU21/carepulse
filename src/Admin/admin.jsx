@@ -54,8 +54,7 @@ const Admin = () => {
     cancelledCount: 0,
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedAppointmentIndex, setSelectedAppointmentIndex] =
-    useState();
+  const [selectedAppointmentIndex, setSelectedAppointmentIndex] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [isScheduleModal, setIsScheduleModal] = useState(false);
   const { colorMode } = useColorMode();
@@ -179,8 +178,6 @@ const Admin = () => {
         columns={{ base: 3, md: 3 }}
         spacing={6}
         w={"100%"}
-        // h={{ base: "15%", md: "10%" }}
-        // overflow={"scroll"}
         sx={{
           "::-webkit-scrollbar": {
             display: "none",
@@ -189,12 +186,24 @@ const Admin = () => {
           msOverflowStyle: "none",
         }}
       >
-        
-       <CountBox gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"} icon={FaCalendarCheck} count={appointments?.scheduledCount} title={"scheduled appointments"}/>
-       <CountBox gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"} icon={FaClock} count={appointments?.pendingCount} title={"pending appointments"}/>
-       <CountBox gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"} icon={FaExclamationTriangle} count={appointments?.cancelledCount} title={"cancelled appointments"}/>
-
-
+        <CountBox
+          gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
+          icon={FaCalendarCheck}
+          count={appointments?.scheduledCount}
+          title={"scheduled appointments"}
+        />
+        <CountBox
+          gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
+          icon={FaClock}
+          count={appointments?.pendingCount}
+          title={"pending appointments"}
+        />
+        <CountBox
+          gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
+          icon={FaExclamationTriangle}
+          count={appointments?.cancelledCount}
+          title={"cancelled appointments"}
+        />
       </SimpleGrid>
       <Box mt={{ base: "5%", md: "1%" }} w={{ base: "100%", md: "50%" }}>
         <SearchInput
@@ -237,7 +246,10 @@ const Admin = () => {
                         name={appointment?.patientId?.name || "Unknown"}
                       />
                       <VStack align="start">
-                        <Text>{appointment?.patientId?.name?.toLowerCase() || "No Name"}</Text>
+                        <Text>
+                          {appointment?.patientId?.name?.toLowerCase() ||
+                            "No Name"}
+                        </Text>
                         <Text fontSize="sm" color="gray.400">
                           {appointment?.patientId?.email || "No Email"}
                         </Text>

@@ -30,7 +30,9 @@ function App() {
           <Route path="/doctor" element={<Adddoctor />} />
           <Route path="/Patients" element={<Patients />} />
           <Route path="/Patient/dashbord" element={<PatientDashboard />} />
+          <Route path="/simoCare/callcenter" element={<Callcenter />} />
           <Route path="/callcenter" element={<Callcenter />} />
+
         </Routes>
       </BrowserRouter>
     </Box>
