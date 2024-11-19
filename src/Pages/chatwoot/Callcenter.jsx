@@ -1,5 +1,5 @@
+import { Box, Text } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
-import './Callcenter.css'; // Ensure this file is linked in your project
 
 const Callcenter = () => {
   useEffect(() => {
@@ -46,6 +46,14 @@ const Callcenter = () => {
       }
     };
   }, []);
+  return(
+    <>
+    <Box>
+      <Text>hey</Text>
+    </Box>
+    
+    </>
+  )
 };
 
 export default Callcenter;
