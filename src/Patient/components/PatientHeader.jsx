@@ -1,19 +1,14 @@
 import {
-  Heading,
   HStack,
   IconButton,
-  Image,
   Spacer,
-  Text,
   useColorMode,
   useDisclosure,
   useTheme,
-  VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import logo from "../../assets/i.mp4";
 import log from "../../assets/i (2).mp4";
-
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import PatiendSidebar from "./patientSidebar";
 
