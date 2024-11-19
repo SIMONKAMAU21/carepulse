@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import '../chatwoot/callcenter.css'
+import './Callcenter.css'; // Ensure this file is linked in your project
+
 const Callcenter = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-
+    console.log('user', user)
     const userLoggedIn = !!user;
-
 
     if (userLoggedIn) {
       (function(d, t) {
@@ -17,19 +17,28 @@ const Callcenter = () => {
         s.parentNode.insertBefore(g, s);
         g.onload = function() {
           window.chatwootSDK.run({
-            websiteToken: "y3UBr9K1hNusY3hknPK6TGGa", 
+            websiteToken: "y3UBr9K1hNusY3hknPK6TGGa",
             baseUrl: BASE_URL,
             locale: 'en',
           });
-         
+
+          // Automatically open the Chatwoot widget when it loads
           setTimeout(() => {
-            window.$chatwoot && window.$chatwoot.toggle();
-          }, 500); 
+            if (window.$chatwoot) {
+              window.$chatwoot.toggle();
+
+              // Find the Chatwoot iframe and add the full-screen CSS class
+              const chatwootIframe = document.querySelector("iframe[title='chatwoot-web-widget']");
+              if (chatwootIframe) {
+                chatwootIframe.classList.add("chatwoot-fullscreen");
+              }
+            }
+          }, 200);
         };
       })(document, "script");
     }
 
-    // Optional cleanup
+    // Optional cleanup to remove the script on unmount
     return () => {
       const chatwootScript = document.querySelector(`script[src="https://app.chatwoot.com/packs/js/sdk.js"]`);
       if (chatwootScript) {
@@ -37,7 +46,6 @@ const Callcenter = () => {
       }
     };
   }, []);
-
 };
 
 export default Callcenter;

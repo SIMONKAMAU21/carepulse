@@ -16,6 +16,7 @@ import { getAppointmentByUserId } from "../lib/Actions/appointment.actions";
 import PatientHeader from "./components/PatientHeader";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import Callcenter from "../Pages/chatwoot/Callcenter";
 
 const PatientDashboard = () => {
   const [appointmentData, setAppointmentData] = useState([]);
@@ -82,7 +83,7 @@ const PatientDashboard = () => {
   return (
     <VStack>
       <PatientHeader width={{ base: "99%", md: "99%" }} />
-
+<Callcenter/>
       <Menu>
         <MenuButton
           as={IconButton}

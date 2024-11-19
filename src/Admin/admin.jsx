@@ -27,9 +27,6 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  IconButton,
-  InputGroup,
-  InputLeftElement,
   useColorMode,
 } from "@chakra-ui/react";
 
@@ -47,6 +44,7 @@ import {
 import { ErrorToast, SuccessToast } from "../Components/toaster";
 import Header from "../Components/header";
 import SearchInput from "../Components/Search";
+import CountBox from "../Components/CountBox";
 
 const Admin = () => {
   const [appointments, setAppointments] = useState({
@@ -177,12 +175,12 @@ const Admin = () => {
         subTitle={"Start day with managing new appointments"}
       />
       <SimpleGrid
-        mt={{ base: "60%", md: "0%" }}
-        // border={"2px solid"}
-        columns={{ base: 1, md: 3 }}
+        mt={{ base: "55%", md: "0%" }}
+        columns={{ base: 3, md: 3 }}
         spacing={6}
-        h={{ base: "25%", md: "10%" }}
-        overflow={"scroll"}
+        w={"100%"}
+        // h={{ base: "15%", md: "10%" }}
+        // overflow={"scroll"}
         sx={{
           "::-webkit-scrollbar": {
             display: "none",
@@ -191,80 +189,14 @@ const Admin = () => {
           msOverflowStyle: "none",
         }}
       >
-        <Box
-          bgGradient="linear(to-l, rgb(255,209,71),#1c1e22, #1c1e22)"
-          p={{ base: "2", md: "4" }}
-          borderRadius="md"
-          shadow="md"
-          // h={{ base: "auto", md: "auto" }}
-        >
-          <VStack align="start">
-            <HStack>
-              <Icon
-                as={FaCalendarCheck}
-                boxSize={{ base: 6, md: 8 }}
-                color="rgb(255,209,71)"
-              />
-              <Heading size={{ base: "md", md: "lg" }}>
-                {appointments?.scheduledCount}
-              </Heading>
-            </HStack>
-            <Text fontSize={{ base: "sm", md: "sm" }}>
-              Total number of scheduled appointments
-            </Text>
-          </VStack>
-        </Box>
-        <Box
-          bgGradient="linear(to-l, blue.200,#1c1e22, #1c1e22)"
-          p={{ base: "2", md: "4" }}
-          borderRadius="md"
-          shadow="md"
-          // h={{ base: "auto", md: "" }}
-        >
-          <VStack align="start">
-            <HStack>
-              <Icon
-                as={FaClock}
-                boxSize={{ base: 6, md: 8 }}
-                color="blue.200"
-              />
-              <Heading size={{ base: "md", md: "lg" }}>
-                {appointments?.pendingCount}
-              </Heading>
-            </HStack>
-            <Text
-              mt={{ base: "none", md: "1%" }}
-              fontSize={{ base: "sm", md: "md" }}
-            >
-              Total number of pending appointments
-            </Text>
-          </VStack>
-        </Box>
-        <Box
-          bgGradient="linear(to-l, red.300,#1c1e22, #1c1e22)"
-          p={{ base: "2", md: "4" }}
-          borderRadius="md"
-          shadow="md"
-          // h={{ base: "auto", md: "" }}
-        >
-          <VStack align="start">
-            <HStack>
-              <Icon
-                as={FaExclamationTriangle}
-                boxSize={{ base: 6, md: 8 }}
-                color="red.400"
-              />
-              <Heading size={{ base: "md", md: "lg" }}>
-                {appointments.cancelledCount}
-              </Heading>
-            </HStack>
-            <Text fontSize={{ base: "sm", md: "md" }}>
-              Total number of cancelled appointments
-            </Text>
-          </VStack>
-        </Box>
+        
+       <CountBox gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"} icon={FaCalendarCheck} count={appointments?.scheduledCount} title={"scheduled appointments"}/>
+       <CountBox gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"} icon={FaClock} count={appointments?.pendingCount} title={"pending appointments"}/>
+       <CountBox gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"} icon={FaExclamationTriangle} count={appointments?.cancelledCount} title={"cancelled appointments"}/>
+
+
       </SimpleGrid>
-      <Box mt={{ base: "none", md: "1%" }} w={{ base: "100%", md: "50%" }}>
+      <Box mt={{ base: "5%", md: "1%" }} w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
           onChange={handleSearch}
