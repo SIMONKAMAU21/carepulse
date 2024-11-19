@@ -1,15 +1,26 @@
-import { Box, Text, Button, VStack, useToast, Image, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Button,
+  VStack,
+  useToast,
+  Image,
+  useColorMode,
+  Icon,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AuthWrapper from "../../Components/OnboarndingWrapper";
 import callcenter from "../../assets/call.jpg";
 import Header from "../../Components/header";
 import { useLocation } from "react-router-dom";
 import PatientHeader from "../../Patient/components/PatientHeader";
+import { FaCalendarPlus } from "react-icons/fa6";
+import { MdCall } from "react-icons/md";
 const Callcenter = () => {
   const [isChatwootLoaded, setIsChatwootLoaded] = useState(false);
   const toast = useToast();
   const location = useLocation();
-const {colorMode} = useColorMode()
+  const { colorMode } = useColorMode();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     const userLoggedIn = !!user;
@@ -23,6 +34,11 @@ const {colorMode} = useColorMode()
         g.defer = true;
         s.parentNode.insertBefore(g, s);
         g.onload = function () {
+          window.chatwootSettings = {
+            position: "center",
+            type: "standard",
+            launcherTitle: "Chat with us",
+          };
           window.chatwootSDK.run({
             websiteToken: "y3UBr9K1hNusY3hknPK6TGGa",
             baseUrl: BASE_URL,
@@ -72,17 +88,17 @@ const {colorMode} = useColorMode()
   };
   const currentHeader =
     location.pathname === "/simoCare/callcenter" ? (
-      <PatientHeader width={{ base: "100%", md: "98%" }}  />
+      <PatientHeader width={{ base: "100%", md: "98%" }} />
     ) : (
-      <Header  width={{ base: "100%", md: "98%" }}  /> 
+      <Header width={{ base: "100%", md: "98%" }} />
     );
   return (
     <AuthWrapper
       leftChildren={
         <>
-         <Box p={{base:0,md:4}} mt={{base:"none",md:"1%"}}>
-         {currentHeader}
-         </Box>
+          <Box p={{ base: 0, md: 4 }} mt={{ base: "none", md: "1%" }}>
+            {currentHeader}
+          </Box>
           <Box
             p={3}
             h={"100%"}
@@ -90,11 +106,15 @@ const {colorMode} = useColorMode()
             alignItems={"center"}
             display={"flex"}
           >
-            <VStack spacing={6}>
-              <Text color={colorMode==="dark"? "white" : "green"} fontSize={{ base: "2xl", md: "4xl" }} fontWeight="bold">
-                Welcome to the Callcenter
+            <VStack justifyContent={"center"} h={{base:"70%",md:"40%"}} boxShadow={"dark-lg"} spacing={6} borderRadius={"10px"}>
+              <Text
+                color={colorMode === "dark" ? "green.400" : "rgb(36,174,124)"}
+                fontSize={{ base: "2xl", md: "4xl" }}
+                fontWeight="bold"
+              >
+                <Icon as={MdCall} /> Welcome to the Callcenter
               </Text>
-              <Text color="gray.600">
+              <Text fontSize={{base:"10px",md:"18px"}} p={"10px"} color="gray.400">
                 We're here to assist you with any questions or issues. Start a
                 chat with our support team or browse through FAQs for quick
                 solutions.
@@ -115,7 +135,7 @@ const {colorMode} = useColorMode()
         </>
       }
       rightChildren={
-        <Box  height="100vh" width="100%">
+        <Box height="100vh" width="100%">
           <Image
             src={callcenter}
             alt="callcenter"
