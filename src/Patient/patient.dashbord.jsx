@@ -17,11 +17,8 @@ import { getAppointmentByUserId } from "../lib/Actions/appointment.actions";
 import PatientHeader from "./components/PatientHeader";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import Callcenter from "../Pages/chatwoot/Callcenter";
-import Header from "../Components/header";
 import CountBox from "../Components/CountBox";
 import {
-  FaAccessibleIcon,
   FaCalendarCheck,
   FaClock,
   FaExclamationTriangle,
@@ -86,7 +83,9 @@ const PatientDashboard = () => {
     // Add logic to view appointment history
     navigate("/AppointmentHistory");
   };
-
+const pendingCount = appointmentData.filter((appointment)=>appointment.status=== "pending").length;
+const scheduledCount =appointmentData.filter((appointment)=>appointment.status === "Scheduled").length
+const cancelledCount = appointmentData.filter((appointment)=> appointment.status === "Cancelled").length
   return (
     <VStack>
       <PatientHeader width={{ base: "100%", md: "99%" }} />
@@ -114,7 +113,7 @@ const PatientDashboard = () => {
       </Menu>
       <Box  p={2} w={"100%"}>
         <SimpleGrid
-          mt={{ base: "35%", md: "0%" }}
+          mt={{ base: "29%", md: "0%" }}
           columns={{ base: 3, md: 3 }}
           spacing={6}
           w={"100%"}
@@ -129,19 +128,19 @@ const PatientDashboard = () => {
           <CountBox
             gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
             icon={FaCalendarCheck}
-            count={"7"}
+            count={scheduledCount}
             title={"scheduled appointments"}
           />
           <CountBox
             gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
             icon={FaClock}
-            count={"7"}
+            count={pendingCount}
             title={"pending appointments"}
           />
           <CountBox
             gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
             icon={FaExclamationTriangle}
-            count={"7"}
+            count={cancelledCount}
             title={"cancelled appointments"}
           />
         </SimpleGrid>
