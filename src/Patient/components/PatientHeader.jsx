@@ -22,7 +22,7 @@ const PatientHeader = ({ width, title, subTitle }) => {
   return (
     <>
       <HStack
-        borderRadius={{ base: "0px", md: "10px" }}
+        borderRadius={{ base: "0px", md: "1px" }}
         w={width}
         display={"flex"}
         p={4}

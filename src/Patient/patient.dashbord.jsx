@@ -11,6 +11,7 @@ import {
   IconButton,
   Button,
   SimpleGrid,
+  HStack,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { getAppointmentByUserId } from "../lib/Actions/appointment.actions";
@@ -83,13 +84,18 @@ const PatientDashboard = () => {
     // Add logic to view appointment history
     navigate("/AppointmentHistory");
   };
-const pendingCount = appointmentData.filter((appointment)=>appointment.status=== "pending").length;
-const scheduledCount =appointmentData.filter((appointment)=>appointment.status === "Scheduled").length
-const cancelledCount = appointmentData.filter((appointment)=> appointment.status === "Cancelled").length
+  const pendingCount = appointmentData.filter(
+    (appointment) => appointment.status === "pending"
+  ).length;
+  const scheduledCount = appointmentData.filter(
+    (appointment) => appointment.status === "Scheduled"
+  ).length;
+  const cancelledCount = appointmentData.filter(
+    (appointment) => appointment.status === "Cancelled"
+  ).length;
   return (
     <VStack>
-      <PatientHeader width={{ base: "100%", md: "99%" }} />
-
+      <PatientHeader width={{ base: "100%", md: "100%" }} />
       <Menu>
         <MenuButton
           as={IconButton}
@@ -111,7 +117,7 @@ const cancelledCount = appointmentData.filter((appointment)=> appointment.status
           <MenuItem onClick={viewHistory}>View appointment history</MenuItem>
         </MenuList>
       </Menu>
-      <Box  p={2} w={"100%"}>
+      <Box p={2} w={"100%"}>
         <SimpleGrid
           mt={{ base: "29%", md: "0%" }}
           columns={{ base: 3, md: 3 }}
@@ -148,47 +154,78 @@ const cancelledCount = appointmentData.filter((appointment)=> appointment.status
       <Box
         mt={{ base: "1%", md: "0" }}
         w={"100%"}
-        // h={"90vh"}
         overflowY={"scroll"}
         color={colorMode === "dark" ? "white" : "black"}
       >
         {appointmentData.length > 0 ? (
-          appointmentData.map((appointment) => {
-            const patient = appointment.patientId;
-            return (
-              <Box
-                key={appointment.$id}
-                mt={4}
-                p={4}
-                borderWidth={1}
-                borderRadius="md"
-              >
-                {/* <Text fontSize="2xl">Welcome, {patient.name}</Text>
-                <Text>
-                  <strong>Email:</strong> {patient.email}
-                </Text>
-                <Text>
-                  <strong>Phone:</strong> {patient.phone}
-                </Text>
-                <Text>
-                  <strong>Date of Birth:</strong> {patient.birthDate}
-                </Text>
-                <Text>
-                  <strong>Primary Physician:</strong> {patient.primaryPhysician}
-                </Text> */}
-                <Text>
-                  <strong>Doctor:</strong> {appointment.doctor}
-                </Text>
-                <Text>
-                  <strong>Appointment Reason:</strong>
-                  {appointment.appointmentReason}
-                </Text>
-                <Text>
-                  <strong>Status:</strong> {appointment.status}
-                </Text>
-              </Box>
-            );
-          })
+          <SimpleGrid p={2} columns={{ base: 1, md: 4 }} spacing={{base:2,md:6}}>
+            {appointmentData.map((appointment) => {
+              const statusColor = (status) => {
+                switch (status) {
+                  case "Cancelled":
+                    return "red.400";
+                  case "Scheduled":
+                    return "green.400";
+                  case "pending":
+                    return "yellow.400";
+                  default:
+                    return "gray.400";
+                }
+              };
+              return (
+                <Box
+                  key={appointment.$id}
+                  mt={4}
+                  p={4}
+                  borderWidth={1}
+                  borderRadius="md"
+                  bg={colorMode === "dark" ? "gray.700" : "gray.100"}
+                  boxShadow="md"
+                >
+                  <Text>
+                    <strong>Doctor:</strong> {appointment.doctor}
+                  </Text>
+                  <Text>
+                    <strong>Appointment Reason:</strong>{" "}
+                    {appointment.appointmentReason}
+                  </Text>
+
+                  <HStack>
+                    <Text fontWeight={"bold"}>Status:</Text>
+                    <Text
+                      fontWeight={"bold"}
+                      fontSize={{ base: "15px", md: "18px" }}
+                      color={statusColor(appointment.status)}
+                    >
+                      {appointment.status}
+                    </Text>
+                  </HStack>
+                  {appointment.status === "Cancelled" && (
+                    <Box
+                      h={"auto"}
+                      w={"auto"}
+                      p={1}
+                      borderRadius={"10px"}
+                      bgGradient={
+                        "linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"
+                      }
+                      fontSize={{ base: "10px", md: "15px" }}
+                    >
+                      <Text
+                        color={colorMode === "light" ? "white" : "white"}
+                        fontWeight={"bold"}
+                      >
+                        This appointment has been canceled due to this reason :
+                      </Text>
+                      <Text fontWeight={"700"} color={"green"}>
+                        {appointment.cancelReason}
+                      </Text>
+                    </Box>
+                  )}
+                </Box>
+              );
+            })}
+          </SimpleGrid>
         ) : (
           <Text>No patient data available</Text>
         )}

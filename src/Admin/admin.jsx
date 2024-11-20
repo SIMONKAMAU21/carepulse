@@ -189,7 +189,7 @@ const Admin = () => {
         <CountBox
           gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
           icon={FaCalendarCheck}
-          count={appointments?.scheduledCount}
+          count={appointments?.scheduledCount || "0"}
           title={"scheduled appointments"}
         />
         <CountBox
