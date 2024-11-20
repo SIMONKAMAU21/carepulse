@@ -9,9 +9,7 @@ import {
 
 export const sidebarLinks = [
   { path: "/patient/dashbord", label: "Dashboard", icon: MdDashboard },
-  // { path: "/doctor", label: "Add doctor", icon: MdMonetizationOn },
   { path: "/simoCare/callcenter", label: "call center", icon: MdCall },
-  // { path: "/statements", label: "Statements", icon: MdReceipt },
   { path: "/settings", label: "Settings", icon: MdSettings },
 ];
 
@@ -49,10 +47,12 @@ const PatiendSidebar = () => {
               w="100%"
               bg={location.pathname.includes(link.path) ? "blue.400" : "none"}
               p="3"
-              _hover={{ bg: "#002E3A" }}
+              _hover={{ bg: "#002E3A", color:"red"}}
             >
               <HStack
                 spacing="4"
+                fontSize={{base:"15px",md:"18px"}}
+                fontWeight={{base:"500",md:"700"}}
                 alignItems="center"
                 color={
                   location.pathname.includes(link.path) ? "white" : "white"
@@ -63,8 +63,8 @@ const PatiendSidebar = () => {
                   boxSize="6"
                   color={
                     location.pathname.includes(link.path)
-                      ? "rgb(130,186,38)"
-                      : "gray.500"
+                      ? "white"
+                      : "blue.500"
                   }
                 />
                 <Text>{link.label}</Text>

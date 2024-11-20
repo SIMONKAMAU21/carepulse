@@ -10,6 +10,7 @@ import {
   VStack,
   IconButton,
   Button,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { getAppointmentByUserId } from "../lib/Actions/appointment.actions";
@@ -17,6 +18,14 @@ import PatientHeader from "./components/PatientHeader";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Callcenter from "../Pages/chatwoot/Callcenter";
+import Header from "../Components/header";
+import CountBox from "../Components/CountBox";
+import {
+  FaAccessibleIcon,
+  FaCalendarCheck,
+  FaClock,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 
 const PatientDashboard = () => {
   const [appointmentData, setAppointmentData] = useState([]);
@@ -81,7 +90,7 @@ const PatientDashboard = () => {
   return (
     <VStack>
       <PatientHeader width={{ base: "100%", md: "99%" }} />
-  
+
       <Menu>
         <MenuButton
           as={IconButton}
@@ -94,18 +103,53 @@ const PatientDashboard = () => {
           zIndex={1}
           border={"none"}
           size={{ base: "md", md: "lg" }}
-          // bg={"#24AE7C"}
         />
-        <MenuList color={colorMode === "dark" ? "white" : "green.400"}>
+        <MenuList
+          boxShadow={"dark-lg"}
+          color={colorMode === "dark" ? "white" : "black"}
+        >
           <MenuItem onClick={newAppointment}>Make new appointment</MenuItem>
           <MenuItem onClick={viewHistory}>View appointment history</MenuItem>
         </MenuList>
       </Menu>
-
+      <Box  p={2} w={"100%"}>
+        <SimpleGrid
+          mt={{ base: "35%", md: "0%" }}
+          columns={{ base: 3, md: 3 }}
+          spacing={6}
+          w={"100%"}
+          sx={{
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
+          <CountBox
+            gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
+            icon={FaCalendarCheck}
+            count={"7"}
+            title={"scheduled appointments"}
+          />
+          <CountBox
+            gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
+            icon={FaClock}
+            count={"7"}
+            title={"pending appointments"}
+          />
+          <CountBox
+            gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
+            icon={FaExclamationTriangle}
+            count={"7"}
+            title={"cancelled appointments"}
+          />
+        </SimpleGrid>
+      </Box>
       <Box
-        mt={{ base: "25%", md: "0" }}
+        mt={{ base: "1%", md: "0" }}
         w={"100%"}
-        h={"90vh"}
+        // h={"90vh"}
         overflowY={"scroll"}
         color={colorMode === "dark" ? "white" : "black"}
       >
@@ -120,7 +164,7 @@ const PatientDashboard = () => {
                 borderWidth={1}
                 borderRadius="md"
               >
-                <Text fontSize="2xl">Welcome, {patient.name}</Text>
+                {/* <Text fontSize="2xl">Welcome, {patient.name}</Text>
                 <Text>
                   <strong>Email:</strong> {patient.email}
                 </Text>
@@ -132,7 +176,7 @@ const PatientDashboard = () => {
                 </Text>
                 <Text>
                   <strong>Primary Physician:</strong> {patient.primaryPhysician}
-                </Text>
+                </Text> */}
                 <Text>
                   <strong>Doctor:</strong> {appointment.doctor}
                 </Text>

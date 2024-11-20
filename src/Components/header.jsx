@@ -88,7 +88,7 @@ const Header = ({ width, title, subTitle }) => {
         align="start"
         p={4}
       >
-        <Heading>{title}</Heading>
+        <Heading fontFamily={"sans-serif"}>{title}</Heading>
         <Text>{subTitle}</Text>
       </VStack>
 

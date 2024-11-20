@@ -1,10 +1,13 @@
 import {
+  Heading,
   HStack,
   IconButton,
   Spacer,
+  Text,
   useColorMode,
   useDisclosure,
   useTheme,
+  VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import logo from "../../assets/i.mp4";
@@ -63,7 +66,6 @@ const PatientHeader = ({ width, title, subTitle }) => {
           color={colorMode === "light" ? "black" : "white"}
         />{" "}
       </HStack>
-
       {/* <VStack
           // bg={"#131619"}
           bg={colorMode === "light" ? "white" : theme.colors.primary.dark}

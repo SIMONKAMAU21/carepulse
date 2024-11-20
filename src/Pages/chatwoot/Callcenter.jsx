@@ -14,7 +14,6 @@ import callcenter from "../../assets/call.jpg";
 import Header from "../../Components/header";
 import { useLocation } from "react-router-dom";
 import PatientHeader from "../../Patient/components/PatientHeader";
-import { FaCalendarPlus } from "react-icons/fa6";
 import { MdCall } from "react-icons/md";
 const Callcenter = () => {
   const [isChatwootLoaded, setIsChatwootLoaded] = useState(false);
