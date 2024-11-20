@@ -28,9 +28,12 @@ import {
 import { MdApproval } from "react-icons/md";
 
 const PatientDashboard = () => {
-  const [appointmentData, setAppointmentData] = useState([]);
+  const [allAppointments, setAllAppointments] = useState([]); // Store the original data
+const [filteredAppointments, setFilteredAppointments] = useState([]); // Store filtered data
+const [selectedStatus, setSelectedStatus] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
 
@@ -42,13 +45,14 @@ const PatientDashboard = () => {
         setLoading(false);
         return;
       }
-
+  
       try {
         const userId = user.id;
         const response = await getAppointmentByUserId(userId);
-
+  
         if (response && response.documents && response.documents.length > 0) {
-          setAppointmentData(response.documents);
+          setAllAppointments(response.documents);
+          setFilteredAppointments(response.documents); // Initially show all
         } else {
           setError("No appointments found for this user");
         }
@@ -58,7 +62,7 @@ const PatientDashboard = () => {
         setLoading(false);
       }
     };
-
+  
     fetchPatientDetails();
   }, []);
 
@@ -82,19 +86,29 @@ const PatientDashboard = () => {
     );
   }
 
-  const viewHistory = () => {
-    // Add logic to view appointment history
-    navigate("/AppointmentHistory");
+
+  const handleFilter = (status) => {
+    if (status === "All") {
+      setFilteredAppointments(allAppointments); // Show all appointments
+    } else {
+      const filtered = allAppointments.filter(
+        (appointment) => appointment.status === status
+      );
+      setFilteredAppointments(filtered);
+    }
+    setSelectedStatus(status);
   };
-  const pendingCount = appointmentData.filter(
+
+  const pendingCount = allAppointments.filter(
     (appointment) => appointment.status === "pending"
   ).length;
-  const scheduledCount = appointmentData.filter(
+  const scheduledCount = allAppointments.filter(
     (appointment) => appointment.status === "Scheduled"
   ).length;
-  const cancelledCount = appointmentData.filter(
+  const cancelledCount = allAppointments.filter(
     (appointment) => appointment.status === "Cancelled"
   ).length;
+
   return (
     <VStack  fontSize={{base:"12px",md:"18px"}}>
       <PatientHeader width={{ base: "100%", md: "100%" }} />
@@ -116,7 +130,7 @@ const PatientDashboard = () => {
           color={colorMode === "dark" ? "white" : "black"}
         >
           <MenuItem onClick={newAppointment}>Make new appointment</MenuItem>
-          <MenuItem onClick={viewHistory}>View appointment history</MenuItem>
+          <MenuItem >View appointment history</MenuItem>
         </MenuList>
       </Menu>
       <Box p={2} w={"100%"}>
@@ -137,18 +151,22 @@ const PatientDashboard = () => {
             gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
             icon={FaCalendarCheck}
             count={scheduledCount}
+            clickMe={()=>handleFilter("Scheduled")}
             title={"scheduled appointments"}
           />
           <CountBox
             gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
             icon={FaClock}
             count={pendingCount}
+            clickMe={() => handleFilter("pending")}
             title={"pending appointments"}
+
           />
           <CountBox
             gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
             icon={FaExclamationTriangle}
             count={cancelledCount}
+            clickMe={()=> handleFilter("Cancelled")}
             title={"cancelled appointments"}
           />
         </SimpleGrid>
@@ -159,14 +177,14 @@ const PatientDashboard = () => {
         overflowY={"scroll"}
         color={colorMode === "dark" ? "white" : "black"}
       >
-        {appointmentData.length > 0 ? (
+        {filteredAppointments.length > 0 ? (
           <SimpleGrid
           boxShadow={"2xl"}
             p={2}
             columns={{ base: 1, md: 4 }}
             spacing={{ base: 2, md: 6 }}
           >
-            {appointmentData.map((appointment) => {
+            {filteredAppointments.map((appointment) => {
               const statusColor = (status) => {
                 switch (status) {
                   case "Cancelled":
@@ -212,7 +230,6 @@ const PatientDashboard = () => {
                       h={"auto"}
                       w={"auto"}
                       p={1}
-                      boxShadow={"dark-lg"}
                       borderRadius={"10px"}
                       bgGradient={colorMode==="light"?
                         "linear(to-l, rgb(148,109,109),#1d1f22, #1c1e22)":"linear(to-l, rgb(148,109,109),#1c1e22, #1c1e22)"
@@ -269,7 +286,7 @@ const PatientDashboard = () => {
                         color={colorMode === "light" ? "green.300" : "green.300"}
                         fontWeight={"bold"}
                       >
-                        Your appointment has been scheduled for this date {appointment.appointmentDate ?new Date(
+                        Your appointment has been scheduled for this date:  {appointment.appointmentDate ?new Date(
                           appointment.appointmentDate
                         ).toDateString("en-US",{
                           year:"numeric",
