@@ -5,6 +5,7 @@ import {
   Button,
   Heading,
   Image,
+  SimpleGrid,
   Spacer,
   Text,
   useColorMode,
@@ -62,7 +63,7 @@ const Success = () => {
     <AuthWrapper
       leftChildren={
         <>
-          <Box  ml={{ base: "10%", md: "20%" }} h={"100%"}>
+          <Box>
             <NavLink to={"/"}>
               <video
                 src={colorMode === "dark" ? log : logo}
@@ -76,82 +77,93 @@ const Success = () => {
                   objectFit: "cover",
                   cursor: "pointer",
                 }}
-              />{" "}
+              />
             </NavLink>
             <Box
-              w={{ base: "100%", md: "50%" }}
-              display={"flex"}
+              color={colorMode === "light" ? "black" : ""}
               alignItems={"center"}
               justifyContent={"center"}
+              h={"100%"}
+              pl={{base:"5%",md:"10%"}}
+              w={"100%"}
             >
-              <Image mt={{ base: "5%" }} src={check} />
-            </Box>
-            <Box w={{ base: "100%", md: "50%" }}>
-              <Heading>
-                Your{" "}
-                <span style={{ color: "rgb(74,201,126)" }}>
-                  Appointment request
-                </span>
-                has been successfully submitted
-              </Heading>
-              <Text mt={"5%"}>We'll be in touch shortly to confirm.</Text>
-            </Box>
-            <Box mt={"5%"} alignItems={"center"}>
-              <Heading as={"h4"} size={{ base: "sm", md: "lg" }}>
-                Requested appointment details:
-              </Heading>
+              <Box
+                // w={{ base: "100%", md: "50%" }}
+                display={"flex"}
+        
+              >
+                <Image mt={{ base: "5%" }} src={check} />
+              </Box>
+              <Box w={{ base: "100%", md: "50%" }}>
+                <Heading>
+                  Your{" "}
+                  <span style={{ color: "rgb(74,201,126)" }}>
+                    Appointment request
+                  </span>{" "}
+                  has been successfully submitted
+                </Heading>
+                <Text mt={"5%"}>We'll be in touch shortly to confirm.</Text>
+              </Box>
+              <Box mt={"5%"} alignItems={"center"}>
+                <Heading as={"h4"} size={{ base: "sm", md: "lg" }}>
+                  Requested appointment details:
+                </Heading>
 
-              {appointment && (
-                <Box
-                  fontSize={{ base: "14px", md: "18px" }}
-                  alignItems={"center"}
-                >
-                  <Text w={"50%"}>
-                    <span
-                      style={{ color: "rgb(74,201,126)", fontWeight: "bold" }}
-                    >
-                      Doctor:{" "}
-                    </span>
-                    {appointment.doctor}
-                  </Text>
-                  <Text>You are expect at this date:</Text>
-
+                {appointment && (
                   <Box
-                    color={"rgb(74,201,126)"}
-                    fontWeight={"bold"}
-                    display={"flex"}
+                    fontSize={{ base: "14px", md: "18px" }}
                     alignItems={"center"}
+                    color={colorMode === "light" ? "black" : ""}
                   >
-                    <Image
-                      boxSize={{ base: "20px", md: "30px" }}
-                      src={calender}
-                    />
-                    {formatDate(appointment.appointmentDate)}
+                    <Text w={"50%"}>
+                      <span
+                        style={{ color: "rgb(74,201,126)", fontWeight: "bold" }}
+                      >
+                        Doctor:{" "}
+                      </span>
+                      {appointment.doctor}
+                    </Text>
+                    <Text>You are expect at this date:</Text>
+
+                    <Box
+                      color={"rgb(74,201,126)"}
+                      fontWeight={"bold"}
+                      display={"flex"}
+                      alignItems={"center"}
+                    >
+                      <Image
+                        boxSize={{ base: "20px", md: "30px" }}
+                        src={calender}
+                      />
+                      {formatDate(appointment.appointmentDate)}
+                    </Box>
                   </Box>
-                </Box>
-              )}
+                )}
+              </Box>
+             <SimpleGrid mt={"10%"} columns={2}>
+             <NavLink to={"/appointment"}>
+                <Button
+                  // mt={"10%"}
+                  color={"white"}
+                  w={"auto"}
+                  bgColor={"rgb(74,201,126)"}
+                >
+                  New Appointment
+                </Button>
+              </NavLink>
+              {/* <Spacer /> */}
+              <NavLink to={"/patient/dashbord"}>
+                <Button
+                  // mt={"5%"}
+                  color={"white"}
+                  w={"auto"}
+                  bgColor={"rgb(74,201,126)"}
+                >
+                  Go to profile
+                </Button>
+              </NavLink>
+             </SimpleGrid>
             </Box>
-            <NavLink to={"/appointment"}>
-              <Button
-                mt={"10%"}
-                color={"white"}
-                w={"50%"}
-                bgColor={"rgb(74,201,126)"}
-              >
-                New Appointment
-              </Button>
-            </NavLink>
-            <Spacer />
-            <NavLink to={"/patient/dashbord"}>
-              <Button
-                mt={"5%"}
-                color={"white"}
-                w={{ base: "30%" }}
-                bgColor={"rgb(74,201,126)"}
-              >
-                Go to profile
-              </Button>
-            </NavLink>
           </Box>
         </>
       }

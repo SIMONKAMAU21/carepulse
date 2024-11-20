@@ -116,7 +116,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
         <MenuButton
           as={IconButton}
           aria-label="Options"
-          icon={<ChevronDownIcon />}
+          icon={<ChevronDownIcon boxSize={"25px"} />}
           variant="outline"
           position="fixed"
           top={{ base: "8%", md: "1%" }}
@@ -135,7 +135,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
       </Menu>
       <Box p={2} w={"100%"}>
         <SimpleGrid
-          mt={{ base: "29%", md: "0%" }}
+          mt={{ base: "25%", md: "0%" }}
           columns={{ base: 3, md: 3 }}
           spacing={6}
           w={"100%"}
@@ -172,7 +172,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
         </SimpleGrid>
       </Box>
       <Box
-        mt={{ base: "1%", md: "0" }}
+        mt={{ base: "0", md: "0" }}
         w={"100%"}
         overflowY={"scroll"}
         color={colorMode === "dark" ? "white" : "black"}
@@ -181,6 +181,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
           <SimpleGrid
           boxShadow={"2xl"}
             p={2}
+          
             columns={{ base: 1, md: 4 }}
             spacing={{ base: 2, md: 6 }}
           >
@@ -202,6 +203,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
                   key={appointment.$id}
                   mt={2}
                   p={4}
+                  // h={"500px"}
                   borderWidth={1}
                   borderRadius="md"
                   bg={colorMode === "dark" ? "gray.700" : "gray.100"}

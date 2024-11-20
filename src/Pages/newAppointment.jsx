@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-// import logo from "../assets/Logo.svg";
 import illustration from "../assets/doc2.png";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import CustomInputs from "../Components/CustomInputs";
@@ -106,7 +105,6 @@ const Appointment = () => {
       ErrorToast("Please fill in all the required fields");
       return;
     }
-
     LoadingToast(true);
     try {
       const appointmentData = {
@@ -134,7 +132,12 @@ const Appointment = () => {
   return (
     <AuthWrapper
       leftChildren={
-        <Box color={colorMode === "light" ? "black" :""} m={{ base: "5%", md: "5%" }} h={"100%"}>
+        <Box
+          fontSize={{ base: "10px", md: "18px" }}
+          color={colorMode === "light" ? "black" : ""}
+          m={{ base: "5%", md: "5%" }}
+          h={"100%"}
+        >
           <video
             src={colorMode === "dark" ? log : logo}
             cursor="pointer"
@@ -152,96 +155,109 @@ const Appointment = () => {
             <Heading>Hey there 👋</Heading>
             <Text>Request a new appointment in 10 seconds</Text>
           </Box>
-          <Box  mt={{ base: "10%", md: "5%" }}>
-            <FormLabel variant={"outline"}>Select Doctor</FormLabel>
-            <Menu>
-              <MenuButton
-                variant={"outline"}
-                w={"100%"}
-                color={colorMode === "light" ? "black" :"gray.100"}
-                as={Button}
-                backgroundColor={"none"}
-                colorScheme="none"
-                rightIcon={<ChevronDownIcon />}
+          <Box
+            p={"10px"}
+            mt={{ base: "10%", md: "5%" }}
+            bg={colorMode === "light" ? "gray.100" : ""}
+            w={"100%"}
+            boxShadow={"2xl"}
+            borderRadius={"10px"}
+          >
+            <Box w={"100%"}>
+              <FormLabel variant={"outline"}>Select Doctor</FormLabel>
+              <Menu>
+                <MenuButton
+                  variant={"outline"}
+                  w={"100%"}
+                  color={colorMode === "light" ? "black" : "gray.100"}
+                  as={Button}
+                  backgroundColor={"none"}
+                  colorScheme="none"
+                  rightIcon={<ChevronDownIcon />}
+                >
+                  {form.doctor ? form.doctor : "Select Doctor"}
+                </MenuButton>
+                <MenuList>
+                  {doctors.map((doctor) => (
+                    <MenuItem
+                      color={"black"}
+                      key={doctor.$id}
+                      onClick={() =>
+                        handleDoctorSelect(doctor.drname, doctor.$id)
+                      }
+                    >
+                      <Flex align="center">
+                        <Image
+                          src={doctor.doctorPhotoUrl}
+                          alt={doctor.drname}
+                          boxSize="30px"
+                          borderRadius="full"
+                          mr={3}
+                        />
+                        <Text>{doctor.drname}</Text>
+                      </Flex>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+
+              <Grid
+                mt={"1%"}
+                templateColumns={{ base: "1fr", md: "1fr 1fr" }}
+                gap={4}
               >
-                {form.doctor ? form.doctor : "Select Doctor"}
-              </MenuButton>
-              <MenuList>
-                {doctors.map((doctor) => (
-                  <MenuItem
-                    color={"black"}
-                    key={doctor.$id}
-                    onClick={() =>
-                      handleDoctorSelect(doctor.drname, doctor.$id)
+                <Box>
+                  <FormLabel htmlFor="appointmentReason">
+                    Reason for Appointment
+                  </FormLabel>
+                  <Textarea
+                    border={"2px solid gray"}
+                    id="appointmentReason"
+                    name="appointmentReason"
+                    value={form.appointmentReason}
+                    onChange={handleInputChange}
+                    placeholder={"ex: Annual check-up, medical review, etc."}
+                    resize="none"
+                  />
+                </Box>
+                <Box>
+                  <FormLabel htmlFor="preferences">
+                    Appointment Preferences/notes
+                  </FormLabel>
+                  <Textarea
+                    border={"2px solid gray"}
+                    id="preferences"
+                    name="preferences"
+                    value={form.preferences}
+                    onChange={handleInputChange}
+                    placeholder={
+                      "ex: Prefer afternoon appointments, if possible"
                     }
-                  >
-                    <Flex align="center">
-                      <Image
-                        src={doctor.doctorPhotoUrl}
-                        alt={doctor.drname}
-                        boxSize="30px"
-                        borderRadius="full"
-                        mr={3}
-                      />
-                      <Text>{doctor.drname}</Text>
-                    </Flex>
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
+                    resize="none"
+                  />
+                </Box>
+              </Grid>
 
-            <Grid
-              mt={"1%"}
-              templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-              gap={4}
-            >
-              <Box>
-                <FormLabel htmlFor="appointmentReason">
-                  Reason for Appointment
-                </FormLabel>
-                <Textarea
-                  id="appointmentReason"
-                  name="appointmentReason"
-                  value={form.appointmentReason}
-                  onChange={handleInputChange}
-                  placeholder={"ex: Annual check-up, medical review, etc."}
-                  resize="none"
-                />
-              </Box>
-              <Box>
-                <FormLabel htmlFor="preferences">
-                  Appointment Preferences/notes
-                </FormLabel>
-                <Textarea
-                  id="preferences"
-                  name="preferences"
-                  value={form.preferences}
-                  onChange={handleInputChange}
-                  placeholder={"ex: Prefer afternoon appointments, if possible"}
-                  resize="none"
-                />
-              </Box>
-            </Grid>
+              <CustomInputs
+                label={"Expected appointment date"}
+                icon={FaCalendarAlt}
+                name="appointmentDate"
+                type="datetime-local"
+                value={form.appointmentDate}
+                onChange={handleInputChange}
+              />
 
-            <CustomInputs
-              label={"Expected appointment date"}
-              icon={FaCalendarAlt}
-              name="appointmentDate"
-              type="datetime-local"
-              value={form.appointmentDate}
-              onChange={handleInputChange}
-            />
-
-            <Button
-              mt={{ base: "20%", md: "10%" }}
-              bg={"rgb(36,174,124)"}
-              width={{ base: "100%", md: "100%" }}
-              onClick={handleSubmit}
-              color={"white"}
-              _hover={{ bg: "rgb(30,140,100)" }}
-            >
-              Submit & Continue
-            </Button>
+              <Button
+                mt={{ base: "20%", md: "10%" }}
+                bg={"rgb(36,174,124)"}
+                width={{ base: "100%", md: "100%" }}
+                onClick={handleSubmit}
+                color={"white"}
+                _hover={{ bg: "rgb(30,140,100)" }}
+              >
+                Submit & Continue
+              </Button>
+            </Box>
           </Box>
         </Box>
       }
