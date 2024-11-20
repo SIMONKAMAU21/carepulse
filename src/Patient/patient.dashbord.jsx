@@ -12,6 +12,7 @@ import {
   Button,
   SimpleGrid,
   HStack,
+  Icon,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { getAppointmentByUserId } from "../lib/Actions/appointment.actions";
@@ -94,7 +95,7 @@ const PatientDashboard = () => {
     (appointment) => appointment.status === "Cancelled"
   ).length;
   return (
-    <VStack>
+    <VStack  fontSize={{base:"12px",md:"18px"}}>
       <PatientHeader width={{ base: "100%", md: "100%" }} />
       <Menu>
         <MenuButton
@@ -158,7 +159,12 @@ const PatientDashboard = () => {
         color={colorMode === "dark" ? "white" : "black"}
       >
         {appointmentData.length > 0 ? (
-          <SimpleGrid p={2} columns={{ base: 1, md: 4 }} spacing={{base:2,md:6}}>
+          <SimpleGrid
+          boxShadow={"2xl"}
+            p={2}
+            columns={{ base: 1, md: 4 }}
+            spacing={{ base: 2, md: 6 }}
+          >
             {appointmentData.map((appointment) => {
               const statusColor = (status) => {
                 switch (status) {
@@ -175,7 +181,7 @@ const PatientDashboard = () => {
               return (
                 <Box
                   key={appointment.$id}
-                  mt={4}
+                  mt={2}
                   p={4}
                   borderWidth={1}
                   borderRadius="md"
@@ -205,9 +211,10 @@ const PatientDashboard = () => {
                       h={"auto"}
                       w={"auto"}
                       p={1}
+                      boxShadow={"dark-lg"}
                       borderRadius={"10px"}
-                      bgGradient={
-                        "linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"
+                      bgGradient={colorMode==="light"?
+                        "linear(to-l, rgb(148,109,109),#1d1f22, #1c1e22)":"linear(to-l, rgb(148,109,109),#1c1e22, #1c1e22)"
                       }
                       fontSize={{ base: "10px", md: "15px" }}
                     >
@@ -217,8 +224,33 @@ const PatientDashboard = () => {
                       >
                         This appointment has been canceled due to this reason :
                       </Text>
-                      <Text fontWeight={"700"} color={"green"}>
-                        {appointment.cancelReason}
+                      <Text fontWeight={"700"} color={"red.500"}>
+                        {appointment.cancelReason} 
+                        <Icon ml={"2%"} as={FaExclamationTriangle} />
+                      </Text>
+                    </Box>
+                  )}
+                  {appointment.status === "pending" && (
+                    <Box
+                      h={"auto"}
+                      w={"auto"}
+                      p={1}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      borderRadius={"10px"}
+                      boxShadow={"dark-lg"}
+                       bgGradient={colorMode=== "light"?
+                         "linear(to-l, rgb(0,156,224),#1c1e22, #1c1e25)":"none"
+                       }
+                      fontSize={{ base: "10px", md: "15px" }}
+                    >
+                      <Text
+                        color={colorMode === "light" ? "yellow.300" : "yellow"}
+                        fontWeight={"bold"}
+                      >
+                        Your appointment is still pending contact the admin for
+                        scheduling
+                        <Icon ml={"2%"} as={FaClock} />
                       </Text>
                     </Box>
                   )}
