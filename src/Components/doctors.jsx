@@ -87,7 +87,7 @@ const Doctorsdata = () => {
 
   return (
     <Box>
-      <Box mt="2%" w={{ base: "100%", md: "50%" }}>
+      <Box boxShadow={"dark-lg"} borderRadius={"10px"} mt="2%" w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
           onChange={handleSearch}
@@ -105,11 +105,11 @@ const Doctorsdata = () => {
         </Text>
       ) : filteredDoctors.length > 0 ? (
         <Box w="100%" mt="5%" overflowX="auto">
-          <Table variant="simple" color={colorMode === "dark" ? "white" :"black"} size="md">
-            <Thead>
+          <Table variant="simple" color={colorMode === "dark" ? "white" :"black"} size={{base:"sm",md:"md"}}>
+            <Thead fontSize={{base:"10px"}}>
               <Tr>
                 <Th>Photo</Th>
-                <Th>Doctor Full Name</Th>
+                <Th>DoctorFullName</Th>
                 <Th>Phone Number</Th>
                 <Th>Email</Th>
                 <Th>Actions</Th>

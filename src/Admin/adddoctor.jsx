@@ -114,21 +114,23 @@ const Adddoctor = () => {
               color={"white"}
               w={"100%"}
               h={"100%"}
-              p={{base:"none",md:4}}
             >
-              <Header
-                width={{ base: "100%", md: "100%", lg: "100%" }}
-                title={"Manage your Doctors"}
-              />
+              <Box p={{ base: 0, md: 4 }}>
+                <Header
+                  width={{ base: "100%", md: "100%", lg: "100%" }}
+                  title={"Manage your Doctors"}
+                />
+              </Box>
 
-              <Button
+              <Box p={{base:1,md:2}}>
+                <Button
                 onClick={onOpen}
                 colorScheme="green"
                 w={"100%"}
-                mt={{ base: "50%", md: "1%" }}
+                mt={{ base: "40%", md: "1%" }}
               >
                 Add Doctor
-              </Button>
+              </Button></Box>
 
               <Modal isOpen={isOpen} onClose={onClose} size="xl">
                 <ModalOverlay />
@@ -206,7 +208,7 @@ const Adddoctor = () => {
                 </ModalContent>
               </Modal>
 
-              <Box mt={"1%"} overflow={"scroll"} h={"70%"}>
+              <Box p={{base:1,md:2}} mt={"1%"} overflow={"scroll"} h={"70%"}>
                 <Doctorsdata />
               </Box>
             </Box>

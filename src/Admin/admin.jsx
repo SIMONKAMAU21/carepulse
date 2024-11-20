@@ -223,7 +223,7 @@ const Admin = () => {
               <Th>Patient</Th>
               <Th>Date</Th>
               <Th>Status</Th>
-              <Th>Doctor</Th>
+              <Th>DoctorFullname</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>

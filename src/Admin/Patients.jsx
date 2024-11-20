@@ -73,9 +73,10 @@ const Patients = () => {
     color: "grey",
   };
   return (
-    <Box h={"100%"} w={"100%"}  p={4}>
+    <Box h={"100%"} w={"100%"}p={{base:1,md:4}}  >
       <Header
-        width={{ base: "90%", md: "99%" }}
+
+        width={{ base: "100%", md: "99%" }}
         title={"Manage Your Patients"}
         subTitle={"View, update, and track patient details efficiently"}
       />

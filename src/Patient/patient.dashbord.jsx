@@ -25,6 +25,7 @@ import {
   FaClock,
   FaExclamationTriangle,
 } from "react-icons/fa";
+import { MdApproval } from "react-icons/md";
 
 const PatientDashboard = () => {
   const [appointmentData, setAppointmentData] = useState([]);
@@ -251,6 +252,31 @@ const PatientDashboard = () => {
                         Your appointment is still pending contact the admin for
                         scheduling
                         <Icon ml={"2%"} as={FaClock} />
+                      </Text>
+                    </Box>
+                  )}
+                         {appointment.status === "Scheduled" && (
+                    <Box
+                      h={"auto"}
+                      w={"auto"}
+                      p={1}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      borderRadius={"10px"}
+                      fontSize={{ base: "10px", md: "15px" }}
+                    >
+                      <Text
+                        color={colorMode === "light" ? "green.300" : "green.300"}
+                        fontWeight={"bold"}
+                      >
+                        Your appointment has been scheduled for this date {appointment.appointmentDate ?new Date(
+                          appointment.appointmentDate
+                        ).toDateString("en-US",{
+                          year:"numeric",
+                          month:"short",
+                          day:"numeric"
+                        }) : ""}
+                        <Icon ml={"2%"} as={MdApproval} />
                       </Text>
                     </Box>
                   )}
