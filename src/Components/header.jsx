@@ -2,6 +2,7 @@ import {
   Button,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Image,
   Spacer,
@@ -15,7 +16,8 @@ import React, { useState } from "react";
 import logo from "../assets/i.mp4";
 import log from "../assets/i (2).mp4";
 import Sidebar from "../Pages/layout/sidebar";
-import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon, } from "@chakra-ui/icons";
+import { MdNotifications } from "react-icons/md";
 
 const Header = ({ width, title, subTitle }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -47,7 +49,7 @@ const Header = ({ width, title, subTitle }) => {
           zIndex={"1000"}
           left={{ base: "70%", md: "20%" }}
         />
-
+       
         <video
           src={colorMode === "dark" ? log : logo}
           onClick={isOpen ? onClose : onOpen}
@@ -76,6 +78,7 @@ const Header = ({ width, title, subTitle }) => {
           />
           <Text display={{ base: "none", md: "block" }}>{text}</Text>
         </Button>
+        <Icon as={MdNotifications}/>
       </HStack>
 
       <VStack

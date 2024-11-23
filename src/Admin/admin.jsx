@@ -201,14 +201,14 @@ const Admin = () => {
         title={"Welcome Admin 😄"}
         subTitle={"Start day with managing new appointments"}
       />
-      <Box h={"10%"}>
         <SimpleGrid
           mt={{ base: "55%", md: "0%" }}
           columns={{ base: 3, md: 3 }}
           spacing={6}
-          p={1}
+          ml={{base:"1%",md:"0"}}
+          // p={1}
           w={"100%"}
-          h={"100%"}
+          // h={"100%"}
           sx={{
             "::-webkit-scrollbar": {
               display: "none",
@@ -236,7 +236,6 @@ const Admin = () => {
             title={"cancelled appointments"}
           />
         </SimpleGrid>
-      </Box>
 <Text p={"4px"} fontWeight={"bold"} fontSize={{base:"10px",md:"18px"}} color={colorMode=== "dark"?"green.300":"green.600"}>YOU HAVE <span color="red">{appointments.expiredCount}</span> EXPIRED APPOINTMENTS</Text>
       <Box mt={{ base: "5%", md: "1%" }} p={"4px"} w={{ base: "100%", md: "50%" }}>
         <SearchInput
