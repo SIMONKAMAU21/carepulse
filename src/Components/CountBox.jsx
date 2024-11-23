@@ -7,13 +7,16 @@ const CountBox = ({ icon, count, title, gradient, clickMe, disable }) => {
       bgGradient={gradient}
       p={{ base: "2", md: "4" }}
       borderRadius="md"
+      // border={"2px solid red"}
+      h={"90%"}
       boxShadow="dark-lg"
-      w={{ base: "100%", md: "100%" }}
+      w={{ base: "100px", md: "100%" }}
       onClick={clickMe}
       _hover={{cursor:"pointer", boxShadow: `0px 14px 15px ${gradient.match(/#[0-9A-Fa-f]{6}/g)?.[1] || "rgba(0,0,0,0.12)"}`,
       
     }}
     transition="box-shadow 0.3s ease" // Smooth hover effect
+    // _disabled={disable}
     >
       <VStack align="start">
         <HStack>
@@ -22,11 +25,11 @@ const CountBox = ({ icon, count, title, gradient, clickMe, disable }) => {
             boxSize={{ base: 6, md: 8 }}
             color="rgb(255,209,71)"
           />
-          <Heading size={{ base: "md", md: "lg" }}>{count}</Heading>
+          <Text fontWeight={"bold"} fontSize={{base:"10px",md:"18px"}}>{count}</Text>
         </HStack>
         <Text
           fontWeight={{ base: "bold", md: "bold" }}
-          fontSize={{ base: "12px", md: "lg" }}
+          fontSize={{ base: "10px", md: "lg" }}
         >
           {title}
         </Text>

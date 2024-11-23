@@ -18,6 +18,8 @@ const SearchInput = ({ value, onChange, placeholder }) => {
       <Input
         color={colorMode === "light" ? "black" : "white"}
         value={value}
+        type="search"
+        border={"2px solid rgb(66,153,225)"}
         onChange={onChange}
         placeholder={placeholder}
       />

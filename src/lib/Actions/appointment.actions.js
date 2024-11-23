@@ -100,6 +100,7 @@ export const getRecentAppointmentList = async () => {
       scheduledCount: 0,
       pendingCount: 0,
       cancelledCount: 0,
+      expiredCount:0
     };
 
     const counts = appointments.documents.reduce((acc, appointment) => {
@@ -114,6 +115,8 @@ export const getRecentAppointmentList = async () => {
         case "Cancelled":
           acc.cancelledCount++;
           break;
+          case "Expired":
+            acc.expiredCount++;
       }
       return acc;
     }, initialCounts);

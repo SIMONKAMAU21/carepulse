@@ -55,7 +55,7 @@ const Admin = () => {
     scheduledCount: 0,
     pendingCount: 0,
     cancelledCount: 0,
-    expiredCount:0
+    expiredCount: 0,
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] = useState();
@@ -194,59 +194,58 @@ const Admin = () => {
         msOverflowStyle: "none",
       }}
       overflow={"scroll"}
-      p={4}
+      p={{base:0,md:4}}
     >
       <Header
-        width={{ base: "99%", md: "99%" }}
+        width={{ base: "100%", md: "99%" }}
         title={"Welcome Admin 😄"}
         subTitle={"Start day with managing new appointments"}
       />
-      <SimpleGrid
-        mt={{ base: "55%", md: "0%" }}
-        columns={{ base: 3, md: 3 }}
-        spacing={6}
-        w={"100%"}
-        sx={{
-          "::-webkit-scrollbar": {
-            display: "none",
-          },
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
-      >
-        <CountBox
-          gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
-          icon={FaCalendarCheck}
-          count={appointments?.scheduledCount || "0"}
-          title={"scheduled appointments"}
-        />
+      <Box h={"10%"}>
+        <SimpleGrid
+          mt={{ base: "55%", md: "0%" }}
+          columns={{ base: 3, md: 3 }}
+          spacing={6}
+          p={1}
+          w={"100%"}
+          h={"100%"}
+          sx={{
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
           <CountBox
-          gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
-          icon={FaCalendarCheck}
-          count={appointments?.scheduledCount || "0"}
-          title={"scheduled appointments"}
-        />
-        <CountBox
-          gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
-          icon={FaClock}
-          count={appointments?.pendingCount}
-          title={"pending appointments"}
-        />
-        <CountBox
-          gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
-          icon={FaExclamationTriangle}
-          count={appointments?.cancelledCount}
-          title={"cancelled appointments"}
-        />
-      </SimpleGrid>
-      <Box mt={{ base: "5%", md: "1%" }} w={{ base: "100%", md: "50%" }}>
+            gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
+            icon={FaCalendarCheck}
+            count={appointments?.scheduledCount || "0"}
+            title={"scheduled appointments"}
+          />
+          <CountBox
+            gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
+            icon={FaClock}
+            count={appointments?.pendingCount || "10000"}
+            title={"pending appointments"}
+          />
+          <CountBox
+            gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
+            icon={FaExclamationTriangle}
+            count={appointments?.cancelledCount}
+            title={"cancelled appointments"}
+          />
+        </SimpleGrid>
+      </Box>
+<Text p={"4px"} fontWeight={"bold"} fontSize={{base:"10px",md:"18px"}} color={colorMode=== "dark"?"green.300":"green.600"}>YOU HAVE <span color="red">{appointments.expiredCount}</span> EXPIRED APPOINTMENTS</Text>
+      <Box mt={{ base: "5%", md: "1%" }} p={"4px"} w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
           onChange={handleSearch}
           placeholder={"search appointments by name or phone"}
         />
       </Box>
-      <Box p={4} mt={4} h={"70%"} overflowX="auto">
+      <Box p={{base:0}} mt={4} h={"70%"} overflowX="auto">
         <Table
           variant="simple"
           color={colorMode === "dark" ? "black.200" : " black"}
@@ -313,7 +312,7 @@ const Admin = () => {
                     {/* Tooltip for Canceled Appointments */}
                     {appointment.cancelReason && (
                       <Tooltip
-                      label="This appointment was canceled"
+                        label="This appointment was canceled"
                         placement="bottom"
                       >
                         <Icon color="red" as={FaTriangleExclamation} />
