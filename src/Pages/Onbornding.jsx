@@ -15,7 +15,6 @@ import { FaPhone, FaUser, FaVoicemail } from "react-icons/fa";
 import { createUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
-import Logo from "../assets/Logo.svg";
 import logo from "../assets/i (2).mp4";
 import log from "../assets/i.mp4";
 import PasskeyModal from "./passkeyModal";
@@ -25,7 +24,7 @@ export const formatPhoneNumber = (number) => {
   if (cleanNumber.length > 15) {
     return cleanNumber.slice(0, 15);
   }
-  return cleanNumber.startsWith("+") ? cleanNumber : `+${cleanNumber}`;
+  return cleanNumber.startsWith("+") ? cleanNumber : `+254${cleanNumber}`;
 };
 
 const Onboarding = () => {
@@ -62,6 +61,7 @@ const Onboarding = () => {
       }
 
       const formattedPhone = formatPhoneNumber(phone);
+      console.log('formattedPhone', formattedPhone)
       const userData = { email, name, phone: formattedPhone };
       const createdUser = await createUser(userData);
 
@@ -86,7 +86,7 @@ const Onboarding = () => {
       LoadingToast(false);
     } catch (error) {
       LoadingToast(false);
-      ErrorToast("Failed to create user");
+      ErrorToast("Failed to create user" + error.message);
     }
   };
 

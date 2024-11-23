@@ -142,7 +142,7 @@ const Register = () => {
         const existingPatient = await getPatient(form.userId);
         setPatientExists(!!existingPatient);
         if (existingPatient) {
-          navigate("/patient/dashbord");
+          navigate("/login");
         } else {
           return;
         }
@@ -208,7 +208,7 @@ const Register = () => {
     <AuthWrapper
       leftChildren={
         <>
-          <Box p={"4%"} color={colorMode === "light" ? "black" :"gray.100"}>
+          <Box p={"2%"} color={colorMode === "light" ? "black" : "gray.100"}>
             <video
               src={colorMode === "light" ? log : logo}
               cursor="pointer"
@@ -217,13 +217,12 @@ const Register = () => {
               muted
               style={{
                 width: "30%",
-                height: "100px",
+                height: "90px",
                 objectFit: "cover",
                 cursor: "pointer",
-                marginTop: "10%",
               }}
             />
-            <Heading  mt={"4%"}>welcome👋</Heading>
+            <Heading mt={"2%"}>welcome👋</Heading>
             <Text>Let us know more about yourself</Text>
           </Box>
 
@@ -242,6 +241,7 @@ const Register = () => {
             <Box>
               <Heading
                 as={"h2"}
+                color={colorMode === "light" ? "black" : "white"}
                 size={{ base: "md", md: "lg" }}
                 mt={{ base: "5%", md: "none" }}
               >
@@ -284,7 +284,10 @@ const Register = () => {
                   placeholder={"Select your birth date"}
                   type="date"
                 />
-                <Box mt={4} color={colorMode === "light" ? "black" :"gray.100"}>
+                <Box
+                  mt={4}
+                  color={colorMode === "light" ? "black" : "gray.100"}
+                >
                   <Text mb={2}>Gender</Text>
                   <RadioGroup
                     onChange={handleGenderChange}
@@ -341,10 +344,14 @@ const Register = () => {
                 as={"h2"}
                 size={{ base: "md", md: "lg" }}
                 mt={{ base: "8%", md: "2%" }}
+                color={colorMode === "light" ? "black" : "white"}
               >
                 Medical Information
               </Heading>
-              <Box color={colorMode === "light" ? "black" :"gray.100"} mt={{ base: "10%", md: "5%" }}>
+              <Box
+                color={colorMode === "light" ? "black" : "gray.100"}
+                mt={{ base: "10%", md: "5%" }}
+              >
                 <FormLabel variant={"outline"}>
                   Select primary Physician
                 </FormLabel>
@@ -352,7 +359,7 @@ const Register = () => {
                   <MenuButton
                     variant={"outline"}
                     w={"100%"}
-                    color={colorMode === "light" ? "black" :"gray.100"}
+                    color={colorMode === "light" ? "black" : "gray.100"}
                     border={"1px solid gray"}
                     as={Button}
                     backgroundColor={"none"}
@@ -450,11 +457,14 @@ const Register = () => {
                 as={"h2"}
                 size={{ base: "md", md: "lg" }}
                 mt={{ base: "8%", md: "2%" }}
+                color={colorMode === "light" ? "black" : "white"}
               >
                 Identification
               </Heading>
               <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={4}>
-                <FormControl color={colorMode === "light" ? "black" :"gray.100"}>
+                <FormControl
+                  color={colorMode === "light" ? "black" : "gray.100"}
+                >
                   <Text mb={2}>Identification Type</Text>
                   <Select
                     border={"1px solid gray"}
@@ -477,7 +487,10 @@ const Register = () => {
                   onChange={handleInputChange}
                   placeholder={"e.g., A123456"}
                 />
-                <FormControl color={colorMode === "light" ? "black" :"gray.100"} mt={4}>
+                <FormControl
+                  color={colorMode === "light" ? "black" : "gray.100"}
+                  mt={4}
+                >
                   <Text>Upload Document</Text>
                   <Input
                     type="file"
@@ -508,7 +521,7 @@ const Register = () => {
               </Grid>
             </Box>
 
-            <Box color={colorMode === "light" ? "black" :"gray.100"}>
+            <Box color={colorMode === "light" ? "black" : "gray.100"}>
               <Heading
                 as={"h2"}
                 size={{ base: "md", md: "lg" }}

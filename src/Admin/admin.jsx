@@ -202,7 +202,7 @@ const Admin = () => {
         subTitle={"Start day with managing new appointments"}
       />
         <SimpleGrid
-          mt={{ base: "55%", md: "0%" }}
+          mt={{ base: "48%", md: "0%" }}
           columns={{ base: 3, md: 3 }}
           spacing={6}
           ml={{base:"1%",md:"0"}}

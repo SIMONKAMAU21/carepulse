@@ -32,7 +32,7 @@ const Header = ({ width, title, subTitle }) => {
         borderRadius={{base:"0",md:"10px"}}
         w={width}
         boxShadow='dark-lg'
-        p={4}
+        p={2}
         bg={
           colorMode === "light"
             ? theme.colors.primary.light
@@ -85,14 +85,14 @@ const Header = ({ width, title, subTitle }) => {
         bg={colorMode === "light" ? "white" : theme.colors.primary.dark}
         color={colorMode === "light" ? "black" : "white"}
         position={{ base: "fixed", md: "relative" }}
-        mt={{ base: "20%", md: "0%" }}
+        mt={{ base: "18%", md: "0%" }}
         spacing={4}
         w={width}
         align="start"
-        p={4}
+        p={{base:0,md:4}}
       >
-        <Heading fontFamily={"sans-serif"}>{title}</Heading>
-        <Text fontFamily={{base:"monospace",md:"inherit"}}>{subTitle}</Text>
+        <Heading p={{base:1,md:0}} fontFamily={"sans-serif"}>{title}</Heading>
+        <Text p={{base:1,md:0}} fontFamily={{base:"monospace",md:"inherit"}}>{subTitle}</Text>
       </VStack>
 
       {isOpen && <Sidebar onClose={onClose} />}

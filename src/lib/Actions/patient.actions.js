@@ -5,7 +5,26 @@ import {
   VITE_DATABASE_ID,
   VITE_PATIENT_COLLECTION_ID,
 } from "../appwriteConfig.js";
+import CryptoJS from "crypto-js";
+import emailjs from 'emailjs-com';
 
+const sendPasscodeEmail = async (email, passcode) => {
+  const serviceID = 'service_8vommni'; // Your EmailJS service ID
+  const templateID = 'template_9oiz16i'; // Your EmailJS template ID
+  const userID = 'bMgeqI01rOsFNk7YB'; // Your EmailJS user ID
+
+  const templateParams = {
+    email: email,
+    passcode: passcode,
+  };
+
+  try {
+    const response = await emailjs.send(serviceID, templateID, templateParams, userID);
+    console.log('Email sent successfully:', response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
 export const createUser = async (user) => {
   try {
     const newUser = await users.create(
@@ -65,14 +84,18 @@ export const getPatient = async (userId) => {
   }
 };
 export const registerUser = async (userData) => {
+  const generatePasscode = () => {
+    return CryptoJS.lib.WordArray.random(6).toString(CryptoJS.enc.Hex);
+  };
+  const passcode = generatePasscode();
   try {
-     const existingUser = await databases.listDocuments(
+    const existingUser = await databases.listDocuments(
       VITE_DATABASE_ID,
       VITE_PATIENT_COLLECTION_ID,
       [Query.equal("email", userData.email)]
     );
     if (existingUser.documents.length > 0) {
-      throw new Error('Email is already registered.');
+      throw new Error("Email is already registered.");
     }
     const additionalDetails = {
       userId: userData.userId,
@@ -96,17 +119,19 @@ export const registerUser = async (userData) => {
       identificationType: userData.identificationType,
       identificationNumber: userData.identificationNumber,
       identificationUrl: userData.identificationUrl,
+      passcode,
     };
-
     const response = await databases.createDocument(
       VITE_DATABASE_ID,
       VITE_PATIENT_COLLECTION_ID,
       ID.unique(),
       additionalDetails
     );
+    await sendPasscodeEmail(userData.email,passcode);
 
     return {
       documentId: response.$id,
+      passcode,
     };
   } catch (error) {
     console.error("Error during registration:", error);
@@ -137,6 +162,30 @@ export const deletePatient = async (patientId) => {
     );
     return patient;
   } catch (error) {
+    throw error;
+  }
+};
+export const authenticateUser = async (email, inputPasscode) => {
+  try {
+    const userDocument = await databases.listDocuments(
+      VITE_DATABASE_ID,
+      VITE_PATIENT_COLLECTION_ID,
+      [Query.equal("email", email)]
+    );
+
+    if (userDocument.documents.length === 0) {
+      throw new Error("User not found.");
+    }
+
+    const storedPasscode = userDocument.documents[0].passcode;
+
+    if (storedPasscode !== inputPasscode) {
+      throw new Error("Invalid passcode.");
+    }
+
+    return { success: true, message: "Authentication successful." };
+  } catch (error) {
+    console.error("Authentication error:", error);
     throw error;
   }
 };

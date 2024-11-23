@@ -12,6 +12,7 @@ import Adddoctor from "./Admin/adddoctor";
 import Patients from "./Admin/Patients";
 import PatientDashboard from "./Patient/patient.dashbord";
 import Callcenter from "./Pages/chatwoot/Callcenter";
+import Auth from "./Pages/Auth";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Onboarnding />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Auth/>} />
+
           <Route path="/Appointment" element={<Appointment />} />
           <Route
             path="/success/:userId/appointment/:appointmentId"
