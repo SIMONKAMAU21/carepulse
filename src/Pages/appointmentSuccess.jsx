@@ -41,15 +41,6 @@ const Success = () => {
     fetchAppointment();
   }, [appointmentId]);
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    const date = new Date(dateString);
-    return (
-      date.toLocaleDateString(undefined, options) +
-      "- " +
-      date.toLocaleTimeString()
-    );
-  };
 
   if (loading) {
     return <Text>Loading appointment details...</Text>;
@@ -143,7 +134,6 @@ const Success = () => {
              <SimpleGrid mt={"10%"} columns={2}>
              <NavLink to={"/appointment"}>
                 <Button
-                  // mt={"10%"}
                   color={"white"}
                   w={"auto"}
                   bgColor={"rgb(74,201,126)"}
@@ -151,10 +141,8 @@ const Success = () => {
                   New Appointment
                 </Button>
               </NavLink>
-              {/* <Spacer /> */}
               <NavLink to={"/patient/dashbord"}>
                 <Button
-                  // mt={"5%"}
                   color={"white"}
                   w={"auto"}
                   bgColor={"rgb(74,201,126)"}
@@ -186,3 +174,12 @@ const Success = () => {
 };
 
 export default Success;
+export const formatDate = (dateString) => {
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const date = new Date(dateString);
+  return (
+    date.toLocaleDateString(undefined, options) +
+    "- " +
+    date.toLocaleTimeString()
+  );
+};

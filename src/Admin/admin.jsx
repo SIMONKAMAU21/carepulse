@@ -28,6 +28,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   useColorMode,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import {
@@ -45,6 +46,8 @@ import { ErrorToast, SuccessToast } from "../Components/toaster";
 import Header from "../Components/header";
 import SearchInput from "../Components/Search";
 import CountBox from "../Components/CountBox";
+import { formatDate } from "../Pages/appointmentSuccess";
+import { FaTriangleExclamation } from "react-icons/fa6";
 
 const Admin = () => {
   const [appointments, setAppointments] = useState({
@@ -52,6 +55,7 @@ const Admin = () => {
     scheduledCount: 0,
     pendingCount: 0,
     cancelledCount: 0,
+    expiredCount:0
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedAppointmentIndex, setSelectedAppointmentIndex] = useState();
@@ -65,7 +69,31 @@ const Admin = () => {
       try {
         const response = await getRecentAppointmentList();
         if (response) {
-          setAppointments(response);
+          const today = new Date();
+          console.log("today", today);
+          const updatedAppointments = response.documents.map((appointment) => {
+            if (appointment.appointmentDate) {
+              const appointmentDate = new Date(appointment.appointmentDate);
+              if (
+                appointmentDate < today &&
+                appointment.status === "Scheduled"
+              ) {
+                appointment.status = "Expired";
+                updateAppointment(
+                  appointment?.patientId?.$id,
+                  appointment?.$id,
+                  { status: "Expired" }
+                ).catch((err) =>
+                  console.error("Failed to update appointment:", err)
+                );
+              }
+            }
+            return appointment;
+          });
+          setAppointments({
+            ...response,
+            documents: updatedAppointments,
+          });
         } else {
           setError("failed to get appointments");
           setAppointments([]);
@@ -192,6 +220,12 @@ const Admin = () => {
           count={appointments?.scheduledCount || "0"}
           title={"scheduled appointments"}
         />
+          <CountBox
+          gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
+          icon={FaCalendarCheck}
+          count={appointments?.scheduledCount || "0"}
+          title={"scheduled appointments"}
+        />
         <CountBox
           gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
           icon={FaClock}
@@ -259,24 +293,16 @@ const Admin = () => {
                       </VStack>
                     </HStack>
                   </Td>
-                  <Td>
-                    {appointment?.appointmentDate
-                      ? new Date(
-                          appointment?.appointmentDate
-                        ).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })
-                      : "No Date"}
-                  </Td>
+                  <Td>{formatDate(appointment.appointmentDate)}</Td>
                   <Td
                     color={
                       appointment.status === "Scheduled"
                         ? "green.400"
                         : appointment.status === "Cancelled"
                         ? "red.400"
-                        : "yellow.400"
+                        : appointment.status === "Expired"
+                        ? "teal"
+                        : "yellow"
                     }
                     fontWeight={colorMode === "light" ? "bold" : "none"}
                   >
@@ -284,37 +310,64 @@ const Admin = () => {
                   </Td>
                   <Td>{appointment?.doctor || "No Doctor"}</Td>
                   <Td>
-                    <Button
-                      bg={colorMode === "light" ? "green" : "none"}
-                      border={
-                        colorMode === "light" ? "none" : "2px solid green"
-                      }
-                      size="sm"
-                      w={{ base: "100%", md: "60%" }}
-                      color={"white"}
-                      _hover={{
-                        bgColor: "green",
-                        color: "white",
-                      }}
-                      onClick={() => openModal(index, true)}
-                    >
-                      Schedule
-                    </Button>
-                    <Button
-                      mt={2}
-                      size="sm"
-                      color={"white"}
-                      bg={colorMode === "light" ? "red.400" : "none"}
-                      border={colorMode === "light" ? "none" : "2px solid red"}
-                      w={{ base: "100%", md: "60%" }}
-                      onClick={() => openModal(index, false)}
-                      _hover={{
-                        bgColor: "red",
-                        color: "white",
-                      }}
-                    >
-                      Cancel
-                    </Button>
+                    {/* Tooltip for Canceled Appointments */}
+                    {appointment.cancelReason && (
+                      <Tooltip
+                      label="This appointment was canceled"
+                        placement="bottom"
+                      >
+                        <Icon color="red" as={FaTriangleExclamation} />
+                      </Tooltip>
+                    )}
+
+                    {/* Actions based on Status */}
+                    {appointment.status === "Expired" ? (
+                      <Button
+                        colorScheme="red"
+                        onClick={() => handleDelete(appointment.$id)}
+                      >
+                        Delete
+                      </Button>
+                    ) : (
+                      <>
+                        {/* Schedule Button */}
+                        <Button
+                          bg={colorMode === "light" ? "green" : "none"}
+                          border={
+                            colorMode === "light" ? "none" : "2px solid green"
+                          }
+                          size="sm"
+                          w={{ base: "100%", md: "60%" }}
+                          color="white"
+                          _hover={{
+                            bgColor: "green",
+                            color: "white",
+                          }}
+                          onClick={() => openModal(index, true)}
+                        >
+                          Schedule
+                        </Button>
+
+                        {/* Cancel Button */}
+                        <Button
+                          mt={2}
+                          size="sm"
+                          color="white"
+                          bg={colorMode === "light" ? "red.400" : "none"}
+                          border={
+                            colorMode === "light" ? "none" : "2px solid red"
+                          }
+                          w={{ base: "100%", md: "60%" }}
+                          onClick={() => openModal(index, false)}
+                          _hover={{
+                            bgColor: "red",
+                            color: "white",
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    )}
                   </Td>
                 </Tr>
               ))
@@ -345,7 +398,7 @@ const Admin = () => {
           <ModalBody pb={6}>
             {isScheduleModal ? (
               <Input
-                type="date"
+                type="datetime-local"
                 placeholder="enter date"
                 value={
                   appointments?.documents[selectedAppointmentIndex]
