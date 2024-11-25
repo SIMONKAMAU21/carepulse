@@ -29,8 +29,8 @@ import { MdApproval } from "react-icons/md";
 
 const PatientDashboard = () => {
   const [allAppointments, setAllAppointments] = useState([]); // Store the original data
-const [filteredAppointments, setFilteredAppointments] = useState([]); // Store filtered data
-const [selectedStatus, setSelectedStatus] = useState("");
+  const [filteredAppointments, setFilteredAppointments] = useState([]); // Store filtered data
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,16 +45,16 @@ const [selectedStatus, setSelectedStatus] = useState("");
         setLoading(false);
         return;
       }
-  
+
       try {
         const userId = user.id;
         const response = await getAppointmentByUserId(userId);
-  
+
         if (response && response.documents && response.documents.length > 0) {
           setAllAppointments(response.documents);
           setFilteredAppointments(response.documents); // Initially show all
         } else {
-          setError("No appointments found for this user");
+          setError(`No appointments found for you ${user.name}`);
         }
       } catch (err) {
         setError("Error fetching patient details or appointments");
@@ -62,7 +62,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
         setLoading(false);
       }
     };
-  
+
     fetchPatientDetails();
   }, []);
 
@@ -71,18 +71,25 @@ const [selectedStatus, setSelectedStatus] = useState("");
   };
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" h="100vh">
-        <Spinner size="xl" />
-      </Box>
+      <VStack h="100vh">
+        <PatientHeader width={{ base: "100%", md: "100%" }} />
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Spinner size="xl" />
+        </Box>
+      </VStack>
     );
   }
 
   if (error) {
     return (
-      <Box textAlign="center" p={4}>
-        <Text color="red.500">{error}</Text>
-        <Button onClick={newAppointment}>make appointment</Button>
-      </Box>
+      <VStack>
+        <PatientHeader width={{ base: "100%", md: "100%" }} />
+        <VStack textAlign="center" mt={{ base: "25%" }}>
+          <Text fontSize={{ base: "10px", md: "20px" }} fontWeight={{ base: "bold" }} color="red.500">{error}</Text>
+          <Button colorScheme="blue" onClick={newAppointment}>make appointment</Button>
+        </VStack>
+
+      </VStack>
     );
   }
 
@@ -110,7 +117,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
   ).length;
 
   return (
-    <VStack  fontSize={{base:"12px",md:"18px"}}>
+    <VStack fontSize={{ base: "12px", md: "18px" }}>
       <PatientHeader width={{ base: "100%", md: "100%" }} />
       <Menu>
         <MenuButton
@@ -151,7 +158,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
             gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
             icon={FaCalendarCheck}
             count={scheduledCount}
-            clickMe={()=>handleFilter("Scheduled")}
+            clickMe={() => handleFilter("Scheduled")}
             title={"scheduled appointments"}
           />
           <CountBox
@@ -166,7 +173,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
             gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
             icon={FaExclamationTriangle}
             count={cancelledCount}
-            clickMe={()=> handleFilter("Cancelled")}
+            clickMe={() => handleFilter("Cancelled")}
             title={"cancelled appointments"}
           />
         </SimpleGrid>
@@ -179,9 +186,9 @@ const [selectedStatus, setSelectedStatus] = useState("");
       >
         {filteredAppointments.length > 0 ? (
           <SimpleGrid
-          boxShadow={"2xl"}
+            boxShadow={"2xl"}
             p={2}
-          
+
             columns={{ base: 1, md: 4 }}
             spacing={{ base: 2, md: 6 }}
           >
@@ -233,8 +240,8 @@ const [selectedStatus, setSelectedStatus] = useState("");
                       w={"auto"}
                       p={1}
                       borderRadius={"10px"}
-                      bgGradient={colorMode==="light"?
-                        "linear(to-l, rgb(148,109,109),#1d1f22, #1c1e22)":"linear(to-l, rgb(148,109,109),#1c1e22, #1c1e22)"
+                      bgGradient={colorMode === "light" ?
+                        "linear(to-l, rgb(148,109,109),#1d1f22, #1c1e22)" : "linear(to-l, rgb(148,109,109),#1c1e22, #1c1e22)"
                       }
                       fontSize={{ base: "10px", md: "15px" }}
                     >
@@ -245,7 +252,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
                         This appointment has been canceled due to this reason :
                       </Text>
                       <Text fontWeight={"700"} color={"red.500"}>
-                        {appointment.cancelReason} 
+                        {appointment.cancelReason}
                         <Icon ml={"2%"} as={FaExclamationTriangle} />
                       </Text>
                     </Box>
@@ -259,9 +266,9 @@ const [selectedStatus, setSelectedStatus] = useState("");
                       justifyContent={"center"}
                       borderRadius={"10px"}
                       boxShadow={"dark-lg"}
-                       bgGradient={colorMode=== "light"?
-                         "linear(to-l, rgb(0,156,224),#1c1e22, #1c1e25)":"none"
-                       }
+                      bgGradient={colorMode === "light" ?
+                        "linear(to-l, rgb(0,156,224),#1c1e22, #1c1e25)" : "none"
+                      }
                       fontSize={{ base: "10px", md: "15px" }}
                     >
                       <Text
@@ -274,7 +281,7 @@ const [selectedStatus, setSelectedStatus] = useState("");
                       </Text>
                     </Box>
                   )}
-                         {appointment.status === "Scheduled" && (
+                  {appointment.status === "Scheduled" && (
                     <Box
                       h={"auto"}
                       w={"auto"}
@@ -288,12 +295,12 @@ const [selectedStatus, setSelectedStatus] = useState("");
                         color={colorMode === "light" ? "green.300" : "green.300"}
                         fontWeight={"bold"}
                       >
-                        Your appointment has been scheduled for this date:  {appointment.appointmentDate ?new Date(
+                        Your appointment has been scheduled for this date:  {appointment.appointmentDate ? new Date(
                           appointment.appointmentDate
-                        ).toDateString("en-US",{
-                          year:"numeric",
-                          month:"short",
-                          day:"numeric"
+                        ).toDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric"
                         }) : ""}
                         <Icon ml={"2%"} as={MdApproval} />
                       </Text>

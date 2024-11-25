@@ -194,7 +194,7 @@ const Register = () => {
       if (!newUser) throw new Error("User registration failed");
 
       SuccessToast("Registration succeeded");
-      navigate("/Appointment");
+      navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
       ErrorToast("Failed to register: " + error.message);
