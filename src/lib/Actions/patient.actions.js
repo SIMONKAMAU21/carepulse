@@ -166,6 +166,7 @@ export const deletePatient = async (patientId) => {
     throw error;
   }
 };
+
 export const authenticateUser = async (email, inputPasscode) => {
   try {
     const userDocument = await databases.listDocuments(
@@ -184,12 +185,17 @@ export const authenticateUser = async (email, inputPasscode) => {
       throw new Error("Invalid passcode.");
     }
 
-    return { success: true, message: "Authentication successful." };
+    // Return the user details so that it can be used in the component
+    const user = userDocument.documents[0];  // Assuming user has a userId field
+    return { success: true, user };  // Return userId for redirection
+
   } catch (error) {
     console.error("Authentication error:", error);
     throw error;
   }
 };
+
+
 export const updatePatientDetails = async (userId, details) => {
   try {
     const documentId = (await getPatient(userId)).$id; // Ensure document ID is retrieved

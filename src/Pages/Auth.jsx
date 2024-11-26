@@ -23,15 +23,42 @@ const Auth = () => {
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
   // Handle form submission for passcode verification
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (step === "verifyPasscode") {
+  //     try {
+  //       const authResponse = await authenticateUser(email, inputPasscode);
+  //       if (authResponse.success) {
+  //         SuccessToast("Authentication successful!");
+  //         navigate(`/Patient/${authResponse.userId}`);
+  //       }
+  //     } catch (error) {
+  //       console.log('error', error)
+  //       ErrorToast(
+  //         "Authentication failed. Please check your email and passcode."
+  //       );
+  //     }
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (step === "verifyPasscode") {
       try {
         const authResponse = await authenticateUser(email, inputPasscode);
+        console.log('first', authResponse)
         if (authResponse.success) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              name:authResponse.user.name,
+              id: authResponse.user.userId,
+              email: email, // You can store additional user info if needed
+            })
+          );
           SuccessToast("Authentication successful!");
-          navigate("/Patient/dashbord");
+          navigate(`/Patient/${authResponse.user.userId}`);
         }
       } catch (error) {
         ErrorToast(
@@ -40,7 +67,6 @@ const Auth = () => {
       }
     }
   };
-
   return (
     <AuthWrapper
       leftChildren={
