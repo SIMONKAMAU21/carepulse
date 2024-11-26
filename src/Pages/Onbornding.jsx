@@ -53,18 +53,16 @@ const Onboarding = () => {
     try {
       LoadingToast(true);
       const { email, name, phone } = form;
-
       if (!email || !name || !phone) {
         ErrorToast("All fields are required");
         LoadingToast(false);
         return;
       }
-
       const formattedPhone = formatPhoneNumber(phone);
       console.log('formattedPhone', formattedPhone)
       const userData = { email, name, phone: formattedPhone };
       const createdUser = await createUser(userData);
-
+      console.log('createdUser', createdUser)
       if (createdUser.error) {
         ErrorToast(createdUser.error);
         LoadingToast(false);
@@ -82,7 +80,7 @@ const Onboarding = () => {
       );
 
       SuccessToast("User successfully created");
-      navigate(`/register`);
+      navigate("/register");
       LoadingToast(false);
     } catch (error) {
       LoadingToast(false);

@@ -26,6 +26,7 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 import { MdApproval } from "react-icons/md";
+import AppointmentDetails from "../Components/Appointment";
 
 const PatientDashboard = () => {
   const [allAppointments, setAllAppointments] = useState([]); // Store the original data
@@ -37,14 +38,15 @@ const PatientDashboard = () => {
   const { colorMode } = useColorMode();
   const navigate = useNavigate();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) {
+    setError("User not found in localStorage");
+    setLoading(false);
+    return;
+  }
   useEffect(() => {
     const fetchPatientDetails = async () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) {
-        setError("User not found in localStorage");
-        setLoading(false);
-        return;
-      }
+
 
       try {
         const userId = user.id;
@@ -72,7 +74,7 @@ const PatientDashboard = () => {
   if (loading) {
     return (
       <VStack h="100vh">
-        <PatientHeader width={{ base: "100%", md: "100%" }} />
+        <PatientHeader width={{ base: "100%", md: "100%" }}  />
         <Box display="flex" justifyContent="center" alignItems="center">
           <Spinner size="xl" />
         </Box>
@@ -83,7 +85,7 @@ const PatientDashboard = () => {
   if (error) {
     return (
       <VStack>
-        <PatientHeader width={{ base: "100%", md: "100%" }} />
+        <PatientHeader width={{ base: "100%", md: "100%" }} userId={user.id} />
         <VStack textAlign="center" mt={{ base: "25%" }}>
           <Text fontSize={{ base: "10px", md: "20px" }} fontWeight={{ base: "bold" }} color="red.500">{error}</Text>
           <Button colorScheme="blue" onClick={newAppointment}>make appointment</Button>
@@ -118,7 +120,7 @@ const PatientDashboard = () => {
 
   return (
     <VStack fontSize={{ base: "12px", md: "18px" }}>
-      <PatientHeader width={{ base: "100%", md: "100%" }} />
+      <PatientHeader width={{ base: "100%", md: "100%" }} userId={user.id} />
       <Menu>
         <MenuButton
           as={IconButton}
@@ -178,6 +180,7 @@ const PatientDashboard = () => {
           />
         </SimpleGrid>
       </Box>
+
       <Box
         mt={{ base: "0", md: "0" }}
         w={"100%"}
@@ -310,6 +313,7 @@ const PatientDashboard = () => {
               );
             })}
           </SimpleGrid>
+
         ) : (
           <Text>No patient data available</Text>
         )}

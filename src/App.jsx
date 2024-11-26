@@ -13,6 +13,7 @@ import Patients from "./Admin/Patients";
 import PatientDashboard from "./Patient/patient.dashbord";
 import Callcenter from "./Pages/chatwoot/Callcenter";
 import Auth from "./Pages/Auth";
+import Profile from "./Patient/patientSetting";
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
           <Route path="/Patient/dashbord" element={<PatientDashboard />} />
           <Route path="/simoCare/callcenter" element={<Callcenter />} />
           <Route path="/callcenter" element={<Callcenter />} />
+          <Route path="/patient/setting" element={<Profile/>} />
+
 
         </Routes>
       </BrowserRouter>

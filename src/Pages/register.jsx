@@ -138,15 +138,19 @@ const Register = () => {
   };
   useEffect(() => {
     const checkPatientExists = async () => {
-      if (form.userId) {
-        const existingPatient = await getPatient(form.userId);
+      if (form?.userId) {
+        const existingPatient = await getPatient(form?.userId);
+        console.log('existingPatient', existingPatient)
         setPatientExists(!!existingPatient);
         if (existingPatient) {
-          navigate("/login");
+          navigate(`/login`);
         } else {
           return;
         }
       }
+      // else{
+      //   navigate("/")
+      // }
     };
 
     checkPatientExists();
@@ -191,10 +195,11 @@ const Register = () => {
       };
 
       const newUser = await registerUser(userData);
+      console.log('newUser', newUser)
       if (!newUser) throw new Error("User registration failed");
 
       SuccessToast("Registration succeeded");
-      navigate("/login");
+      navigate(`/login`);
     } catch (error) {
       console.error("Registration error:", error);
       ErrorToast("Failed to register: " + error.message);

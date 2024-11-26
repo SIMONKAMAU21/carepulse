@@ -40,7 +40,7 @@ const Appointment = () => {
     appointmentDate: "",
     status: "pending",
   });
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode  } = useColorMode();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

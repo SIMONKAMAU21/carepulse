@@ -8,7 +8,7 @@ const AppointmentDetails = ({ appointmentId }) => {
   useEffect(() => {
     const fetchAppointmentDetails = async () => {
       try {
-        const details = await getAppointmentWithDoctor("66f48f6d0012796af42a");
+        const details = await getAppointmentWithDoctor("673ef1df0002a4d82754");
         setAppointmentDetails(details);
       } catch (error) {
         console.error("Error fetching appointment details:", error);

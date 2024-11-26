@@ -10,7 +10,7 @@ import {
 export const sidebarLinks = [
   { path: "/patient/dashbord", label: "Dashboard", icon: MdDashboard },
   { path: "/simoCare/callcenter", label: "call center", icon: MdCall },
-  { path: "/settings", label: "Settings", icon: MdSettings },
+  { path:"/patient/setting" , label: "Settings", icon: MdSettings },
 ];
 
 const PatiendSidebar = () => {

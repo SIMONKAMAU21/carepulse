@@ -81,6 +81,7 @@ export const getPatient = async (userId) => {
       "An error occurred while retrieving the user details:",
       error
     );
+    throw error
   }
 };
 export const registerUser = async (userData) => {
@@ -186,6 +187,21 @@ export const authenticateUser = async (email, inputPasscode) => {
     return { success: true, message: "Authentication successful." };
   } catch (error) {
     console.error("Authentication error:", error);
+    throw error;
+  }
+};
+export const updatePatientDetails = async (userId, details) => {
+  try {
+    const documentId = (await getPatient(userId)).$id; // Ensure document ID is retrieved
+    console.log('documentId', documentId)
+    return await databases.updateDocument(
+      VITE_DATABASE_ID,
+      VITE_PATIENT_COLLECTION_ID,
+      documentId,
+      details
+    );
+  } catch (error) {
+    console.error("Error updating patient details:", error);
     throw error;
   }
 };
