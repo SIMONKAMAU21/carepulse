@@ -87,7 +87,7 @@ const Callcenter = () => {
   };
   const currentHeader =
     location.pathname === "/simoCare/callcenter" ? (
-      <PatientHeader width={{ base: "100%", md: "98%" }} />
+      <PatientHeader width={{ base: "100%", md: "50%" }} position={"fixed"}/>
     ) : (
       <Header width={{ base: "100%", md: "98%" }} />
     );

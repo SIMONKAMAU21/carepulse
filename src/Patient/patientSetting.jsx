@@ -11,15 +11,19 @@ import {
     SimpleGrid,
     Divider,
     Avatar,
+    Image,
 } from "@chakra-ui/react";
 import PatientHeader from "./components/PatientHeader";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import { getPatient, updatePatientDetails } from "../lib/Actions/patient.actions";
-import { ErrorToast, SuccessToast } from "../Components/toaster";
+import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [patientDetails, setPatientDetails] = useState({});
+    const [error, setError] = useState("")
+    const [confirmPasscode, setConfirmPasscode] = useState("")
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -28,8 +32,8 @@ const Profile = () => {
         profilePicture: "",
     });
     const { colorMode } = useColorMode();
+    const navigate= useNavigate()
     const user = JSON.parse(localStorage.getItem("user"));
-
     if (!user) {
         ErrorToast("Oops, your data is not found");
         return null;
@@ -39,7 +43,8 @@ const Profile = () => {
 
     useEffect(() => {
         const fetchDetails = async () => {
-            setLoading(true);
+            LoadingToast(true);
+            setLoading(true)
             try {
                 const response = await getPatient(userId);
                 if (response) {
@@ -56,6 +61,7 @@ const Profile = () => {
                 console.error("Error fetching details:", error);
                 ErrorToast("Failed to fetch user details");
             } finally {
+                LoadingToast(false)
                 setLoading(false);
             }
         };
@@ -75,6 +81,7 @@ const Profile = () => {
         if (!selectedFile) return;
 
         try {
+            LoadingToast(true)
             const data = new FormData();
             data.append("file", selectedFile);
             data.append("upload_preset", "wdfjbcug");
@@ -98,6 +105,7 @@ const Profile = () => {
                 }));
 
                 SuccessToast("Profile picture uploaded successfully!");
+                LoadingToast(false)
             } else {
                 ErrorToast("Failed to upload the profile picture");
             }
@@ -108,7 +116,7 @@ const Profile = () => {
     };
 
     const handleSubmit = async () => {
-        setLoading(true);
+        LoadingToast(true);
         try {
             await updatePatientDetails(userId, form);
             SuccessToast("Details saved successfully!");
@@ -116,13 +124,36 @@ const Profile = () => {
             console.error("Error updating details:", error);
             ErrorToast("Failed to save changes");
         } finally {
-            setLoading(false);
+            LoadingToast(false);
+            setLoading(false)
         }
     };
-
+    const handleConfirmPasscode = async (e) => {
+        setConfirmPasscode(e.target.value)
+    }
+    const handlePasscodeUpdate = async () => {
+        if (form.passcode !== confirmPasscode) {
+            setError("passcode do not match")
+            return
+        }
+        LoadingToast(true)
+        setLoading(true)
+        try {
+            await updatePatientDetails(userId, { passcode: form.passcode })
+            SuccessToast("passcode updated")
+            navigate("/login")
+        } catch (error) {
+            ErrorToast("failed to update password")
+        } finally {
+            setLoading(false)
+            LoadingToast(false)
+            setError("")
+            setConfirmPasscode("")
+        }
+    }
     return (
         <>
-            <PatientHeader width={{ base: "100%", md: "100%" }} userId={userId} />
+            <PatientHeader width={{ base: "100%", md: "100%" }} userId={userId} position={"fixed"} />
             <AuthWrapper
                 leftChildren={
                     <Box
@@ -130,17 +161,17 @@ const Profile = () => {
                         p={4}
                         boxShadow="dark-lg"
                         color={colorMode === "dark" ? "white" : "black"}
-                        fontWeight="bold"
                     >
                         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                             <VStack
                                 w="100%"
+                                fontWeight="bold"
                                 border="1px solid"
                                 borderRadius="10px"
                                 boxShadow="2xl"
                                 p={4}
                                 spacing={4}
-                                mt={{ base: "20%", md: "0%" }}
+                                mt={{ base: "20%", md: "20%" }}
                                 align="stretch"
                             >
                                 <Heading size="md">Your Profile</Heading>
@@ -207,6 +238,8 @@ const Profile = () => {
                                 p={4}
                                 spacing={4}
                                 align="stretch"
+                                mt={{ base: "0%", md: "20%" }}
+
                             >
                                 <Heading size="md">Update Passcode</Heading>
                                 <Box>
@@ -219,10 +252,24 @@ const Profile = () => {
                                         onChange={handleChange}
                                         isDisabled={loading}
                                     />
+                                    <Text>confirm passcode</Text>
+                                    <Input
+                                        placeholder="Enter your current passcode"
+                                        name="confirmPasscode"
+                                        type="password"
+                                        value={confirmPasscode}
+                                        onChange={handleConfirmPasscode}
+                                        isDisabled={loading}
+                                    />
                                 </Box>
+                                {error && (
+                                    <Text fontSize={"10px"} color={"red"}>
+                                        {error}
+                                    </Text>
+                                )}
                                 <Button
                                     colorScheme="green"
-                                    onClick={handleSubmit}
+                                    onClick={handlePasscodeUpdate}
                                     isLoading={loading}
                                 >
                                     Update Passcode
@@ -232,10 +279,15 @@ const Profile = () => {
                     </Box>
                 }
                 rightChildren={
-                    <VStack spacing={4} color={colorMode === "dark" ? "white" : "black"}>
-                        <Text>Welcome to your profile management page!</Text>
-                        <Text>Here, you can update your details, change your passcode, and upload a profile picture.</Text>
-                    </VStack>
+                    <Box height="100vh" width="100%">
+                        <Image
+                            src={patientDetails.profilePicture}
+                            alt="profilePicture"
+                            height="100%"
+                            width="100%"
+                            objectFit="cover"
+                        />
+                    </Box>
                 }
             />
         </>

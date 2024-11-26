@@ -17,7 +17,7 @@ import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import PatiendSidebar from "./patientSidebar";
 import { getPatient } from "../../lib/Actions/patient.actions";
 
-const PatientHeader = ({ width, title, subTitle, userId }) => {
+const PatientHeader = ({ width, title, subTitle, userId,position }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const [patientDetails, setPatientDetails] = useState(null);
@@ -47,7 +47,7 @@ const PatientHeader = ({ width, title, subTitle, userId }) => {
         display={"flex"}
         p={4}
         bg={colorMode === "light" ? "#3182CE" : theme.colors.primary.dark}
-        position={{ base: "fixed", md: "relative" }}
+        position={position}
       >
         <IconButton
           boxShadow={"dark-lg"}

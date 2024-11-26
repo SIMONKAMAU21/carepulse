@@ -50,7 +50,7 @@ const Auth = () => {
             alignItems={"center"}
             justifyContent={"center"}
             display={"flex"}
-            h={"100%"}
+            h={"80%"}
             w={"100%"}
           >
             <Box
@@ -85,7 +85,7 @@ const Auth = () => {
                       <FormControl id="passcode" isRequired mt={4}>
                         <FormLabel>Passcode</FormLabel>
                         <Input
-                          type="text"
+                          type="password"
                           value={inputPasscode}
                           onChange={(e) => setInputPasscode(e.target.value)}
                           placeholder="Enter passcode"
