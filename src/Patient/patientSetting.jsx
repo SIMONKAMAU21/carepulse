@@ -161,6 +161,14 @@ const Profile = () => {
                         p={4}
                         boxShadow="dark-lg"
                         color={colorMode === "dark" ? "white" : "black"}
+                        overflow={"scroll"}
+                        sx={{
+                            "::-webkit-scrollbar": {
+                              display: "none",
+                            },
+                            scrollbarWidth: "none",
+                            msOverflowStyle: "none",
+                          }}
                     >
                         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                             <VStack
