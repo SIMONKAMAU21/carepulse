@@ -194,49 +194,49 @@ const Admin = () => {
         msOverflowStyle: "none",
       }}
       overflow={"scroll"}
-      p={{base:0,md:4}}
+      p={{ base: 0, md: 4 }}
     >
       <Header
         width={{ base: "100%", md: "99%" }}
         title={"Welcome Admin 😄"}
         subTitle={"Start day with managing new appointments"}
       />
-        <SimpleGrid
-          mt={{ base: "48%", md: "0%" }}
-          columns={{ base: 3, md: 3 }}
-          spacing={6}
-          ml={{base:"1%",md:"0"}}
-          // p={1}
-          w={"100%"}
-          // h={"100%"}
-          sx={{
-            "::-webkit-scrollbar": {
-              display: "none",
-            },
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-        >
-          <CountBox
-            gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
-            icon={FaCalendarCheck}
-            count={appointments?.scheduledCount || "0"}
-            title={"scheduled appointments"}
-          />
-          <CountBox
-            gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
-            icon={FaClock}
-            count={appointments?.pendingCount || "10000"}
-            title={"pending appointments"}
-          />
-          <CountBox
-            gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
-            icon={FaExclamationTriangle}
-            count={appointments?.cancelledCount}
-            title={"cancelled appointments"}
-          />
-        </SimpleGrid>
-<Text p={"4px"} fontWeight={"bold"} fontSize={{base:"10px",md:"18px"}} color={colorMode=== "dark"?"green.300":"green.600"}>YOU HAVE <span color="red">{appointments.expiredCount}</span> EXPIRED APPOINTMENTS</Text>
+      <SimpleGrid
+        mt={{ base: "48%", md: "0%" }}
+        columns={{ base: 3, md: 3 }}
+        spacing={6}
+        ml={{ base: "1%", md: "0" }}
+        // p={1}
+        w={"100%"}
+        // h={"100%"}
+        sx={{
+          "::-webkit-scrollbar": {
+            display: "none",
+          },
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+      >
+        <CountBox
+          gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
+          icon={FaCalendarCheck}
+          count={appointments?.scheduledCount || "0"}
+          title={"scheduled appointments"}
+        />
+        <CountBox
+          gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
+          icon={FaClock}
+          count={appointments?.pendingCount || "0"}
+          title={"pending appointments"}
+        />
+        <CountBox
+          gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
+          icon={FaExclamationTriangle}
+          count={appointments?.cancelledCount}
+          title={"cancelled appointments"}
+        />
+      </SimpleGrid>
+      <Text p={"4px"} fontWeight={"bold"} fontSize={{ base: "10px", md: "18px" }} color={colorMode === "dark" ? "green.300" : "green.600"}>YOU HAVE <span color="red">{appointments.expiredCount}</span> EXPIRED APPOINTMENTS</Text>
       <Box mt={{ base: "5%", md: "1%" }} p={"4px"} w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
@@ -244,7 +244,7 @@ const Admin = () => {
           placeholder={"search appointments by name or phone"}
         />
       </Box>
-      <Box p={{base:0}} mt={4} h={"70%"} overflowX="auto">
+      <Box p={{ base: 0 }} mt={4} h={"70%"} overflowX="auto">
         <Table
           variant="simple"
           color={colorMode === "dark" ? "black.200" : " black"}
@@ -297,10 +297,10 @@ const Admin = () => {
                       appointment.status === "Scheduled"
                         ? "green.400"
                         : appointment.status === "Cancelled"
-                        ? "red.400"
-                        : appointment.status === "Expired"
-                        ? "teal"
-                        : "yellow"
+                          ? "red.400"
+                          : appointment.status === "Expired"
+                            ? "teal"
+                            : "yellow"
                     }
                     fontWeight={colorMode === "light" ? "bold" : "none"}
                   >

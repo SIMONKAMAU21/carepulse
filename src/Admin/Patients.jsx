@@ -22,16 +22,22 @@ import {
   Spacer,
   Avatar,
   useColorMode,
+  Card,
+  CardHeader,
+  VStack,
+  CardBody,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Header from "../Components/header";
 import { deletePatient, getPatients } from "../lib/Actions/patient.actions";
 import { LoadingToast, SuccessToast } from "../Components/toaster";
+import SearchInput from "../Components/Search";
 
 const Patients = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("")
   const [selectedPatient, setSelectedPatient] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode } = useColorMode();
@@ -40,6 +46,7 @@ const Patients = () => {
     const fetchPatients = async () => {
       try {
         const response = await getPatients();
+        console.log('response', response)
         setPatients(response?.documents);
       } catch (error) {
         setError("Failed to fetch patients data");
@@ -72,14 +79,36 @@ const Patients = () => {
     fontWeight: "bold",
     color: "grey",
   };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
+  const filteredPatients = patients?.filter(
+    (patient) => {
+      return (
+        patient.name.toLowerCase().includes(searchTerm) ||
+        patient.email.toLowerCase().includes(searchTerm) ||
+        patient.identificationNumber
+          .toLowerCase().includes(searchTerm)
+      )
+    }
+  )
+
   return (
-    <Box h={"100%"} w={"100%"}p={{base:1,md:4}}  >
+    <Box h={"100%"} w={"100%"} p={{ base: 1, md: 4 }}  >
       <Header
 
         width={{ base: "100%", md: "99%" }}
         title={"Manage Your Patients"}
         subTitle={"View, update, and track patient details efficiently"}
       />
+      <Box w={
+        { base: "90%", md: "50%" }
+      }
+        mt={{ base: "49%", md: "0%" }}>
+        <SearchInput value={searchTerm} onChange={handleSearch} placeholder={"serach patient by name,email,id number"} />
+
+      </Box>
       <Box >
         {loading ? (
           <Text>loading....</Text>
@@ -87,13 +116,14 @@ const Patients = () => {
           <Text color="red.500">{error}</Text>
         ) : patients?.length > 0 ? (
           <Box
-            mt={{ base: "60%", md: "0%" }}
+            mt={{ base: "2%", md: "0%" }}
             h={"100%"}
             p={"0px"}
             overflowX="auto"
             color={colorMode === "dark" ? "white" : "black"}
 
           >
+
             <Table
               color={colorMode === "dark" ? "white" : "black"}
               variant={"simple"}
@@ -113,53 +143,57 @@ const Patients = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {patients?.map((patient) => (
-                  <Tr key={patient.$id}>
-                    <Td>
-                      <HStack>
-                        <Avatar name={patient.name} />
-                        <Text> {patient.name}</Text>
-                      </HStack>
-                    </Td>
-                    <Td>{patient.email}</Td>
-                    <Td display={{ base: "none", md: "table-cell" }}>
-                      {patient.phone}
-                    </Td>
-                    <Td display={{ base: "none", md: "table-cell" }}>
-                      {patient.insuranceProvider}
-                    </Td>
-                    <Td>
-                      <Button
-                        // w={{ base: "100%", md: "60%" }}
-                        size={"sm"}
-                        bg={"transparent"}
-                        border={"2px solid green"}
-                        color={colorMode === "dark" ? "white" : "gray.700"}
-                        _hover={{
-                          bg: "green",
-                        }}
-                        onClick={() => handlePatientSelect(patient)}
-                      >
-                        View More
-                      </Button>
-                      <Spacer />
-                      <Button
-                        mt={"5%"}
-                        // w={{ base: "100%", md: "60%" }}
-                        size={"sm"}
-                        bg={"transparent"}
-                        border={"2px solid red"}
-                        color={colorMode === "dark" ? "white" : "gray.700"}
-                        _hover={{
-                          bg: "red.500",
-                        }}
-                        onClick={() => handleDelete(patient.$id)}
-                      >
-                        Delete patient
-                      </Button>
-                    </Td>
-                  </Tr>
-                ))}
+                {filteredPatients?.length > 0 ? (
+
+                  filteredPatients?.map((patient) => (
+                    <Tr key={patient.$id}>
+                      <Td>
+                        <HStack>
+                          <Avatar src={patient?.profilePicture} name={patient?.name} />
+                          <Text> {patient.name}</Text>
+                        </HStack>
+                      </Td>
+                      <Td>{patient.email}</Td>
+                      <Td display={{ base: "none", md: "table-cell" }}>
+                        {patient.phone}
+                      </Td>
+                      <Td display={{ base: "none", md: "table-cell" }}>
+                        {patient.insuranceProvider}
+                      </Td>
+                      <Td>
+                        <Button
+                          // w={{ base: "100%", md: "60%" }}
+                          size={"sm"}
+                          bg={"transparent"}
+                          border={"2px solid green"}
+                          color={colorMode === "dark" ? "white" : "gray.700"}
+                          _hover={{
+                            bg: "green",
+                          }}
+                          onClick={() => handlePatientSelect(patient)}
+                        >
+                          View More
+                        </Button>
+                        <Spacer />
+                        <Button
+                          mt={"5%"}
+                          // w={{ base: "100%", md: "60%" }}
+                          size={"sm"}
+                          bg={"transparent"}
+                          border={"2px solid red"}
+                          color={colorMode === "dark" ? "white" : "gray.700"}
+                          _hover={{
+                            bg: "red.500",
+                          }}
+                          onClick={() => handleDelete(patient.$id)}
+                        >
+                          Delete patient
+                        </Button>
+                      </Td>
+                    </Tr>
+                  ))) : (<Text>
+                    no patient found
+                  </Text>)}
               </Tbody>
             </Table>
           </Box>
@@ -175,87 +209,94 @@ const Patients = () => {
         )}
       </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
           fontSize={{ base: "sm", md: "lg" }}
-          color={"#83B9DC"}
-          bg={"#131619"}
-          w={{ base: "90%" }}
+          // color={"#83B9DC"}
+          // bg={"#131619"}
+          w={{ base: "95%" }}
         >
           <ModalHeader>{selectedPatient?.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>
-              <span style={spanStyles}>Email: </span>
-              {selectedPatient?.email}
-            </Text>
-            <Text>
-              <span style={spanStyles}>Phone:</span> {selectedPatient?.phone}
-            </Text>
-            <Text>
-              <span style={spanStyles}>Insurance Provider:</span>
-              {selectedPatient?.insuranceProvider}
-            </Text>
-            <Text>
-              <span style={spanStyles}> insurancePolicyNumber:</span>
-              {selectedPatient?.insurancePolicyNumber}
-            </Text>
-            <Text>
-              <span style={spanStyles}> Allergies:</span>
-              {selectedPatient?.allergies}
-            </Text>
-            <Text>
-              <span style={spanStyles}>Birth Date:</span>
-              {selectedPatient?.birthDate}
-            </Text>
-            <Text>
-              <span style={spanStyles}>Occupation:</span>
-              {selectedPatient?.occupation}
-            </Text>
-            <Text>
-              <span style={spanStyles}>Emergency Contact:</span>{" "}
-              {selectedPatient?.emergencyContact}
-            </Text>
-            <Text>
-              <span style={spanStyles}> Emergency Contact Name:</span>{" "}
-              {selectedPatient?.emergencyContactName}
-            </Text>
-            <Text>
-              <span style={spanStyles}>currentMedication:</span>{" "}
-              {selectedPatient?.currentMedication || " -"}
-            </Text>
-            <Text>
-              <span style={spanStyles}>pastMedicalHistory: </span>
-              {selectedPatient?.pastMedicalHistory}
-            </Text>
-            <Text>
-              <span style={spanStyles}>identificationType:</span>{" "}
-              {selectedPatient?.identificationType}
-            </Text>
+            <Card w={"100%"}>
+              <CardHeader>
+                <HStack>
+                  <Avatar size={"lg"} src={selectedPatient?.profilePicture} name={selectedPatient?.name} />
+                  <VStack>
+                    <Text>
+                      {selectedPatient?.phone}
+                    </Text>
+                    <Text>
+                      {selectedPatient?.email}
+                    </Text>
+                  </VStack>
+                </HStack>
+              </CardHeader>
+              <CardBody>
 
-            <Text>
-              <span style={spanStyles}> familyMedicalHistory:</span>{" "}
-              {selectedPatient?.familyMedicalHistory}
-            </Text>
-            <Text>
-              <span style={spanStyles}> identificationNumber:</span>{" "}
-              {selectedPatient?.identificationNumber}
-            </Text>
-            <HStack>
-              <Text style={spanStyles}>identificationUrl:</Text>
-              <Image
-                boxSize={"50px"}
-                src={selectedPatient?.identificationUrl}
-                alt="Patient Identification"
-              />
-            </HStack>
+                <Text>
+                  <span style={spanStyles}>Insurance Provider:</span>
+                  {selectedPatient?.insuranceProvider}
+                </Text>
+                <Text>
+                  <span style={spanStyles}> insurancePolicyNumber:</span>
+                  {selectedPatient?.insurancePolicyNumber}
+                </Text>
+                <Text>
+                  <span style={spanStyles}> Allergies:</span>
+                  {selectedPatient?.allergies}
+                </Text>
+                <Text>
+                  <span style={spanStyles}>Birth Date:</span>
+                  {selectedPatient?.birthDate}
+                </Text>
+                <Text>
+                  <span style={spanStyles}>Occupation:</span>
+                  {selectedPatient?.occupation}
+                </Text>
+                <Text>
+                  <span style={spanStyles}>Emergency Contact:</span>{" "}
+                  {selectedPatient?.emergencyContact}
+                </Text>
+                <Text>
+                  <span style={spanStyles}> Emergency Contact Name:</span>{" "}
+                  {selectedPatient?.emergencyContactName}
+                </Text>
+                <Text>
+                  <span style={spanStyles}>currentMedication:</span>{" "}
+                  {selectedPatient?.currentMedication || " -"}
+                </Text>
+                <Text>
+                  <span style={spanStyles}>pastMedicalHistory: </span>
+                  {selectedPatient?.pastMedicalHistory}
+                </Text>
+                <Text>
+                  <span style={spanStyles}>identificationType:</span>{" "}
+                  {selectedPatient?.identificationType}
+                </Text>
+
+                <Text>
+                  <span style={spanStyles}> familyMedicalHistory:</span>{" "}
+                  {selectedPatient?.familyMedicalHistory}
+                </Text>
+                <Text>
+                  <span style={spanStyles}> identificationNumber:</span>{" "}
+                  {selectedPatient?.identificationNumber}
+                </Text>
+                <HStack>
+                  <Text style={spanStyles}>identificationUrl:</Text>
+                  <Image
+                    boxSize={"50px"}
+                    src={selectedPatient?.identificationUrl}
+                    alt="Patient Identification"
+                  />
+                </HStack>
+              </CardBody>
+            </Card>
+
           </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>

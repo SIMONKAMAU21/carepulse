@@ -92,7 +92,7 @@ const Header = ({ width, title, subTitle }) => {
         p={{base:0,md:4}}
       >
         <Heading p={{base:1,md:0}} fontFamily={"sans-serif"}>{title}</Heading>
-        <Text p={{base:1,md:0}} fontFamily={{base:"monospace",md:"inherit"}}>{subTitle}</Text>
+        <Text p={{base:1,md:0}} >{subTitle}</Text>
       </VStack>
 
       {isOpen && <Sidebar onClose={onClose} />}
