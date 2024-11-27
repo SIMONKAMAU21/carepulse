@@ -144,7 +144,7 @@ const PatientDashboard = () => {
       </Menu>
       <Box p={2} w={"100%"}>
         <SimpleGrid
-          mt={{ base: "25%", md: "0%" }}
+          mt={{ base: "2%", md: "0%" }}
           columns={{ base: 3, md: 3 }}
           spacing={6}
           w={"100%"}
@@ -182,7 +182,7 @@ const PatientDashboard = () => {
       </Box>
 
       <Box
-        mt={{ base: "0", md: "0" }}
+        // mt={{ base: "0", md: "0" }}
         w={"100%"}
         overflowY={"scroll"}
         color={colorMode === "dark" ? "white" : "black"}
@@ -216,7 +216,7 @@ const PatientDashboard = () => {
                   // h={"500px"}
                   borderWidth={1}
                   borderRadius="md"
-                  bg={colorMode === "dark" ? "gray.700" : "gray.100"}
+                  bg={colorMode === "dark" ? "gray.700" : "gray.200"}
                   boxShadow="md"
                 >
                   <Text>

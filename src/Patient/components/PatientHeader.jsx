@@ -76,7 +76,8 @@ const PatientHeader = ({ width, title, subTitle, userId,position }) => {
         />
         <Spacer />
         <Avatar
-          name={"unknown"}
+        size={{base:"sm",md:"lg"}}
+          name={patientDetails?.name}
           src={patientDetails?.profilePicture}
         />
         <IconButton

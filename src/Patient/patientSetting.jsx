@@ -18,11 +18,13 @@ import AuthWrapper from "../Components/OnboarndingWrapper";
 import { getPatient, updatePatientDetails } from "../lib/Actions/patient.actions";
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
+import CustomInputs from "../Components/CustomInputs";
 
 const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [patientDetails, setPatientDetails] = useState({});
     const [error, setError] = useState("")
+    const [passwordStrenth, setPasswordStrenth] = useState("")
     const [confirmPasscode, setConfirmPasscode] = useState("")
     const [form, setForm] = useState({
         name: "",
@@ -32,7 +34,7 @@ const Profile = () => {
         profilePicture: "",
     });
     const { colorMode } = useColorMode();
-    const navigate= useNavigate()
+    const navigate = useNavigate()
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) {
         ErrorToast("Oops, your data is not found");
@@ -74,6 +76,13 @@ const Profile = () => {
             ...prev,
             [name]: value,
         }));
+        if(name === 'passcode'){
+            if (value.length < 8) {
+                setPasswordStrenth("weak passcode")
+            } else {
+                setPasswordStrenth("Strong password")
+            }
+         }
     };
 
     const handleProfilePictureUpload = async (e) => {
@@ -134,6 +143,7 @@ const Profile = () => {
     const handlePasscodeUpdate = async () => {
         if (form.passcode !== confirmPasscode) {
             setError("passcode do not match")
+            setPasswordStrenth("")
             return
         }
         LoadingToast(true)
@@ -147,10 +157,12 @@ const Profile = () => {
         } finally {
             setLoading(false)
             LoadingToast(false)
+            setPasswordStrenth("")
             setError("")
             setConfirmPasscode("")
         }
     }
+
     return (
         <>
             <PatientHeader width={{ base: "100%", md: "100%" }} userId={userId} position={"fixed"} />
@@ -159,22 +171,25 @@ const Profile = () => {
                     <Box
                         h={"100%"}
                         p={4}
+                        zIndex={"1000"}
+                        // fontSize={{base:"10px"}}
                         boxShadow="dark-lg"
                         color={colorMode === "dark" ? "white" : "black"}
                         overflow={"scroll"}
                         sx={{
                             "::-webkit-scrollbar": {
-                              display: "none",
+                                display: "none",
                             },
                             scrollbarWidth: "none",
                             msOverflowStyle: "none",
-                          }}
+                        }}
                     >
                         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                             <VStack
                                 w="100%"
                                 fontWeight="bold"
-                                border="1px solid"
+                                // border="1px solid"
+                                bg={colorMode === "dark" ? "gray.700" : "gray.200"}
                                 borderRadius="10px"
                                 boxShadow="2xl"
                                 p={4}
@@ -184,32 +199,35 @@ const Profile = () => {
                             >
                                 <Heading size="md">Your Profile</Heading>
                                 <Box>
-                                    <Text>Name</Text>
-                                    <Input
+                                    <CustomInputs
+                                        label={"Name"}
                                         placeholder="Enter your name"
-                                        name="name"
+                                        type="text"
+                                        name={"name"}
                                         value={form.name}
                                         onChange={handleChange}
                                         isDisabled={loading}
                                     />
                                 </Box>
                                 <Box>
-                                    <Text>Email</Text>
-                                    <Input
-                                        placeholder="Enter your email"
-                                        name="email"
+
+                                    <CustomInputs
+                                        label={"Email"}
+                                        placeholder={"Enter your email"}
                                         type="email"
+                                        name={"email"}
                                         value={form.email}
                                         onChange={handleChange}
                                         isDisabled={loading}
                                     />
                                 </Box>
                                 <Box>
-                                    <Text>Phone</Text>
-                                    <Input
+
+                                    <CustomInputs
+                                        label={"Phone"}
                                         placeholder="Enter your phone"
-                                        name="phone"
                                         type="tel"
+                                        name="phone"
                                         value={form.phone}
                                         onChange={handleChange}
                                         isDisabled={loading}
@@ -222,7 +240,7 @@ const Profile = () => {
                                         size="xl"
                                         mb={4}
                                     />
-                                    <Input
+                                    <CustomInputs
                                         type="file"
                                         accept="image/*"
                                         onChange={handleProfilePictureUpload}
@@ -240,7 +258,7 @@ const Profile = () => {
                             {/* Passcode Update Section */}
                             <VStack
                                 w="100%"
-                                border="1px solid"
+                                bg={colorMode === "dark" ? "gray.700" : "gray.200"}
                                 borderRadius="10px"
                                 boxShadow="2xl"
                                 p={4}
@@ -251,28 +269,40 @@ const Profile = () => {
                             >
                                 <Heading size="md">Update Passcode</Heading>
                                 <Box>
-                                    <Text>Current Passcode</Text>
-                                    <Input
+
+                                    <CustomInputs
+                                        label={"Current Passcode"}
                                         placeholder="Enter your current passcode"
-                                        name="passcode"
                                         type="password"
+                                        name="passcode"
                                         value={form.passcode}
                                         onChange={handleChange}
                                         isDisabled={loading}
                                     />
-                                    <Text>confirm passcode</Text>
-                                    <Input
+
+                                    <CustomInputs
+                                        label={"confirm passcode"}
                                         placeholder="Enter your current passcode"
-                                        name="confirmPasscode"
                                         type="password"
+                                        name="confirmPasscode"
                                         value={confirmPasscode}
                                         onChange={handleConfirmPasscode}
                                         isDisabled={loading}
                                     />
                                 </Box>
                                 {error && (
-                                    <Text fontSize={"10px"} color={"red"}>
+                                    <Text fontSize={{ base: "10px", md: "18px" }} color={"red.400"}>
                                         {error}
+                                    </Text>
+                                )}
+                                {passwordStrenth !== "weak passcode" && (
+                                    <Text fontWeight={"bold"} fontSize={{base:"10px",md:"14px"}}  color={"green.400"}>
+                                        {passwordStrenth}
+                                    </Text>
+                                )}
+                                  {passwordStrenth === "weak passcode" && (
+                                    <Text fontWeight={"bold"} fontSize={{base:"10px",md:"14px"}} color={"red"}>
+                                        {passwordStrenth}
                                     </Text>
                                 )}
                                 <Button
@@ -292,6 +322,7 @@ const Profile = () => {
                             src={patientDetails.profilePicture}
                             alt="profilePicture"
                             height="100%"
+                            blur={"10%"}
                             width="100%"
                             objectFit="cover"
                         />
