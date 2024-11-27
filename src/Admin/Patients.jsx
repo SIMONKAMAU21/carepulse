@@ -26,6 +26,7 @@ import {
   CardHeader,
   VStack,
   CardBody,
+  CardFooter,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Header from "../Components/header";
@@ -72,6 +73,7 @@ const Patients = () => {
       ErrorToast("Failed to delete patient");
     } finally {
       LoadingToast(false);
+      onClose()
     }
   };
 
@@ -123,7 +125,6 @@ const Patients = () => {
             color={colorMode === "dark" ? "white" : "black"}
 
           >
-
             <Table
               color={colorMode === "dark" ? "white" : "black"}
               variant={"simple"}
@@ -135,61 +136,36 @@ const Patients = () => {
                 <Tr>
                   <Th>Name</Th>
                   <Th>Email</Th>
-                  <Th display={{ base: "none", md: "table-cell" }}>Phone</Th>
+                  <Th>Phone</Th>
                   <Th display={{ base: "none", md: "table-cell" }}>
                     Insurance Provider
                   </Th>
-                  <Th>Action</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {filteredPatients?.length > 0 ? (
 
                   filteredPatients?.map((patient) => (
-                    <Tr key={patient.$id}>
-                      <Td>
+                    <Tr key={patient.$id} _hover={{
+                      bg: "yellow.100",
+                      cursor: "pointer",
+                      color:"black"
+                    }} onClick={() => handlePatientSelect(patient)}
+                    >
+                      <Td >
                         <HStack>
                           <Avatar src={patient?.profilePicture} name={patient?.name} />
                           <Text> {patient.name}</Text>
                         </HStack>
                       </Td>
                       <Td>{patient.email}</Td>
-                      <Td display={{ base: "none", md: "table-cell" }}>
+                      <Td>
                         {patient.phone}
                       </Td>
                       <Td display={{ base: "none", md: "table-cell" }}>
                         {patient.insuranceProvider}
                       </Td>
-                      <Td>
-                        <Button
-                          // w={{ base: "100%", md: "60%" }}
-                          size={"sm"}
-                          bg={"transparent"}
-                          border={"2px solid green"}
-                          color={colorMode === "dark" ? "white" : "gray.700"}
-                          _hover={{
-                            bg: "green",
-                          }}
-                          onClick={() => handlePatientSelect(patient)}
-                        >
-                          View More
-                        </Button>
-                        <Spacer />
-                        <Button
-                          mt={"5%"}
-                          // w={{ base: "100%", md: "60%" }}
-                          size={"sm"}
-                          bg={"transparent"}
-                          border={"2px solid red"}
-                          color={colorMode === "dark" ? "white" : "gray.700"}
-                          _hover={{
-                            bg: "red.500",
-                          }}
-                          onClick={() => handleDelete(patient.$id)}
-                        >
-                          Delete patient
-                        </Button>
-                      </Td>
+                    
                     </Tr>
                   ))) : (<Text>
                     no patient found
@@ -294,6 +270,21 @@ const Patients = () => {
                   />
                 </HStack>
               </CardBody>
+              <CardFooter>
+                <Button
+                  mt={"5%"}
+                  size={"sm"}
+                  bg={"transparent"}
+                  border={"2px solid red"}
+                  // color={colorMode === "dark" ? "white" : "gray.700"}
+                  _hover={{
+                    bg: "red.500",
+                  }}
+                  onClick={() => handleDelete(selectedPatient.$id)}
+                >
+                  Delete patient
+                </Button>
+              </CardFooter>
             </Card>
 
           </ModalBody>
