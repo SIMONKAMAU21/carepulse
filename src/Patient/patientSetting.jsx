@@ -36,7 +36,7 @@ const Profile = () => {
     const [patientDetails, setPatientDetails] = useState({});
     const [error, setError] = useState("")
     const [passwordStrenth, setPasswordStrenth] = useState("")
-    const [isModalOpen, setIsModalOpen] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [isEditable, setIsEditable] = useState(false); // State to toggle edit mode
     const [confirmPasscode, setConfirmPasscode] = useState("")
     const [form, setForm] = useState({
