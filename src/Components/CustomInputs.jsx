@@ -1,12 +1,12 @@
 import React from 'react';
 import { Input, InputGroup, InputLeftElement, FormControl, FormLabel, useColorMode } from '@chakra-ui/react';
 
-const CustomInputs = ({ label, value, placeholder, fontSize, icon: IconComponent, width, name, onChange,accept, type, ...rest }) => {
+const CustomInputs = ({ label, value, placeholder, fontSize, icon: IconComponent, width, name, onChange,accept, variant,type, ...rest }) => {
   const { colorMode } = useColorMode();
 
   return (
     <FormControl color={colorMode === "light" ? "black" : "gray.100"}>
-      {label && <FormLabel mt={"10px"}>{label}</FormLabel>}
+      {label && <FormLabel mt={"1%"} fontSize={fontSize}>{label}</FormLabel>}
       <InputGroup>
         {IconComponent && (
           <InputLeftElement pointerEvents="none">
@@ -19,7 +19,8 @@ const CustomInputs = ({ label, value, placeholder, fontSize, icon: IconComponent
           fontSize={fontSize}
           onChange={onChange}
           name={name}
-          // border={"1px solid gray"}
+          variant={variant}
+          borderBottom={"1px solid gray"}
           placeholder={placeholder}
           {...rest}
           accept={accept}

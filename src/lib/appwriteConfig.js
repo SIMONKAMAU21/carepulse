@@ -9,6 +9,9 @@ export const {
   VITE_APPOINTMENT_COLLECTION_ID,
   VITE_STORAGE_ID,
   VITE_ENDPOINT,
+  VITE_USERID,
+  VITE_SERVICEID,
+  VITE_TEMPLATEID
 } = import.meta.env;
 
 const client = new sdk.Client();

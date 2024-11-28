@@ -12,6 +12,15 @@ import {
     Divider,
     Avatar,
     Image,
+    Icon,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    IconButton,
 } from "@chakra-ui/react";
 import PatientHeader from "./components/PatientHeader";
 import AuthWrapper from "../Components/OnboarndingWrapper";
@@ -19,12 +28,16 @@ import { getPatient, updatePatientDetails } from "../lib/Actions/patient.actions
 import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
 import CustomInputs from "../Components/CustomInputs";
+import { FaChevronDown, FaEdit } from "react-icons/fa";
+import { EditIcon } from "@chakra-ui/icons";
 
 const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [patientDetails, setPatientDetails] = useState({});
     const [error, setError] = useState("")
     const [passwordStrenth, setPasswordStrenth] = useState("")
+    const [isModalOpen, setIsModalOpen] = useState(true)
+    const [isEditable, setIsEditable] = useState(false); // State to toggle edit mode
     const [confirmPasscode, setConfirmPasscode] = useState("")
     const [form, setForm] = useState({
         name: "",
@@ -76,13 +89,13 @@ const Profile = () => {
             ...prev,
             [name]: value,
         }));
-        if(name === 'passcode'){
+        if (name === 'passcode') {
             if (value.length < 8) {
                 setPasswordStrenth("weak passcode")
             } else {
                 setPasswordStrenth("Strong password")
             }
-         }
+        }
     };
 
     const handleProfilePictureUpload = async (e) => {
@@ -149,7 +162,7 @@ const Profile = () => {
         LoadingToast(true)
         setLoading(true)
         try {
-            await updatePatientDetails(userId, { passcode: form.passcode })
+            await updatePatientDetails(userId, { passcode: form.passcode, email: form.email })
             SuccessToast("passcode updated")
             navigate("/login")
         } catch (error) {
@@ -172,10 +185,10 @@ const Profile = () => {
                         h={"100%"}
                         p={4}
                         zIndex={"1000"}
-                        // fontSize={{base:"10px"}}
+                        fontSize={{ base: "10px", md: "18px" }}
                         boxShadow="dark-lg"
                         color={colorMode === "dark" ? "white" : "black"}
-                        overflow={"scroll"}
+                        overflowY={"scroll"}
                         sx={{
                             "::-webkit-scrollbar": {
                                 display: "none",
@@ -188,22 +201,32 @@ const Profile = () => {
                             <VStack
                                 w="100%"
                                 fontWeight="bold"
-                                // border="1px solid"
                                 bg={colorMode === "dark" ? "gray.700" : "gray.200"}
                                 borderRadius="10px"
                                 boxShadow="2xl"
                                 p={4}
-                                spacing={4}
+                                spacing={{ base: 2, md: 4 }}
                                 mt={{ base: "20%", md: "20%" }}
                                 align="stretch"
                             >
-                                <Heading size="md">Your Profile</Heading>
+
+                                <Box alignItems={"center"} alignContent={"center"} justifyContent={"center"} display={{ base: "flex", md: "block" }} flexDir={"column"}>
+                                    <Heading size="md">Your Profile</Heading>
+                                    <Avatar
+                                        src={form.profilePicture || patientDetails.profilePicture}
+                                        size="xl"
+                                        mb={4}
+                                    />
+                                    <Button onClick={() => setIsModalOpen(true)}>see more <Icon as={FaChevronDown} /></Button>
+                                </Box>
                                 <Box>
                                     <CustomInputs
                                         label={"Name"}
                                         placeholder="Enter your name"
                                         type="text"
+                                        variant={"flushed"}
                                         name={"name"}
+                                        fontSize={{ base: "13px", md: "18px" }}
                                         value={form.name}
                                         onChange={handleChange}
                                         isDisabled={loading}
@@ -215,7 +238,9 @@ const Profile = () => {
                                         label={"Email"}
                                         placeholder={"Enter your email"}
                                         type="email"
+                                        fontSize={{ base: "13px", md: "18px" }}
                                         name={"email"}
+                                        variant={"flushed"}
                                         value={form.email}
                                         onChange={handleChange}
                                         isDisabled={loading}
@@ -229,20 +254,21 @@ const Profile = () => {
                                         type="tel"
                                         name="phone"
                                         value={form.phone}
+                                        fontSize={{ base: "13px", md: "18px" }}
+                                        variant={"flushed"}
                                         onChange={handleChange}
                                         isDisabled={loading}
                                     />
                                 </Box>
                                 <Box>
-                                    <Text>Profile Picture</Text>
-                                    <Avatar
-                                        src={form.profilePicture || patientDetails.profilePicture}
-                                        size="xl"
-                                        mb={4}
-                                    />
+
+
                                     <CustomInputs
+                                        label={"Profile Picture"}
+                                        fontSize={{ base: "13px", md: "18px" }}
                                         type="file"
                                         accept="image/*"
+                                        variant={"flushed"}
                                         onChange={handleProfilePictureUpload}
                                     />
                                 </Box>
@@ -274,6 +300,9 @@ const Profile = () => {
                                         label={"Current Passcode"}
                                         placeholder="Enter your current passcode"
                                         type="password"
+                                        fontSize={{ base: "13px", md: "18px" }}
+                                        variant={"flushed"}
+
                                         name="passcode"
                                         value={form.passcode}
                                         onChange={handleChange}
@@ -284,6 +313,8 @@ const Profile = () => {
                                         label={"confirm passcode"}
                                         placeholder="Enter your current passcode"
                                         type="password"
+                                        variant={"flushed"}
+                                        fontSize={{ base: "13px", md: "18px" }}
                                         name="confirmPasscode"
                                         value={confirmPasscode}
                                         onChange={handleConfirmPasscode}
@@ -296,12 +327,12 @@ const Profile = () => {
                                     </Text>
                                 )}
                                 {passwordStrenth !== "weak passcode" && (
-                                    <Text fontWeight={"bold"} fontSize={{base:"10px",md:"14px"}}  color={"green.400"}>
+                                    <Text fontWeight={"bold"} fontSize={{ base: "10px", md: "14px" }} color={"green.400"}>
                                         {passwordStrenth}
                                     </Text>
                                 )}
-                                  {passwordStrenth === "weak passcode" && (
-                                    <Text fontWeight={"bold"} fontSize={{base:"10px",md:"14px"}} color={"red"}>
+                                {passwordStrenth === "weak passcode" && (
+                                    <Text fontWeight={"bold"} fontSize={{ base: "10px", md: "14px" }} color={"red"}>
                                         {passwordStrenth}
                                     </Text>
                                 )}
@@ -329,8 +360,241 @@ const Profile = () => {
                     </Box>
                 }
             />
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <ModalOverlay />
+                <ModalContent w={{ base: "95%", md: "100%" }} color={colorMode === "light" ? "black" : "white"}>
+                    <ModalHeader >Edit Details
+                        <Icon
+                            as={FaEdit}
+                            onClick={() => setIsEditable(!isEditable)}
+                            aria-label="Toggle Edit Mode"
+                            variant="ghost"
+                            size="sm"
+                        />
+                    </ModalHeader>
+
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <VStack spacing={4}>
+                            {/* Address */}
+                            {isEditable ? (
+                                <CustomInputs
+                                    label="Address"
+                                    placeholder="Enter your address"
+                                    type="text"
+                                    variant="flushed"
+                                    fontSize={{ base: "13px", md: "18px" }}
+                                    name="address"
+                                    value={patientDetails.address || ""}
+                                    onChange={(e) => handleChange(e, "address")}
+                                />
+                            ) : (
+                                <CustomInputs
+                                    label="Address"
+                                    placeholder="Enter your address"
+                                    type="text"
+                                    variant="flushed"
+                                    fontSize={{ base: "13px", md: "18px" }}
+                                    name="address"
+                                    isDisabled
+                                    value={patientDetails.address || ""}
+                                    onChange={(e) => handleChange(e, "address")}
+                                />
+
+                            )}
+
+
+                            {/* Gender */}
+                            {isEditable ? (<CustomInputs
+                                label="Gender"
+                                placeholder="Enter your gender"
+                                type="text"
+                                variant="flushed"
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="gender"
+                                value={patientDetails.gender || ""}
+                                onChange={(e) => handleChange(e, "gender")}
+                            />) : (
+                                <CustomInputs
+                                    label="Gender"
+                                    placeholder="Enter your gender"
+                                    type="text"
+                                    isDisabled
+                                    variant="flushed"
+                                    fontSize={{ base: "13px", md: "18px" }}
+                                    name="gender"
+                                    value={patientDetails.gender || ""}
+                                    onChange={(e) => handleChange(e, "gender")}
+                                />
+                            )}
+                            {isEditable ? (<CustomInputs
+                                label="Date of Birth"
+                                placeholder="Enter your birth date"
+                                type="date"
+                                variant="flushed"
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="birthDate"
+                                value={patientDetails.birthDate || ""}
+                                onChange={(e) => handleChange(e, "birthDate")}
+
+                            />) : (<CustomInputs
+                                label="Date of Birth"
+                                placeholder="Enter your birth date"
+                                type="date"
+                                variant="flushed"
+                                isDisabled
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="birthDate"
+                                value={patientDetails.birthDate || ""}
+                                onChange={(e) => handleChange(e, "birthDate")}
+                            />)}
+                            {isEditable ? (
+                                <CustomInputs
+                                    label="Allergies"
+                                    placeholder="Enter any allergies"
+                                    type="text"
+                                    variant="flushed"
+                                    fontSize={{ base: "13px", md: "18px" }}
+                                    name="allergies"
+                                    value={patientDetails.allergies || ""}
+                                    onChange={(e) => handleChange(e, "allergies")}
+                                />
+                            ) : (
+                                <CustomInputs
+                                    label="Allergies"
+                                    placeholder="Enter any allergies"
+                                    type="text"
+                                    isDisabled
+                                    variant="flushed"
+                                    fontSize={{ base: "13px", md: "18px" }}
+                                    name="allergies"
+                                    value={patientDetails.allergies || ""}
+                                    onChange={(e) => handleChange(e, "allergies")}
+                                />
+                            )}
+
+                            {/* Birth Date */}
+
+
+                            {/* Allergies */}
+
+
+                            {/* Emergency Contact */}
+                            {isEditable ? (<CustomInputs
+                                label="Emergency Contact Name"
+                                placeholder="Enter emergency contact name"
+                                type="text"
+                                variant="flushed"
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="emergencyContactName"
+                                value={patientDetails.emergencyContactName || ""}
+                                onChange={(e) => handleChange(e, "emergencyContactName")}
+                            />) : (<CustomInputs
+                                label="Emergency Contact Name"
+                                placeholder="Enter emergency contact name"
+                                type="text"
+                                isDisabled
+                                variant="flushed"
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="emergencyContactName"
+                                value={patientDetails.emergencyContactName || ""}
+                                onChange={(e) => handleChange(e, "emergencyContactName")}
+                            />)}
+                            {isEditable ? (<CustomInputs
+                                label="Emergency Contact Number"
+                                placeholder="Enter emergency contact number"
+                                type="tel"
+                                variant="flushed"
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="emergencyContact"
+                                value={patientDetails.emergencyContact || ""}
+                                onChange={(e) => handleChange(e, "emergencyContact")}
+                            />) : (<CustomInputs
+                                label="Emergency Contact Number"
+                                placeholder="Enter emergency contact number"
+                                type="tel"
+                                variant="flushed"
+                                isDisabled
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="emergencyContact"
+                                value={patientDetails.emergencyContact || ""}
+                                onChange={(e) => handleChange(e, "emergencyContact")}
+                            />)}
+
+
+                            {/* Insurance */}
+                            {isEditable ? (<CustomInputs
+                                label="Insurance Provider"
+                                placeholder="Enter insurance provider"
+                                type="text"
+                                variant="flushed"
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="insuranceProvider"
+                                value={patientDetails.insuranceProvider || ""}
+                                onChange={(e) => handleChange(e, "insuranceProvider")}
+                            />) : (
+                                <CustomInputs
+                                    label="Insurance Provider"
+                                    placeholder="Enter insurance provider"
+                                    type="text"
+                                    variant="flushed"
+                                    isDisabled
+                                    fontSize={{ base: "13px", md: "18px" }}
+                                    name="insuranceProvider"
+                                    value={patientDetails.insuranceProvider || ""}
+                                    onChange={(e) => handleChange(e, "insuranceProvider")}
+                                />
+                            )}
+                            {isEditable ? (<CustomInputs
+                                label="Insurance Policy Number"
+                                placeholder="Enter policy number"
+                                type="text"
+                                variant="flushed"
+                                fontSize={{ base: "13px", md: "18px" }}
+                                name="insurancePolicyNumber"
+                                value={patientDetails.insurancePolicyNumber || ""}
+                                onChange={(e) => handleChange(e, "insurancePolicyNumber")}
+                            />) : (
+                                <CustomInputs
+                                    label="Insurance Policy Number"
+                                    placeholder="Enter policy number"
+                                    type="text"
+                                    variant="flushed"
+                                    isDisabled
+                                    fontSize={{ base: "13px", md: "18px" }}
+                                    name="insurancePolicyNumber"
+                                    value={patientDetails.insurancePolicyNumber || ""}
+                                    onChange={(e) => handleChange(e, "insurancePolicyNumber")}
+                                />
+                            )}
+
+                        </VStack>
+                    </ModalBody>
+                    <ModalFooter>
+                        {isEditable ? (<Button
+                            colorScheme="blue"
+                            onClick={handleSubmit} // Function to save updated details
+                            isDisabled={loading}
+                        >
+                            Save
+                        </Button>) : (
+                            <Button
+                                isDisabled
+                                colorScheme="blue"
+                                onClick={handleSubmit} // Function to save updated details
+
+                            >
+                                Save
+                            </Button>
+                        )}
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
         </>
     );
 };
+
+
 
 export default Profile;

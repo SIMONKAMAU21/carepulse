@@ -4,15 +4,19 @@ import {
   users,
   VITE_DATABASE_ID,
   VITE_PATIENT_COLLECTION_ID,
+  VITE_SERVICEID,
+  VITE_TEMPLATEID,
+  VITE_USERID,
 } from "../appwriteConfig.js";
 import CryptoJS from "crypto-js";
 import emailjs from 'emailjs-com';
 
 const sendPasscodeEmail = async (email, passcode) => {
-  const serviceID = 'service_8vommni'; // Your EmailJS service ID
-  const templateID = 'template_9oiz16i'; // Your EmailJS template ID
-  const userID = 'bMgeqI01rOsFNk7YB'; // Your EmailJS user ID
 
+  const serviceID = VITE_SERVICEID; // Your EmailJS service ID
+  const templateID = VITE_TEMPLATEID; // Your EmailJS template ID
+  const userID =VITE_USERID ; // Your EmailJS user ID
+console.log('userID', userID)
   const templateParams = {
     email: email,
     passcode: passcode,
@@ -128,7 +132,7 @@ export const registerUser = async (userData) => {
       ID.unique(),
       additionalDetails
     );
-    await sendPasscodeEmail(userData.email,passcode);
+    await sendPasscodeEmail(userData.email, passcode);
 
     return {
       documentId: response.$id,
@@ -196,18 +200,33 @@ export const authenticateUser = async (email, inputPasscode) => {
 };
 
 
+
+
+
 export const updatePatientDetails = async (userId, details) => {
   try {
-    const documentId = (await getPatient(userId)).$id; // Ensure document ID is retrieved
-    console.log('documentId', documentId)
-    return await databases.updateDocument(
+    // Retrieve the document ID associated with the user
+    const documentId = (await getPatient(userId)).$id;
+    console.log('documentId', documentId);
+
+    // Update the patient's details in the database
+    const updatedDocument = await databases.updateDocument(
       VITE_DATABASE_ID,
       VITE_PATIENT_COLLECTION_ID,
       documentId,
       details
     );
+    // After successful update, send the passcode email
+    if (details.email && details.passcode) {
+      await sendPasscodeEmail(details.email, details.passcode);
+      console.log('Passcode email sent successfully.');
+    } else {
+      console.warn('Email or passcode missing. Email not sent.');
+    }
+
+    return updatedDocument;
   } catch (error) {
-    console.error("Error updating patient details:", error);
+    console.error('Error updating patient details:', error);
     throw error;
   }
 };

@@ -125,6 +125,7 @@ const Auth = () => {
                       >
                         Verify Account
                       </Button>
+                      <Text></Text>
                     </>
                   )}
                 </form>

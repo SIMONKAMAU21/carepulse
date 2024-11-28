@@ -48,6 +48,7 @@ const PatientHeader = ({ width, title, subTitle, userId,position }) => {
         p={4}
         bg={colorMode === "light" ? "#3182CE" : theme.colors.primary.dark}
         position={position}
+        zIndex={"1000"}
       >
         <IconButton
           boxShadow={"dark-lg"}

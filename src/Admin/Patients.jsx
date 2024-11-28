@@ -79,7 +79,7 @@ const Patients = () => {
 
   const spanStyles = {
     fontWeight: "bold",
-    color: "grey",
+    color: "rgb(104,163,254)",
   };
 
   const handleSearch = (e) => {
@@ -108,7 +108,7 @@ const Patients = () => {
         { base: "90%", md: "50%" }
       }
         mt={{ base: "49%", md: "0%" }}>
-        <SearchInput value={searchTerm} onChange={handleSearch} placeholder={"serach patient by name,email,id number"} />
+        <SearchInput value={searchTerm} onChange={handleSearch} placeholder={"search patient by name,email,id number"} />
 
       </Box>
       <Box >
