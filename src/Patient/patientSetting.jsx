@@ -224,12 +224,12 @@ const Profile = () => {
                                         label={"Name"}
                                         placeholder="Enter your name"
                                         type="text"
+                                        isDisabled
                                         variant={"flushed"}
                                         name={"name"}
                                         fontSize={{ base: "13px", md: "18px" }}
                                         value={form.name}
                                         onChange={handleChange}
-                                        isDisabled={loading}
                                     />
                                 </Box>
                                 <Box>
@@ -238,12 +238,12 @@ const Profile = () => {
                                         label={"Email"}
                                         placeholder={"Enter your email"}
                                         type="email"
+                                        isDisabled
                                         fontSize={{ base: "13px", md: "18px" }}
                                         name={"email"}
                                         variant={"flushed"}
                                         value={form.email}
                                         onChange={handleChange}
-                                        isDisabled={loading}
                                     />
                                 </Box>
                                 <Box>
@@ -257,7 +257,7 @@ const Profile = () => {
                                         fontSize={{ base: "13px", md: "18px" }}
                                         variant={"flushed"}
                                         onChange={handleChange}
-                                        isDisabled={loading}
+                                        isDisabled
                                     />
                                 </Box>
                                 <Box>
