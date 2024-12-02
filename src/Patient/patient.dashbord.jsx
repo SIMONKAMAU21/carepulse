@@ -205,7 +205,7 @@ const PatientDashboard = () => {
                   case "pending":
                     return "yellow.400";
                   default:
-                    return "gray.400";
+                    return "red.200";
                 }
               };
               return (
@@ -225,6 +225,10 @@ const PatientDashboard = () => {
                   <Text>
                     <strong>Appointment Reason:</strong>{" "}
                     {appointment.appointmentReason}
+                  </Text>
+                  <Text>
+                    <strong>Appointment preferences:</strong>{" "}
+                    {appointment.preferences || " none"}
                   </Text>
 
                   <HStack>
