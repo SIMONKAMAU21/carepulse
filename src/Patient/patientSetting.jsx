@@ -33,7 +33,9 @@ import { EditIcon } from "@chakra-ui/icons";
 
 const Profile = () => {
     const [loading, setLoading] = useState(false);
-    const [patientDetails, setPatientDetails] = useState({});
+    const [patientDetails, setPatientDetails] = useState({
+
+    });
     const [error, setError] = useState("")
     const [passwordStrenth, setPasswordStrenth] = useState("")
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -45,6 +47,7 @@ const Profile = () => {
         phone: "",
         passcode: "",
         profilePicture: "",
+       
     });
     const { colorMode } = useColorMode();
     const navigate = useNavigate()
@@ -86,6 +89,10 @@ const Profile = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+        setPatientDetails((prev) => ({
             ...prev,
             [name]: value,
         }));
@@ -148,6 +155,7 @@ const Profile = () => {
         } finally {
             LoadingToast(false);
             setLoading(false)
+            setIsModalOpen(false)
         }
     };
     const handleConfirmPasscode = async (e) => {
@@ -386,7 +394,7 @@ const Profile = () => {
                                     fontSize={{ base: "13px", md: "18px" }}
                                     name="address"
                                     value={patientDetails.address || ""}
-                                    onChange={(e) => handleChange(e, "address")}
+                                    onChange={handleChange}
                                 />
                             ) : (
                                 <CustomInputs
@@ -398,7 +406,7 @@ const Profile = () => {
                                     name="address"
                                     isDisabled
                                     value={patientDetails.address || ""}
-                                    onChange={(e) => handleChange(e, "address")}
+                                    // onChange={(e) => handleChange(e, "address")}
                                 />
 
                             )}

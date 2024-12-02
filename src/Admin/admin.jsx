@@ -48,6 +48,7 @@ import SearchInput from "../Components/Search";
 import CountBox from "../Components/CountBox";
 import { formatDate } from "../Pages/appointmentSuccess";
 import { FaTriangleExclamation } from "react-icons/fa6";
+import Appointment from "../Pages/newAppointment";
 
 const Admin = () => {
   const [appointments, setAppointments] = useState({
@@ -236,7 +237,7 @@ const Admin = () => {
           title={"cancelled appointments"}
         />
       </SimpleGrid>
-      <Text p={"4px"} fontWeight={"bold"} fontSize={{ base: "10px", md: "18px" }} color={colorMode === "dark" ? "green.300" : "green.600"}>YOU HAVE <span color="red">{appointments.expiredCount}</span> EXPIRED APPOINTMENTS</Text>
+      <Text p={"4px"} fontWeight={"bold"} fontSize={{ base: "10px", md: "18px" }} color={colorMode === "dark" ? "green.300" : "green.600"}>YOU HAVE <span color="red">{appointments.expiredCount || "0"}</span> EXPIRED APPOINTMENTS</Text>
       <Box mt={{ base: "5%", md: "1%" }} p={"4px"} w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
@@ -407,10 +408,10 @@ const Admin = () => {
             ) : (
               <Textarea
                 placeholder="Enter cancellation reason"
-                // value={
-                //   appointments?.documents[selectedAppointmentIndex]
-                //     ?.cancelReason || ""
-                // }
+                value={
+                  appointments?.documents[selectedAppointmentIndex]
+                    ?.cancelReason || ""
+                }
                 onChange={(e) => handleReasonChange(e.target.value)}
               />
             )}
