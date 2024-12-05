@@ -9,13 +9,15 @@ import {
   VStack,
   Image,
   useColorMode,
+  HStack,
 } from "@chakra-ui/react";
 import { authenticateUser } from "../lib/Actions/patient.actions";
 import { ErrorToast, SuccessToast } from "../Components/toaster";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import AuthWrapper from "../Components/OnboarndingWrapper";
 import illustration from "../assets/doc.png";
-
+import logo from "../assets/i (2).mp4";
+import log from "../assets/i.mp4";
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [inputPasscode, setInputPasscode] = useState("");
@@ -52,7 +54,7 @@ const Auth = () => {
           localStorage.setItem(
             "user",
             JSON.stringify({
-              name:authResponse.user.name,
+              name: authResponse.user.name,
               id: authResponse.user.userId,
               email: email, // You can store additional user info if needed
             })
@@ -73,25 +75,38 @@ const Auth = () => {
         <>
           <Box
             color={colorMode === "light" ? "black" : "white"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            display={"flex"}
             h={"80%"}
             w={"100%"}
           >
+            <video
+              src={colorMode === "light" ? log : logo}
+              cursor="pointer"
+              autoPlay
+              loop
+              muted
+              style={{
+                width: "30%",
+                height: "100px",
+                objectFit: "cover",
+                cursor: "pointer",
+                marginTop: "5%"
+              }}
+            />
             <Box
               bg={colorMode === "light" ? "gray.100" : ""}
               borderRadius={"10px"}
-              boxShadow={"dark-lg"}
+              boxShadow={"2xl"}
               p={2}
               h={"50%"}
               w={{ base: "90%", md: "50%" }}
               alignItems={"center"}
+              margin={"auto"}
+
               display={{ base: "block", md: "flex" }}
               flexDirection={"column"}
               justifyContent={"center"}
             >
-              <Text fontSize={{base:"xl",md:"2xl"}} fontWeight="bold">
+              <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold">
                 Enter Your Email and Passcode
               </Text>
               <Box w={"100%"} mt={"10%"} p={2}>
@@ -130,7 +145,19 @@ const Auth = () => {
                   )}
                 </form>
               </Box>
+
             </Box>
+            <HStack mt={{base:"2%",md:"5%"}} alignItems={"center"}
+            justifyContent={"center"}
+            display={"flex"}>
+              <Text>
+                Dont have an account ?
+              </Text>
+              <Box color={"rgb(74,201,126)"}
+                textDecoration={"underline"}>
+                <NavLink to={"/"}>login</NavLink>
+              </Box>
+            </HStack>
           </Box>
         </>
       }

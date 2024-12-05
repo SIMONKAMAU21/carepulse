@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Heading,
+  HStack,
   Image,
   Text,
   useColorMode,
@@ -99,9 +100,9 @@ const Onboarding = () => {
       <AuthWrapper
         leftChildren={
           <>
-            <Box color={colorMode === "light" ? "gray.700" :"white"} ml={{ base: "9%", md: "20%" }}>
+            <Box color={colorMode === "light" ? "gray.700" : "white"} ml={{ base: "9%", md: "20%" }}>
               {/* <Image mt={"10%"} src={Logo} alt="Logo" /> */}
-              
+
               <video
                 src={colorMode === "light" ? log : logo}
                 cursor="pointer"
@@ -113,7 +114,7 @@ const Onboarding = () => {
                   height: "100px",
                   objectFit: "cover",
                   cursor: "pointer",
-                  marginTop:"10%"
+                  marginTop: "10%"
                 }}
               />
               <Box mt={"5%"}>
@@ -168,15 +169,32 @@ const Onboarding = () => {
               >
                 Get Started
               </Button>
-              <Box
-                mt={{base:"10%",md:"5%"}}
-                w={"100%"}
+              <HStack w={"100%"}
                 display={"flex"}
-                alignItems={"flex-end"}
-                color={"rgb(74,201,126)"}
+                mt={{ base: "10%", md: "5%" }}
+
               >
-                <NavLink to={"/?admin=true"}>Admin</NavLink>
-              </Box>
+                <Box
+                  flex={1}
+                  alignItems={"flex-end"}
+                  color={"rgb(74,201,126)"}
+                >
+                  <NavLink to={"/?admin=true"}>Admin</NavLink>
+                </Box>
+                <Box flex={3}>
+                  <HStack>
+                    <Text
+                    >Already have an account?</Text>
+                    <Box color={"rgb(74,201,126)"}
+                    textDecoration={"underline"}
+                    >
+                      <NavLink to={"/login"}>login</NavLink>
+
+                    </Box>
+                  </HStack>
+                </Box>
+              </HStack>
+
             </Box>
           </>
         }
