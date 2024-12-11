@@ -180,6 +180,6 @@ export const formatDate = (dateString) => {
   return (
     date.toLocaleDateString(undefined, options) +
     "- " +
-    date.toLocaleTimeString()
+    date.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"})
   );
 };

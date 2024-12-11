@@ -254,7 +254,7 @@ const Admin = () => {
           <Thead>
             <Tr>
               <Th>Patient</Th>
-              <Th>Date</Th>
+              <Th>Date {""}</Th>
               <Th>Status</Th>
               <Th>DoctorFullname</Th>
               <Th>Actions</Th>

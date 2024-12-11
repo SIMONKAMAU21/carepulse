@@ -17,7 +17,8 @@ import logo from "../assets/i.mp4";
 import log from "../assets/i (2).mp4";
 import Sidebar from "../Pages/layout/sidebar";
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon, } from "@chakra-ui/icons";
-import { MdNotifications } from "react-icons/md";
+import { MdNotifications, MdSunny } from "react-icons/md";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const Header = ({ width, title, subTitle }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,7 +30,7 @@ const Header = ({ width, title, subTitle }) => {
   return (
     <>
       <HStack
-        borderRadius={{base:"0",md:"10px"}}
+        borderRadius={{ base: "0", md: "10px" }}
         w={width}
         boxShadow='dark-lg'
         p={2}
@@ -49,7 +50,7 @@ const Header = ({ width, title, subTitle }) => {
           zIndex={"1000"}
           left={{ base: "70%", md: "20%" }}
         />
-       
+
         <video
           src={colorMode === "dark" ? log : logo}
           onClick={isOpen ? onClose : onOpen}
@@ -65,20 +66,11 @@ const Header = ({ width, title, subTitle }) => {
           }}
         />
         <Spacer />
-        <Button
-          w={{ base: "40px",md:"150px" }}
-          h={{ base: "40px" }}
-          onClick={toggleColorMode}
-        >
-          <IconButton
-            aria-label="Toggle color mode"
-            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            bg={"none"}
-            color={colorMode === "light" ? "black" : "white"}
-          />
-          <Text display={{ base: "none", md: "block" }}>{text}</Text>
-        </Button>
-        <Icon as={MdNotifications}/>
+
+
+        <Icon onClick={toggleColorMode} as={colorMode === "dark" ? MdSunny : FaMoon} />
+        <Icon as={MdNotifications} />
+
       </HStack>
 
       <VStack
@@ -89,10 +81,10 @@ const Header = ({ width, title, subTitle }) => {
         spacing={4}
         w={width}
         align="start"
-        p={{base:0,md:4}}
+        p={{ base: 0, md: 4 }}
       >
-        <Heading p={{base:1,md:0}} fontFamily={"sans-serif"}>{title}</Heading>
-        <Text p={{base:1,md:0}} >{subTitle}</Text>
+        <Heading p={{ base: 1, md: 0 }} fontFamily={"sans-serif"}>{title}</Heading>
+        <Text p={{ base: 1, md: 0 }} >{subTitle}</Text>
       </VStack>
 
       {isOpen && <Sidebar onClose={onClose} />}
