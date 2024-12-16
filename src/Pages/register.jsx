@@ -88,11 +88,15 @@ const Register = () => {
           const fetchedUser = await getUser(userID);
           setForm((prevForm) => ({
             ...prevForm,
-            userId: fetchedUser.$id,
-            email: fetchedUser.email || "",
-            name: fetchedUser.name || "",
-            phone: fetchedUser.phone || "",
+            userId: fetchedUser?.$id,
+            email: fetchedUser?.email || "",
+            name: fetchedUser?.name || "",
+            phone: fetchedUser?.phone || "",
           }));
+          if(!fetchedUser){
+ErrorToast("oops failed to retrieve your detailes")
+navigate('/')
+          }
         } catch (error) {
           ErrorToast("Error fetching user data");
         }

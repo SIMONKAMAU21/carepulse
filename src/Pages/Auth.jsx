@@ -155,7 +155,7 @@ const Auth = () => {
               </Text>
               <Box color={"rgb(74,201,126)"}
                 textDecoration={"underline"}>
-                <NavLink to={"/"}>login</NavLink>
+                <NavLink to={"/"}>register</NavLink>
               </Box>
             </HStack>
           </Box>

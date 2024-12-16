@@ -24,56 +24,38 @@ import {
 } from "@chakra-ui/react";
 import SearchInput from "./Search";
 import { ErrorToast, LoadingToast, SuccessToast } from "./toaster";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const Doctorsdata = () => {
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDoctorId, setSelectedDoctorId] = useState(null); 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const cancelRef = React.useRef();
   const { colorMode } = useColorMode();
+const queryClient = useQueryClient()
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await getDoctors();
-        setDoctors(response.documents || []);
-      } catch (error) {
-        setError("Failed to fetch doctors data");
-      } finally {
-        setLoading(false);
-      }
-    };
+const { data: doctorsData = [], isLoading, error } = useQuery("doctors", getDoctors);
+const doctors = doctorsData?.documents || [];
 
-    fetchDoctors();
-  }, []);
-
-  const handleDelete = async (doctorId) => {
-    try {
-      LoadingToast(true);
-      await deleteDoctor(doctorId);
+const deleteMutation = useMutation(deleteDoctor,{
+  onSuccess:()=>{
+    queryClient.invalidateQueries('doctors')
       SuccessToast("Doctor deleted successfully");
-      setDoctors(doctors.filter((doctor) => doctor.$id !== doctorId));
-    } catch (error) {
-      ErrorToast("Failed to delete the doctor");
-    } finally {
-      LoadingToast(false);
-    }
-  };
+},
+onError:() =>{
+  ErrorToast("Failed to delete the doctor");
+}})
+
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
-  const filteredDoctors = doctors.filter((doctor) => {
-    return (
-      doctor.drname.toLowerCase().includes(searchTerm) ||
-      doctor.phone.toLowerCase().includes(searchTerm) ||
-      doctor.email.toLowerCase().includes(searchTerm)
-    );
-  });
+  const filteredDoctors = doctors?.filter((doctor) =>
+    ["drname", "phone", "email"].some((key) =>
+      doctor[key]?.toLowerCase().includes(searchTerm)
+    )
+  );
 
   const handleOpenDeleteDialog = (doctorId) => {
     setSelectedDoctorId(doctorId);
@@ -95,7 +77,7 @@ const Doctorsdata = () => {
         />
       </Box>
 
-      {loading ? (
+      {isLoading ? (
         <Box display="flex" justifyContent="center" alignItems="center" minH="40vh">
           <Spinner size="xl" color="blue.500" />
         </Box>
@@ -173,7 +155,7 @@ const Doctorsdata = () => {
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={() => {
-                handleDelete(selectedDoctorId);
+                deleteMutation.mutate(selectedDoctorId)
                 handleCloseDeleteDialog();
               }} ml={3}>
                 Delete

@@ -23,16 +23,15 @@ import { registerDoctor } from "../lib/Actions/doctor.actions";
 import { FaUpload, FaUser } from "react-icons/fa";
 import Doctorsdata from "../Components/doctors";
 import { formatPhoneNumber } from "../Pages/Onbornding";
+import { useMutation, useQueryClient } from "react-query";
 
 const Adddoctor = () => {
   const [form, setForm] = useState({ email: "", drname: "", phone: "" });
   const [selectedFile, setSelectedFile] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [doctors, setDoctors] = useState([]);
+  const queryClient = useQueryClient()
 
-  const handleDoctorUpdate = (newDoctor) => {
-    setDoctors((prevDoctors) => [...prevDoctors, newDoctor]);
-  };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +48,18 @@ const Adddoctor = () => {
       doctorPhotoUrl: e.target.files[0],
     }));
   };
-
+  const { mutateAsync: addDoctorMutation } = useMutation(registerDoctor, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("doctors"); // Refresh doctors query
+      SuccessToast("Registration succeeded");
+      setForm({ email: "", drname: "", phone: "" });
+      setSelectedFile(null);
+      onClose();
+    },
+    onError: (error) => {
+      ErrorToast(error.message || "Failed to register doctor");
+    },
+  });
   const addDoctor = async () => {
     LoadingToast(true);
     try {
@@ -83,11 +93,7 @@ const Adddoctor = () => {
           doctorPhotoUrl: secure_url,
         };
 
-        const newUser = await registerDoctor(userData);
-        handleDoctorUpdate(newUser);
-        setForm({});
-        SuccessToast("Registration succeeded");
-        onClose();
+        await addDoctorMutation(userData); // Call the mutation
       } else {
         throw new Error("Cloudinary upload failed");
       }
@@ -97,7 +103,7 @@ const Adddoctor = () => {
     }
     LoadingToast(false);
   };
-
+ 
   return (
     <>
       <AuthWrapper
