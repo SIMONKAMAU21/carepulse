@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   SimpleGrid,
@@ -36,6 +36,7 @@ import CountBox from "../Components/CountBox";
 import { FaCalendarCheck, FaClock, FaExclamationTriangle } from "react-icons/fa";
 import SearchInput from "../Components/Search";
 import { formatDate } from "../Pages/appointmentSuccess";
+import { FcExpired } from "react-icons/fc";
 
 const Admin = () => {
   const queryClient = useQueryClient();
@@ -44,14 +45,15 @@ const Admin = () => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isScheduleModal, setIsScheduleModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-
-
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [allAppointments, setAllAppointments] = useState([]); // Store the original data
 
   const { data: appointments, isLoading, isError } = useQuery(
     "appointments",
     async () => {
       const response = await getRecentAppointmentList();
       const today = new Date();
+      setAllAppointments(response.documents)
       response.documents.forEach((appointment) => {
         if (
           appointment.appointmentDate &&
@@ -61,10 +63,52 @@ const Admin = () => {
           appointment.status = "Expired";
         }
       });
+      
       return response;
     },
-    { staleTime: 1000 * 60 * 5 }
+    {
+      //  staleTime: 1000 * 60 * 5 , 
+      staleTime: 0, 
+
+      initialData: queryClient.getQueryData("appointments") || [],
+    }
   );
+  const filteredAppointments = React.useMemo(() => {
+    let filtered = allAppointments;
+    // Apply status filter
+    if (selectedStatus) {
+      filtered = filtered.filter(
+        (appointment) => appointment.status === selectedStatus
+      );
+    }
+    // Apply search term filter
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (appointment) =>
+          appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
+          appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    return(filtered);
+  },[searchTerm, selectedStatus, allAppointments]);
+
+  // Watch for changes in filters and reapply
+ 
+  const pendingCount = allAppointments.filter(
+    (appointment) => appointment.status === "pending"
+  ).length;
+  const scheduledCount = allAppointments.filter(
+    (appointment) => appointment.status === "Scheduled"
+  ).length;
+  const cancelledCount = allAppointments.filter(
+    (appointment) => appointment.status === "Cancelled"
+  ).length;
+  const expiredCount = allAppointments.filter(
+    (appointment) => appointment.status === "Expired"
+  ).length;
+
+ 
 
   const mutation = useMutation(
     async ({ userId, appointmentId, data }) =>
@@ -108,11 +152,7 @@ const Admin = () => {
     }
   };
 
-  const filteredAppointments = appointments?.documents?.filter(
-    (appointment) =>
-      appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
-      appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
-  );
+ 
 
   if (isLoading) return <p>Loading appointments...</p>;
   if (isError) return <p>Error fetching appointments</p>;
@@ -138,7 +178,7 @@ const Admin = () => {
 
       <SimpleGrid
         mt={{ base: "48%", md: "0%" }}
-        columns={{ base: 3, md: 3 }}
+        columns={{ base: 2, md: 4 }}
         spacing={6}
         ml={{ base: "1%", md: "0" }}
         // p={1}
@@ -156,20 +196,40 @@ const Admin = () => {
         <CountBox
           gradient="linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"
           icon={FaCalendarCheck}
-          count={appointments?.scheduledCount || 0}
+          count={scheduledCount}
           title="Scheduled Appointments"
+          clickMe={() => setSelectedStatus("Scheduled")}
+          color={"green.400"}
         />
         <CountBox
           gradient="linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"
           icon={FaClock}
-          count={appointments?.pendingCount || 0}
+          count={pendingCount}
           title="Pending Appointments"
+          clickMe={() => setSelectedStatus("Pending")}
+          color={"yellow.400"}
+
+
         />
         <CountBox
           gradient="linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"
           icon={FaExclamationTriangle}
-          count={appointments?.cancelledCount || 0}
+          count={cancelledCount}
           title="Cancelled Appointments"
+          clickMe={() => setSelectedStatus("Cancelled")}
+          color={"red.400"}
+
+
+        />
+          <CountBox
+          gradient="linear(to-l, #38B2AC,#1c1e22, #1c1e22)"
+          icon={FcExpired}
+          count={expiredCount}
+          title="Expired Appointments"
+          clickMe={() => setSelectedStatus("Expired")}
+          color={"teal.400"}
+
+
         />
       </SimpleGrid>
 
@@ -301,7 +361,7 @@ const Admin = () => {
             {isScheduleModal ? (
               <Input
                 type="datetime-local"
-                value={selectedAppointment?.selectedDate || ""}
+                value={selectedAppointment?.appointmentDate || ""}
                 onChange={(e) =>
                   setSelectedAppointment({
                     ...selectedAppointment,

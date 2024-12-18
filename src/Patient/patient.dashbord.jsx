@@ -47,7 +47,6 @@ const PatientDashboard = () => {
   useEffect(() => {
     const fetchPatientDetails = async () => {
 
-
       try {
         const userId = user.id;
         const response = await getAppointmentByUserId(userId);

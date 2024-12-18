@@ -67,17 +67,15 @@ const Header = ({ width, title, subTitle }) => {
         />
         <Spacer />
 
-
         <Icon onClick={toggleColorMode} as={colorMode === "dark" ? MdSunny : FaMoon} />
         <Icon as={MdNotifications} />
 
       </HStack>
-
       <VStack
         bg={colorMode === "light" ? "white" : theme.colors.primary.dark}
         color={colorMode === "light" ? "black" : "white"}
         position={{ base: "fixed", md: "relative" }}
-        mt={{ base: "18%", md: "0%" }}
+        mt={{ base: "17%", md: "0%" }}
         spacing={4}
         w={width}
         align="start"
