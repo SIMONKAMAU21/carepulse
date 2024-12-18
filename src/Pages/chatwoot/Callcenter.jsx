@@ -80,7 +80,7 @@ const Callcenter = () => {
         title: "Chat widget not ready.",
         description: "Please wait for the chat widget to load.",
         status: "warning",
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       });
     }
