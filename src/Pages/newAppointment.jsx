@@ -14,6 +14,8 @@ import {
   Flex,
   Input,
   useColorMode,
+  Avatar,
+  HStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -28,6 +30,7 @@ import { ErrorToast, LoadingToast, SuccessToast } from "../Components/toaster";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/i.mp4";
 import log from "../assets/i (2).mp4";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const Appointment = () => {
   const [form, setForm] = useState({
@@ -36,14 +39,21 @@ const Appointment = () => {
     doctorId: "",
     userId: "",
     appointmentReason: "",
+    doctorPhotoUrl:"",
     preferences: "",
     appointmentDate: "",
     status: "pending",
   });
   const { colorMode  } = useColorMode();
-  const [doctors, setDoctors] = useState([]);
+  // const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const queryClient = useQueryClient()
+ 
+const{data:doctorsdata}=useQuery("doctors",getDoctors)
+const doctors = doctorsdata?.documents || [];
+
+ console.log('doctors', doctors)
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -65,19 +75,7 @@ const Appointment = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await getDoctors();
-        setDoctors(response.documents);
-      } catch (error) {
-        console.error("Error fetching doctors:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchDoctors();
-  }, []);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -87,11 +85,12 @@ const Appointment = () => {
     }));
   };
 
-  const handleDoctorSelect = (doctorName, doctorId) => {
+  const handleDoctorSelect = (doctorName, doctorId,doctorPhotoUrl) => {
     setForm((prevForm) => ({
       ...prevForm,
       doctor: doctorName,
       doctorId: doctorId,
+      doctorPhotoUrl:doctorPhotoUrl
     }));
   };
 
@@ -169,21 +168,28 @@ const Appointment = () => {
                 <MenuButton
                   variant={"outline"}
                   w={"100%"}
-                  color={colorMode === "light" ? "black" : "gray.100"}
                   as={Button}
                   backgroundColor={"none"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  display={"flex"}
                   colorScheme="none"
                   rightIcon={<ChevronDownIcon />}
                 >
-                  {form.doctor ? form.doctor : "Select Doctor"}
+               <HStack>
+               {<Avatar size={"sm"} src={form?.doctorPhotoUrl} />} 
+               <Text>
+               {form.doctor ? form.doctor : "Select Doctor"}
+               </Text>
+               </HStack>
                 </MenuButton>
                 <MenuList>
-                  {doctors.map((doctor) => (
+                  {doctors?.map((doctor) => (
                     <MenuItem
-                      color={"black"}
-                      key={doctor.$id}
+                    color={colorMode === "light" ? "white" : "white"}
+                    key={doctor.$id}
                       onClick={() =>
-                        handleDoctorSelect(doctor.drname, doctor.$id)
+                        handleDoctorSelect(doctor.drname, doctor.$id,doctor.doctorPhotoUrl)
                       }
                     >
                       <Flex align="center">
@@ -253,6 +259,7 @@ const Appointment = () => {
                 width={{ base: "100%", md: "100%" }}
                 onClick={handleSubmit}
                 color={"white"}
+                disabled={!form.appointmentDate || !form.appointmentReason || !form.doctor}
                 _hover={{ bg: "rgb(30,140,100)" }}
               >
                 Submit & Continue

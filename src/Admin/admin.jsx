@@ -1,13 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
-  Heading,
-  HStack,
-  Image,
-  Spacer,
-  Text,
-  VStack,
-  Avatar,
+  SimpleGrid,
   Table,
   Thead,
   Tbody,
@@ -17,8 +11,6 @@ import {
   Button,
   Input,
   Textarea,
-  SimpleGrid,
-  Icon,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -26,182 +18,124 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  HStack,
+  Avatar,
+  VStack,
+  Text,
   useDisclosure,
   useColorMode,
-  Tooltip,
 } from "@chakra-ui/react";
-
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
   getRecentAppointmentList,
   updateAppointment,
 } from "../lib/Actions/appointment.actions";
-import {
-  FaBatteryEmpty,
-  FaCalendarCheck,
-  FaClock,
-  FaExclamationTriangle,
-  FaSearch,
-} from "react-icons/fa";
-import { ErrorToast, SuccessToast } from "../Components/toaster";
+import { SuccessToast, ErrorToast } from "../Components/toaster";
 import Header from "../Components/header";
-import SearchInput from "../Components/Search";
 import CountBox from "../Components/CountBox";
+import { FaCalendarCheck, FaClock, FaExclamationTriangle } from "react-icons/fa";
+import SearchInput from "../Components/Search";
 import { formatDate } from "../Pages/appointmentSuccess";
-import { FaTriangleExclamation } from "react-icons/fa6";
-import Appointment from "../Pages/newAppointment";
 
 const Admin = () => {
-  const [appointments, setAppointments] = useState({
-    documents: [],
-    scheduledCount: 0,
-    pendingCount: 0,
-    cancelledCount: 0,
-    expiredCount: 0,
-  });
+  const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedAppointmentIndex, setSelectedAppointmentIndex] = useState();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isScheduleModal, setIsScheduleModal] = useState(false);
   const { colorMode } = useColorMode();
-  const [error, setError] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [isScheduleModal, setIsScheduleModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const response = await getRecentAppointmentList();
-        if (response) {
-          const today = new Date();
-          console.log("today", today);
-          const updatedAppointments = response.documents.map((appointment) => {
-            if (appointment.appointmentDate) {
-              const appointmentDate = new Date(appointment.appointmentDate);
-              if (
-                appointmentDate < today &&
-                appointment.status === "Scheduled"
-              ) {
-                appointment.status = "Expired";
-                updateAppointment(
-                  appointment?.patientId?.$id,
-                  appointment?.$id,
-                  { status: "Expired" }
-                ).catch((err) =>
-                  console.error("Failed to update appointment:", err)
-                );
-              }
-            }
-            return appointment;
-          });
-          setAppointments({
-            ...response,
-            documents: updatedAppointments,
-          });
-        } else {
-          setError("failed to get appointments");
-          setAppointments([]);
+
+
+  const { data: appointments, isLoading, isError } = useQuery(
+    "appointments",
+    async () => {
+      const response = await getRecentAppointmentList();
+      const today = new Date();
+      response.documents.forEach((appointment) => {
+        if (
+          appointment.appointmentDate &&
+          new Date(appointment.appointmentDate) < today &&
+          appointment.status === "Scheduled"
+        ) {
+          appointment.status = "Expired";
         }
-      } catch (error) {
-        setError("Failed to fetch doctors data");
-        setAppointments([]);
-      }
-    };
-    fetchAppointments();
-  }, []);
+      });
+      return response;
+    },
+    { staleTime: 1000 * 60 * 5 }
+  );
 
-  const openModal = (index, schedule = true) => {
-    setSelectedAppointmentIndex(index);
-    setIsScheduleModal(schedule);
+  const mutation = useMutation(
+    async ({ userId, appointmentId, data }) =>
+      updateAppointment(userId, appointmentId, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("appointments");
+        SuccessToast(
+          isScheduleModal
+            ? "Appointment scheduled successfully"
+            : "Appointment canceled successfully"
+        );
+        onClose();
+      },
+      onError: () => {
+        ErrorToast("Error updating appointment");
+      },
+    }
+  );
+
+  const openModal = (appointment, isSchedule) => {
+    setSelectedAppointment(appointment);
+    setIsScheduleModal(isSchedule);
     onOpen();
   };
 
-  const handleDateChange = (value) => {
-    setAppointments((prevAppointments) => {
-      const newAppointments = {
-        ...prevAppointments,
-        documents: [...prevAppointments.documents],
-      };
-      newAppointments.documents[selectedAppointmentIndex].selectedDate = value;
-      return newAppointments;
-    });
-  };
-
-  const handleReasonChange = (value) => {
-    setAppointments((prevAppointments) => {
-      const newAppointments = {
-        ...prevAppointments,
-        documents: [...prevAppointments.documents],
-      };
-      newAppointments.documents[selectedAppointmentIndex].cancelReason = value;
-      return newAppointments;
-    });
-  };
-
-  const handleSaveSchedule = async () => {
-    const appointment = appointments.documents[selectedAppointmentIndex];
-    if (appointment.selectedDate) {
-      try {
-        const userId = appointment.patientId?.$id;
-        await updateAppointment(userId, appointment.$id, {
+  const handleSave = () => {
+    if (selectedAppointment) {
+      const data = isScheduleModal
+        ? {
           status: "Scheduled",
-          appointmentDate: appointment.selectedDate,
-          patientId: appointment.patientId,
-        });
-        SuccessToast("Appointment scheduled successfully");
-        onClose();
-      } catch (error) {
-        ErrorToast("Error scheduling appointment");
-      }
-    }
-  };
+          appointmentDate: selectedAppointment.selectedDate,
+        }
+        : { status: "Cancelled", cancelReason: selectedAppointment.cancelReason };
 
-  const handleSaveCancel = async () => {
-    const appointment = appointments.documents[selectedAppointmentIndex];
-    if (appointment.cancelReason) {
-      try {
-        const userId = appointment.patientId?.$id;
-        await updateAppointment(userId, appointment.$id, {
-          status: "Cancelled",
-          cancelReason: appointment.cancelReason,
-          patientId: appointment.patientId,
-        });
-        SuccessToast("Appointment cancelled successfully");
-        onClose();
-      } catch (error) {
-        ErrorToast("Error cancelling appointment");
-      }
+      mutation.mutate({
+        userId: selectedAppointment.patientId?.$id,
+        appointmentId: selectedAppointment.$id,
+        data,
+      });
     }
-  };
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value.toLowerCase());
   };
 
   const filteredAppointments = appointments?.documents?.filter(
-    (appointment) => {
-      return (
-        appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
-        appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
-      );
-    }
+    (appointment) =>
+      appointment?.patientId?.name?.toLowerCase().includes(searchTerm) ||
+      appointment?.patientId?.phone?.toLowerCase().includes(searchTerm)
   );
+
+  if (isLoading) return <p>Loading appointments...</p>;
+  if (isError) return <p>Error fetching appointments</p>;
+
   return (
     <Box
-      color={"white"}
-      w={"100%"}
-      h={"100%"}
+      color="white"
+      w="100%"
+      h="100%"
+      overflow="scroll"
+      p={{ base: 0, md: 4 }}
       sx={{
-        "::-webkit-scrollbar": {
-          display: "none",
-        },
+        "::-webkit-scrollbar": { display: "none" },
         scrollbarWidth: "none",
         msOverflowStyle: "none",
       }}
-      overflow={"scroll"}
-      p={{ base: 0, md: 4 }}
     >
       <Header
         width={{ base: "100%", md: "99%" }}
-        title={"Welcome Admin 😄"}
-        subTitle={"Start day with managing new appointments"}
+        title="Welcome Admin 😄"
+        subTitle="Start day with managing new appointments"
       />
+
       <SimpleGrid
         mt={{ base: "48%", md: "0%" }}
         columns={{ base: 3, md: 3 }}
@@ -218,71 +152,57 @@ const Admin = () => {
           msOverflowStyle: "none",
         }}
       >
+
         <CountBox
-          gradient={"linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"}
+          gradient="linear(to-l, rgb(57,138,116),#1c1e22, #1c1e22)"
           icon={FaCalendarCheck}
-          count={appointments?.scheduledCount || "0"}
-          title={"scheduled appointments"}
+          count={appointments?.scheduledCount || 0}
+          title="Scheduled Appointments"
         />
         <CountBox
-          gradient={"linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"}
+          gradient="linear(to-l, rgb(0,156,224),#1c1e22, #1c1e22)"
           icon={FaClock}
-          count={appointments?.pendingCount || "0"}
-          title={"pending appointments"}
+          count={appointments?.pendingCount || 0}
+          title="Pending Appointments"
         />
         <CountBox
-          gradient={"linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"}
+          gradient="linear(to-l, rgb(245,101,101),#1c1e22, #1c1e22)"
           icon={FaExclamationTriangle}
-          count={appointments?.cancelledCount}
-          title={"cancelled appointments"}
+          count={appointments?.cancelledCount || 0}
+          title="Cancelled Appointments"
         />
       </SimpleGrid>
-      <Text p={"4px"} fontWeight={"bold"} fontSize={{ base: "10px", md: "18px" }} color={colorMode === "dark" ? "green.300" : "green.600"}>YOU HAVE <span color="red">{appointments.expiredCount || "0"}</span> EXPIRED APPOINTMENTS</Text>
+
       <Box mt={{ base: "5%", md: "1%" }} p={"4px"} w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
-          onChange={handleSearch}
+          onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
           placeholder={"search appointments by name or phone"}
         />
       </Box>
       <Box p={{ base: 0 }} mt={4} h={"70%"} overflowX="auto">
+
         <Table
           variant="simple"
           color={colorMode === "dark" ? "black.200" : " black"}
           size={"md"}
-        >
-          <Thead>
+        >        <Thead>
             <Tr>
               <Th>Patient</Th>
-              <Th>Date {""}</Th>
+              <Th>Date</Th>
               <Th>Status</Th>
-              <Th>DoctorFullname</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
-          <Tbody
-            overflow={"scroll"}
-            sx={{
-              "::-webkit-scrollbar": {
-                display: "none",
-              },
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-            }}
-          >
+          <Tbody>
             {filteredAppointments?.length > 0 ? (
-              filteredAppointments?.map((appointment, index) => (
+              filteredAppointments.map((appointment) => (
                 <Tr key={appointment?.$id}>
                   <Td>
                     <HStack>
-                      <Avatar
-                        name={appointment?.patientId?.name || "Unknown"}
-                      />
+                      <Avatar name={appointment?.patientId?.name || "Unknown"} src={appointment?.patientId?.profilePicture} />
                       <VStack align="start">
-                        <Text>
-                          {appointment?.patientId?.name?.toLowerCase() ||
-                            "No Name"}
-                        </Text>
+                        <Text>{appointment?.patientId?.name || "No Name"}</Text>
                         <Text fontSize="sm" color="gray.400">
                           {appointment?.patientId?.email || "No Email"}
                         </Text>
@@ -303,77 +223,66 @@ const Admin = () => {
                             ? "teal"
                             : "yellow"
                     }
-                    fontWeight={colorMode === "light" ? "bold" : "none"}
+                    fontWeight="bold"
                   >
                     {appointment?.status || "Pending"}
                   </Td>
-                  <Td>{appointment?.doctor || "No Doctor"}</Td>
                   <Td>
-                    {/* Tooltip for Canceled Appointments */}
-                    {appointment.cancelReason && (
-                      <Tooltip
-                        label="This appointment was canceled"
-                        placement="bottom"
-                      >
-                        <Icon color="red" as={FaTriangleExclamation} />
-                      </Tooltip>
-                    )}
-
-                    {/* Actions based on Status */}
                     {appointment.status === "Expired" ? (
-                      <Button
-                        colorScheme="red"
-                        onClick={() => handleDelete(appointment.$id)}
-                      >
-                        Delete
-                      </Button>
-                    ) : (
                       <>
-                        {/* Schedule Button */}
-                        <Button
-                          bg={colorMode === "light" ? "green" : "none"}
-                          border={
-                            colorMode === "light" ? "none" : "2px solid green"
-                          }
-                          size="sm"
-                          w={{ base: "100%", md: "60%" }}
-                          color="white"
-                          _hover={{
-                            bgColor: "green",
-                            color: "white",
-                          }}
-                          onClick={() => openModal(index, true)}
-                        >
-                          Schedule
-                        </Button>
-
-                        {/* Cancel Button */}
-                        <Button
-                          mt={2}
-                          size="sm"
-                          color="white"
-                          bg={colorMode === "light" ? "red.400" : "none"}
-                          border={
-                            colorMode === "light" ? "none" : "2px solid red"
-                          }
-                          w={{ base: "100%", md: "60%" }}
-                          onClick={() => openModal(index, false)}
-                          _hover={{
-                            bgColor: "red",
-                            color: "white",
-                          }}
-                        >
+                       <Button
+                        mt={2}
+                        size="sm"
+                        color="white"
+                        bg={colorMode === "light" ? "red.400" : "none"}
+                        border={colorMode === "light" ? "none" : "2px solid red"}
+                        w={{ base: "100%", md: "60%" }}
+                        onClick={() => openModal(appointment, false)}
+                        _hover={{
+                          bgColor: "red",
+                          color: "white",
+                        }}
+                      >
+                          Delete
+                        </Button></>
+                    ) : (
+                      <><Button
+                        bg={colorMode === "light" ? "green" : "none"}
+                        border={colorMode === "light" ? "none" : "2px solid green"}
+                        size="sm"
+                        w={{ base: "100%", md: "60%" }}
+                        color="white"
+                        _hover={{
+                          bgColor: "green",
+                          color: "white",
+                        }}
+                        onClick={() => openModal(appointment, true)}
+                      >
+                        Schedule
+                      </Button>
+                      <Button
+                        mt={2}
+                        size="sm"
+                        color="white"
+                        bg={colorMode === "light" ? "red.400" : "none"}
+                        border={colorMode === "light" ? "none" : "2px solid red"}
+                        w={{ base: "100%", md: "60%" }}
+                        onClick={() => openModal(appointment, false)}
+                        _hover={{
+                          bgColor: "red",
+                          color: "white",
+                        }}
+                      >
                           Cancel
                         </Button>
-                      </>
+                        </>
                     )}
                   </Td>
                 </Tr>
               ))
             ) : (
               <Tr>
-                <Td colSpan={5} textAlign="center">
-                  <Icon mr={"1%"} as={FaClock} />
+                <Td colSpan={4} textAlign="center">
                   No appointments found.
                 </Td>
               </Tr>
@@ -381,47 +290,40 @@ const Admin = () => {
           </Tbody>
         </Table>
       </Box>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent
-          width={{ base: "90%", md: "60%" }}
-          bg={"#131619"}
-          color={"white"}
-          opacity={"0.9"}
-        >
+        <ModalContent>
           <ModalHeader>
             {isScheduleModal ? "Schedule Appointment" : "Cancel Appointment"}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody pb={6}>
+          <ModalBody>
             {isScheduleModal ? (
               <Input
                 type="datetime-local"
-                placeholder="enter date"
-                value={
-                  appointments?.documents[selectedAppointmentIndex]
-                    ?.selectedDate || ""
+                value={selectedAppointment?.selectedDate || ""}
+                onChange={(e) =>
+                  setSelectedAppointment({
+                    ...selectedAppointment,
+                    selectedDate: e.target.value,
+                  })
                 }
-                onChange={(e) => handleDateChange(e.target.value)}
               />
             ) : (
               <Textarea
                 placeholder="Enter cancellation reason"
-                value={
-                  appointments?.documents[selectedAppointmentIndex]
-                    ?.cancelReason || ""
+                value={selectedAppointment?.cancelReason || ""}
+                onChange={(e) =>
+                  setSelectedAppointment({
+                    ...selectedAppointment,
+                    cancelReason: e.target.value,
+                  })
                 }
-                onChange={(e) => handleReasonChange(e.target.value)}
               />
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              w={"100%"}
-              colorScheme={isScheduleModal ? "green" : "red"}
-              onClick={isScheduleModal ? handleSaveSchedule : handleSaveCancel}
-            >
+            <Button colorScheme="blue" onClick={handleSave}>
               Save
             </Button>
           </ModalFooter>

@@ -119,7 +119,7 @@ const PatientDashboard = () => {
   ).length;
 
   return (
-    <VStack fontSize={{ base: "12px", md: "18px" }}>
+    <VStack h={"100%"} fontSize={{ base: "12px", md: "18px" }}>
       <PatientHeader width={{ base: "100%", md: "100%" }} userId={user.id} />
       <Menu>
         <MenuButton
@@ -184,6 +184,7 @@ const PatientDashboard = () => {
       <Box
         // mt={{ base: "0", md: "0" }}
         w={"100%"}
+        h={"80%"}
         overflowY={"scroll"}
         color={colorMode === "dark" ? "white" : "black"}
       >

@@ -174,12 +174,9 @@ const Success = () => {
 };
 
 export default Success;
+
 export const formatDate = (dateString) => {
-  const options = { year: "numeric", month: "short", day: "numeric" };
+  if (!dateString) return "No Date";
   const date = new Date(dateString);
-  return (
-    date.toLocaleDateString(undefined, options) +
-    "- " +
-    date.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"})
-  );
+  return date.toLocaleDateString() + " " + date.toLocaleTimeString();
 };

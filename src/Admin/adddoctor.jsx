@@ -60,6 +60,7 @@ const Adddoctor = () => {
       ErrorToast(error.message || "Failed to register doctor");
     },
   });
+  
   const addDoctor = async () => {
     LoadingToast(true);
     try {
