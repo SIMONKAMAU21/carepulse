@@ -37,6 +37,7 @@ import { FaCalendarCheck, FaClock, FaExclamationTriangle } from "react-icons/fa"
 import SearchInput from "../Components/Search";
 import { formatDate } from "../Pages/appointmentSuccess";
 import { FcExpired } from "react-icons/fc";
+import CustomInputs from "../Components/CustomInputs";
 
 const Admin = () => {
   const queryClient = useQueryClient();
@@ -350,16 +351,17 @@ const Admin = () => {
           </Tbody>
         </Table>
       </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal   isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mt={"50%"} w={{base:"90%"}}>
           <ModalHeader>
             {isScheduleModal ? "Schedule Appointment" : "Cancel Appointment"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {isScheduleModal ? (
-              <Input
+              <>
+               <Input
                 type="datetime-local"
                 value={selectedAppointment?.appointmentDate || ""}
                 onChange={(e) =>
@@ -369,6 +371,33 @@ const Admin = () => {
                   })
                 }
               />
+                <CustomInputs
+                    value={selectedAppointment?.appointmentDate || ""}
+                onChange={(e) =>
+                  setSelectedAppointment({
+                    ...selectedAppointment,
+                    selectedDate: e.target.value,
+                  })
+                }
+              />
+              <Text>
+                {selectedAppointment.appointmentReason}
+              </Text>
+              <Text>
+                {selectedAppointment.preferences}
+              </Text> <Text>
+                {selectedAppointment.status}
+              </Text> <Text>
+                {selectedAppointment.appointmentReason}
+              </Text> <Text>
+                {selectedAppointment.appointmentReason}
+              </Text> <Text>
+                {selectedAppointment.appointmentReason}
+              </Text> <Text>
+                {selectedAppointment.appointmentReason}
+              </Text>
+              </>
+             
             ) : (
               <Textarea
                 placeholder="Enter cancellation reason"

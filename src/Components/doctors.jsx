@@ -69,13 +69,11 @@ onError:() =>{
 
   return (
     <Box>
-      <Box boxShadow={"dark-lg"} borderRadius={"10px"} mt="2%" w={{ base: "100%", md: "50%" }}>
         <SearchInput
           value={searchTerm}
           onChange={handleSearch}
           placeholder={"Search doctor by name, phone, or email"}
         />
-      </Box>
 
       {isLoading ? (
         <Box display="flex" justifyContent="center" alignItems="center" minH="40vh">
