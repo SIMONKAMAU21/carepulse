@@ -64,12 +64,12 @@ const Admin = () => {
           appointment.status = "Expired";
         }
       });
-      
+
       return response;
     },
     {
       //  staleTime: 1000 * 60 * 5 , 
-      staleTime: 0, 
+      staleTime: 0,
 
       initialData: queryClient.getQueryData("appointments") || [],
     }
@@ -91,11 +91,11 @@ const Admin = () => {
       );
     }
 
-    return(filtered);
-  },[searchTerm, selectedStatus, allAppointments]);
+    return (filtered);
+  }, [searchTerm, selectedStatus, allAppointments]);
 
   // Watch for changes in filters and reapply
- 
+
   const pendingCount = allAppointments.filter(
     (appointment) => appointment.status === "pending"
   ).length;
@@ -109,7 +109,7 @@ const Admin = () => {
     (appointment) => appointment.status === "Expired"
   ).length;
 
- 
+
 
   const mutation = useMutation(
     async ({ userId, appointmentId, data }) =>
@@ -153,7 +153,7 @@ const Admin = () => {
     }
   };
 
- 
+
 
   if (isLoading) return <p>Loading appointments...</p>;
   if (isError) return <p>Error fetching appointments</p>;
@@ -222,7 +222,7 @@ const Admin = () => {
 
 
         />
-          <CountBox
+        <CountBox
           gradient="linear(to-l, #38B2AC,#1c1e22, #1c1e22)"
           icon={FcExpired}
           count={expiredCount}
@@ -291,19 +291,19 @@ const Admin = () => {
                   <Td>
                     {appointment.status === "Expired" ? (
                       <>
-                       <Button
-                        mt={2}
-                        size="sm"
-                        color="white"
-                        bg={colorMode === "light" ? "red.400" : "none"}
-                        border={colorMode === "light" ? "none" : "2px solid red"}
-                        w={{ base: "100%", md: "60%" }}
-                        onClick={() => openModal(appointment, false)}
-                        _hover={{
-                          bgColor: "red",
-                          color: "white",
-                        }}
-                      >
+                        <Button
+                          mt={2}
+                          size="sm"
+                          color="white"
+                          bg={colorMode === "light" ? "red.400" : "none"}
+                          border={colorMode === "light" ? "none" : "2px solid red"}
+                          w={{ base: "100%", md: "60%" }}
+                          onClick={() => openModal(appointment, false)}
+                          _hover={{
+                            bgColor: "red",
+                            color: "white",
+                          }}
+                        >
                           Delete
                         </Button></>
                     ) : (
@@ -321,22 +321,22 @@ const Admin = () => {
                       >
                         Schedule
                       </Button>
-                      <Button
-                        mt={2}
-                        size="sm"
-                        color="white"
-                        bg={colorMode === "light" ? "red.400" : "none"}
-                        border={colorMode === "light" ? "none" : "2px solid red"}
-                        w={{ base: "100%", md: "60%" }}
-                        onClick={() => openModal(appointment, false)}
-                        _hover={{
-                          bgColor: "red",
-                          color: "white",
-                        }}
-                      >
+                        <Button
+                          mt={2}
+                          size="sm"
+                          color="white"
+                          bg={colorMode === "light" ? "red.400" : "none"}
+                          border={colorMode === "light" ? "none" : "2px solid red"}
+                          w={{ base: "100%", md: "60%" }}
+                          onClick={() => openModal(appointment, false)}
+                          _hover={{
+                            bgColor: "red",
+                            color: "white",
+                          }}
+                        >
                           Cancel
                         </Button>
-                        </>
+                      </>
                     )}
                   </Td>
                 </Tr>
@@ -351,9 +351,9 @@ const Admin = () => {
           </Tbody>
         </Table>
       </Box>
-      <Modal   isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent mt={"50%"} w={{base:"90%"}}>
+        <ModalContent mt={{ base: "50%", md: "20%" }} w={{ base: "90%", md: "100%" }}>
           <ModalHeader>
             {isScheduleModal ? "Schedule Appointment" : "Cancel Appointment"}
           </ModalHeader>
@@ -361,43 +361,52 @@ const Admin = () => {
           <ModalBody>
             {isScheduleModal ? (
               <>
-               <Input
-                type="datetime-local"
-                value={selectedAppointment?.appointmentDate || ""}
-                onChange={(e) =>
-                  setSelectedAppointment({
-                    ...selectedAppointment,
-                    selectedDate: e.target.value,
-                  })
-                }
-              />
-                <CustomInputs
-                    value={selectedAppointment?.appointmentDate || ""}
-                onChange={(e) =>
-                  setSelectedAppointment({
-                    ...selectedAppointment,
-                    selectedDate: e.target.value,
-                  })
-                }
-              />
-              <Text>
-                {selectedAppointment.appointmentReason}
+                <Input
+                  type="datetime-local"
+                  value={selectedAppointment?.selectedDate || ""}
+                  onChange={(e) =>
+                    setSelectedAppointment({
+                      ...selectedAppointment,
+                      selectedDate: e.target.value,
+                    })
+                  }
+                />
+              <Box borderRadius={"10px"} boxShadow={"md"} bg={colorMode==='light'?"gray.100":"none"} p={{base:2}} mt={"4%"} border={colorMode === "dark"?"1px solid gray":"1px solid black"}>
+              <Box>
+                  <Text fontWeight={"bold"}>
+                  patient appointment date:
+                  </Text>
+                <Text>
+                 {selectedAppointment.appointmentDate}
               </Text>
-              <Text>
-                {selectedAppointment.preferences}
-              </Text> <Text>
-                {selectedAppointment.status}
-              </Text> <Text>
-                {selectedAppointment.appointmentReason}
-              </Text> <Text>
-                {selectedAppointment.appointmentReason}
-              </Text> <Text>
-                {selectedAppointment.appointmentReason}
-              </Text> <Text>
-                {selectedAppointment.appointmentReason}
-              </Text>
-              </>
+                </Box>
              
+                <Box>
+                  <Text fontWeight={"bold"}>Reason for the Appointment:</Text>
+                  <Text>
+                    {selectedAppointment.appointmentReason}
+
+                  </Text>
+                </Box>
+                <Box>
+                  <Text fontWeight={"bold"}>
+                    Preferences
+                  </Text>
+                  <Text>
+                    {selectedAppointment.preferences}
+                  </Text>
+                </Box>
+                <Box>
+                  <Text fontWeight={"bold"}>
+                    status of the appointment
+                  </Text>
+                  <Text>
+                    {selectedAppointment.status}
+                  </Text>
+                </Box>
+              </Box>
+              </>
+
             ) : (
               <Textarea
                 placeholder="Enter cancellation reason"
@@ -412,7 +421,7 @@ const Admin = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" onClick={handleSave}>
+            <Button w={"full"} colorScheme="blue" onClick={handleSave}>
               Save
             </Button>
           </ModalFooter>
